@@ -14,7 +14,14 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <h1 className="text-2xl font-bold">GESTÃO DE PNEUS</h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/lovable-uploads/b3a23caf-4d12-4f1c-999b-4a3dc733e4c7.png" 
+                alt="JC Transportes" 
+                className="h-10 w-auto"
+              />
+              <h1 className="text-2xl font-bold">GESTÃO DE PNEUS</h1>
+            </div>
             <nav className="flex space-x-4">
               <Button 
                 asChild 

@@ -21,8 +21,9 @@ const GestaoLaudos = () => {
     operacao: '',
   });
   const [isTableOpen, setIsTableOpen] = useState(false);
+  const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
 
-  const handleFilterChange = (key: string, value: string) => {
+  const handleFilterChange = (key: string, value: string | string[]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
@@ -35,7 +36,7 @@ const GestaoLaudos = () => {
       
       if (filters.mes && mes !== filters.mes) return false;
       if (filters.ano && ano !== filters.ano) return false;
-      if (filters.placa && !item.AB.toLowerCase().includes(filters.placa.toLowerCase())) return false;
+      if (filters.placa && !item.AB?.toLowerCase().includes(filters.placa.toLowerCase())) return false;
       if (filters.operacao && item.D !== filters.operacao) return false;
       
       return true;
@@ -59,13 +60,19 @@ const GestaoLaudos = () => {
     return { meses, anos, operacoes };
   }, [laudoData]);
 
-  // Cards de operações
+  // Cards de operações com percentual
   const operacaoCards = useMemo(() => {
     const operacoes = [...new Set(laudoData.map(item => item.D))].filter(Boolean);
-    return operacoes.slice(0, 4).map(op => ({
-      title: op,
-      value: filteredData.filter(item => item.D === op).length
-    }));
+    const total = filteredData.length;
+    
+    return operacoes.slice(0, 4).map(op => {
+      const count = filteredData.filter(item => item.D === op).length;
+      return {
+        title: op,
+        value: count,
+        percentage: total > 0 ? (count / total) * 100 : 0
+      };
+    });
   }, [laudoData, filteredData]);
 
   // Top 10 Motivos de Laudo
@@ -113,7 +120,7 @@ const GestaoLaudos = () => {
       .map(([name, value]) => ({ name, value }));
   }, [filteredData]);
 
-  // Distribuição por Vida
+  // Distribuição por Vida - Gráfico de Rosca
   const vidaPneus = useMemo(() => {
     const vidas = filteredData.reduce((acc, item) => {
       if (item.J) {
@@ -125,7 +132,7 @@ const GestaoLaudos = () => {
     return Object.entries(vidas).map(([name, value]) => ({ name, value }));
   }, [filteredData]);
 
-  // Top 20 Placas
+  // Top 25 Placas
   const topPlacas = useMemo(() => {
     const placas = filteredData.reduce((acc, item) => {
       if (item.AB) {
@@ -136,9 +143,72 @@ const GestaoLaudos = () => {
     
     return Object.entries(placas)
       .sort(([,a], [,b]) => b - a)
-      .slice(0, 20)
+      .slice(0, 25)
       .map(([name, value]) => ({ name, value }));
   }, [filteredData]);
+
+  // Dados comparativos por ano (mensal ou diário se drill down)
+  const dadosComparativos = useMemo(() => {
+    const anoAtual = new Date().getFullYear();
+    const anoAnterior = anoAtual - 1;
+    
+    if (drillDownMonth) {
+      // Drill down por dia do mês
+      const [ano, mes] = drillDownMonth.split('-');
+      const daysInMonth = new Date(parseInt(ano), parseInt(mes), 0).getDate();
+      
+      return Array.from({length: daysInMonth}, (_, i) => {
+        const dia = (i + 1).toString().padStart(2, '0');
+        
+        const dadosAnoAtual = laudoData.filter(item => {
+          const date = new Date(item.P);
+          return date.getFullYear() === anoAtual && 
+                 (date.getMonth() + 1).toString().padStart(2, '0') === mes &&
+                 date.getDate().toString().padStart(2, '0') === dia;
+        }).length;
+        
+        const dadosAnoAnterior = laudoData.filter(item => {
+          const date = new Date(item.P);
+          return date.getFullYear() === anoAnterior && 
+                 (date.getMonth() + 1).toString().padStart(2, '0') === mes &&
+                 date.getDate().toString().padStart(2, '0') === dia;
+        }).length;
+        
+        return {
+          mes: `${dia}/${mes}`,
+          anoAtual: dadosAnoAtual,
+          anoAnterior: dadosAnoAnterior
+        };
+      });
+    } else {
+      // Dados mensais
+      const meses = Array.from({length: 12}, (_, i) => (i + 1).toString().padStart(2, '0'));
+      
+      return meses.map(mes => {
+        const dadosAnoAtual = laudoData.filter(item => {
+          const date = new Date(item.P);
+          return date.getFullYear() === anoAtual && (date.getMonth() + 1).toString().padStart(2, '0') === mes;
+        }).length;
+        
+        const dadosAnoAnterior = laudoData.filter(item => {
+          const date = new Date(item.P);
+          return date.getFullYear() === anoAnterior && (date.getMonth() + 1).toString().padStart(2, '0') === mes;
+        }).length;
+        
+        return {
+          mes: `${mes}/${anoAtual}`,
+          anoAtual: dadosAnoAtual,
+          anoAnterior: dadosAnoAnterior
+        };
+      });
+    }
+  }, [laudoData, drillDownMonth]);
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('pt-BR');
+  };
 
   if (laudoData.length === 0) {
     return (
@@ -173,12 +243,47 @@ const GestaoLaudos = () => {
               key={index}
               title={card.title}
               value={card.value}
+              percentage={card.percentage}
             />
           ))}
         </div>
 
         {/* Gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Comparativo Anual */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Comparativo Anual
+                {drillDownMonth && (
+                  <Button variant="outline" size="sm" onClick={() => setDrillDownMonth(null)}>
+                    Voltar
+                  </Button>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart 
+                  data={dadosComparativos}
+                  onClick={(data) => {
+                    if (!drillDownMonth && data?.activeLabel) {
+                      const [mes] = data.activeLabel.split('/');
+                      setDrillDownMonth(`${new Date().getFullYear()}-${mes}`);
+                    }
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="mes" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="anoAtual" fill={COLORS[0]} name="Ano Atual" />
+                  <Bar dataKey="anoAnterior" fill={COLORS[0]} fillOpacity={0.5} name="Ano Anterior" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
           {/* Top 10 Motivos de Laudo */}
           <Card>
             <CardHeader>
@@ -188,37 +293,51 @@ const GestaoLaudos = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={motivosLaudo}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    height={120}
+                    interval={0}
+                  />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill={COLORS[0]} />
+                  <Bar dataKey="value" fill={COLORS[0]}>
+                    {motivosLaudo.map((entry, index) => (
+                      <Cell key={`cell-${index}`} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          {/* Distribuição por Marca */}
+          {/* Marcas dos Pneus */}
           <Card>
             <CardHeader>
-              <CardTitle>Distribuição por Marca dos Pneus</CardTitle>
+              <CardTitle>Marcas dos Pneus</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={marcasPneus}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="name" interval={0} />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill={COLORS[1]} />
+                  <Bar dataKey="value" fill={COLORS[1]}>
+                    {marcasPneus.map((entry, index) => (
+                      <Cell key={`cell-${index}`} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          {/* Distribuição por Vida */}
+          {/* Vida dos Pneus - Rosca */}
           <Card>
             <CardHeader>
-              <CardTitle>Distribuição por Vida</CardTitle>
+              <CardTitle>Vida dos Pneus</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -227,6 +346,7 @@ const GestaoLaudos = () => {
                     data={vidaPneus}
                     cx="50%"
                     cy="50%"
+                    innerRadius={60}
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
@@ -252,10 +372,20 @@ const GestaoLaudos = () => {
                 <ResponsiveContainer width={Math.max(800, topDOTs.length * 40)} height={300}>
                   <BarChart data={topDOTs}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <XAxis 
+                      dataKey="name" 
+                      angle={-45} 
+                      textAnchor="end" 
+                      height={100}
+                      interval={0}
+                    />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="value" fill={COLORS[2]} />
+                    <Bar dataKey="value" fill={COLORS[2]}>
+                      {topDOTs.map((entry, index) => (
+                        <Cell key={`cell-${index}`} />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -263,20 +393,30 @@ const GestaoLaudos = () => {
           </Card>
         </div>
 
-        {/* Top 20 Placas com scroll horizontal */}
+        {/* Placas - Largura completa */}
         <Card>
           <CardHeader>
-            <CardTitle>Top 20 Placas</CardTitle>
+            <CardTitle>Placas</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <ResponsiveContainer width={Math.max(800, topPlacas.length * 40)} height={300}>
+              <ResponsiveContainer width={Math.max(1200, topPlacas.length * 40)} height={300}>
                 <BarChart data={topPlacas}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    height={100}
+                    interval={0}
+                  />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill={COLORS[3]} />
+                  <Bar dataKey="value" fill={COLORS[3]}>
+                    {topPlacas.map((entry, index) => (
+                      <Cell key={`cell-${index}`} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -297,23 +437,23 @@ const GestaoLaudos = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Operação (D)</TableHead>
-                      <TableHead>E</TableHead>
-                      <TableHead>F</TableHead>
-                      <TableHead>DOT (G)</TableHead>
-                      <TableHead>Vida (J)</TableHead>
-                      <TableHead>K</TableHead>
-                      <TableHead>L</TableHead>
-                      <TableHead>M</TableHead>
-                      <TableHead>N</TableHead>
-                      <TableHead>O</TableHead>
-                      <TableHead>Data (P)</TableHead>
-                      <TableHead>Q</TableHead>
-                      <TableHead>U</TableHead>
-                      <TableHead>W</TableHead>
-                      <TableHead>Marca (Y)</TableHead>
-                      <TableHead>Código Veículo (AA)</TableHead>
-                      <TableHead>Placa (AB)</TableHead>
+                      <TableHead>Operação</TableHead>
+                      <TableHead>Coluna E</TableHead>
+                      <TableHead>Coluna F</TableHead>
+                      <TableHead>DOT</TableHead>
+                      <TableHead>Vida</TableHead>
+                      <TableHead>Coluna K</TableHead>
+                      <TableHead>Coluna L</TableHead>
+                      <TableHead>Coluna M</TableHead>
+                      <TableHead>Coluna N</TableHead>
+                      <TableHead>Coluna O</TableHead>
+                      <TableHead>Data</TableHead>
+                      <TableHead>Coluna Q</TableHead>
+                      <TableHead>Coluna U</TableHead>
+                      <TableHead>Coluna W</TableHead>
+                      <TableHead>Marca</TableHead>
+                      <TableHead>Código Veículo</TableHead>
+                      <TableHead>Placa</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -329,7 +469,7 @@ const GestaoLaudos = () => {
                         <TableCell>{item.M}</TableCell>
                         <TableCell>{item.N}</TableCell>
                         <TableCell>{item.O}</TableCell>
-                        <TableCell>{item.P}</TableCell>
+                        <TableCell>{formatDate(item.P)}</TableCell>
                         <TableCell>{item.Q}</TableCell>
                         <TableCell>{item.U}</TableCell>
                         <TableCell>{item.W}</TableCell>
