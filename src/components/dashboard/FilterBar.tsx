@@ -34,7 +34,6 @@ const FilterBar = ({ filters, onFilterChange, availableFilters }: FilterBarProps
                 <SelectValue placeholder="Todos os meses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os meses</SelectItem>
                 {availableFilters.meses.map((mes) => (
                   <SelectItem key={mes} value={mes}>{mes}</SelectItem>
                 ))}
@@ -51,7 +50,6 @@ const FilterBar = ({ filters, onFilterChange, availableFilters }: FilterBarProps
                 <SelectValue placeholder="Todos os anos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os anos</SelectItem>
                 {availableFilters.anos.map((ano) => (
                   <SelectItem key={ano} value={ano}>{ano}</SelectItem>
                 ))}
@@ -68,7 +66,6 @@ const FilterBar = ({ filters, onFilterChange, availableFilters }: FilterBarProps
                 <SelectValue placeholder="Todas as operações" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todas as operações</SelectItem>
                 {availableFilters.operacoes.map((op) => (
                   <SelectItem key={op} value={op}>{op}</SelectItem>
                 ))}
@@ -85,7 +82,6 @@ const FilterBar = ({ filters, onFilterChange, availableFilters }: FilterBarProps
                 <SelectValue placeholder="Todos os estoques" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os estoques</SelectItem>
                 {availableFilters.estoques.map((est) => (
                   <SelectItem key={est} value={est}>{est}</SelectItem>
                 ))}
