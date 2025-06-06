@@ -19,7 +19,7 @@ const DOTsChart = ({ filteredData }: DOTsChartProps) => {
     }, {} as Record<string, number>);
     
     return Object.entries(dots)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([,a]: [string, number], [,b]: [string, number]) => b - a)
       .slice(0, 20)
       .map(([name, value]) => ({ name, value }));
   }, [filteredData]);

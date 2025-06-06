@@ -19,7 +19,7 @@ const PlacasChart = ({ filteredData }: PlacasChartProps) => {
     }, {} as Record<string, number>);
     
     return Object.entries(placas)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([,a]: [string, number], [,b]: [string, number]) => b - a)
       .slice(0, 25)
       .map(([name, value]) => ({ name, value }));
   }, [filteredData]);

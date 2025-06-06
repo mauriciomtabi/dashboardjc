@@ -19,7 +19,7 @@ const MarcasChart = ({ filteredData }: MarcasChartProps) => {
     }, {} as Record<string, number>);
     
     return Object.entries(marcas)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([,a]: [string, number], [,b]: [string, number]) => b - a)
       .slice(0, 10)
       .map(([name, value]) => ({ name, value }));
   }, [filteredData]);
