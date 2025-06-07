@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
@@ -55,7 +54,7 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
                 outerRadius={140}
                 fill="#8884d8"
                 dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                 labelLine={false}
               >
                 {vidaPneus.map((entry, index) => (
@@ -88,15 +87,14 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
         {/* Legenda personalizada */}
         {vidaPneus.length > 0 && (
           <div className="mt-6">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {vidaPneus.map((item, index) => (
-                <div key={item.name} className="flex items-center gap-2">
+                <div key={item.name} className="flex items-center gap-3">
                   <div 
-                    className="w-3 h-3 rounded-full" 
+                    className="w-3 h-3 rounded-full flex-shrink-0" 
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   ></div>
-                  <span className="text-sm font-medium">{item.name}</span>
-                  <span className="text-sm text-muted-foreground ml-auto">{item.value.toString()}</span>
+                  <span className="text-sm font-medium flex-grow">{item.name} {item.value.toString()}</span>
                 </div>
               ))}
             </div>

@@ -20,7 +20,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Upload />} />
+            <Route path="/" element={<Navigate to="/upload" replace />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/gestao-laudos" element={<GestaoLaudos />} />
             <Route path="/gestao-estoque" element={<GestaoEstoque />} />
