@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, LabelList } from 'recharts';
 import { Gauge } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
@@ -35,6 +35,30 @@ const EstoqueVidaPneusChart = ({ filteredData }: EstoqueVidaPneusChartProps) => 
     return null;
   };
 
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }: any) => {
+    if (percent < 0.05) return null; // Só mostra rótulo se for maior que 5%
+    
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="white" 
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontSize="12"
+        fontWeight="600"
+        className="drop-shadow-lg"
+      >
+        {name}
+      </text>
+    );
+  };
+
   return (
     <Card className="shadow-lg border-0 bg-gradient-to-br from-background to-muted/20">
       <CardHeader className="pb-4">
@@ -55,11 +79,12 @@ const EstoqueVidaPneusChart = ({ filteredData }: EstoqueVidaPneusChartProps) => 
                   data={vidaPneus}
                   cx="50%"
                   cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
                   innerRadius={50}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
-                  label={false}
                 >
                   {vidaPneus.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

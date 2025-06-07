@@ -35,6 +35,30 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
     return null;
   };
 
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }: any) => {
+    if (percent < 0.05) return null; // Só mostra rótulo se for maior que 5%
+    
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="white" 
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontSize="12"
+        fontWeight="600"
+        className="drop-shadow-lg"
+      >
+        {name}
+      </text>
+    );
+  };
+
   return (
     <Card className="shadow-lg border-0 bg-gradient-to-br from-background to-muted/20">
       <CardHeader className="pb-4">
@@ -55,11 +79,12 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
                   data={vidaPneus}
                   cx="50%"
                   cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
                   innerRadius={50}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
-                  label={false}
                 >
                   {vidaPneus.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
