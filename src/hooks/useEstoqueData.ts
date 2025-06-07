@@ -31,10 +31,10 @@ export const useEstoqueData = (filters: {
       
       if (Array.isArray(filters.placa) && filters.placa.length > 0) {
         const hasMatchingPlaca = filters.placa.some(placa => 
-          item.AK?.toLowerCase().includes(placa.toLowerCase())
+          item.AP?.toLowerCase().includes(placa.toLowerCase())
         );
         if (!hasMatchingPlaca) return false;
-      } else if (typeof filters.placa === 'string' && filters.placa && !item.AK?.toLowerCase().includes(filters.placa.toLowerCase())) {
+      } else if (typeof filters.placa === 'string' && filters.placa && !item.AP?.toLowerCase().includes(filters.placa.toLowerCase())) {
         return false;
       }
       
@@ -57,7 +57,7 @@ export const useEstoqueData = (filters: {
     
     const operacoes = [...new Set(estoqueData.map(item => item.AB))].filter(Boolean).sort();
     const estoques = [...new Set(estoqueData.map(item => item.N))].filter(Boolean).sort();
-    const placas = [...new Set(estoqueData.map(item => item.AK))].filter(Boolean).sort();
+    const placas = [...new Set(estoqueData.map(item => item.AP))].filter(Boolean).sort();
     
     return { meses, anos, operacoes, estoques, placas };
   }, [estoqueData]);

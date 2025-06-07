@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,6 +27,15 @@ interface FilterBarProps {
 }
 
 const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = false }: FilterBarProps) => {
+  const [placaSearch, setPlacaSearch] = useState('');
+
+  const filteredPlacas = useMemo(() => {
+    if (!availableFilters.placas || !placaSearch) return availableFilters.placas || [];
+    return availableFilters.placas.filter(placa => 
+      placa.toLowerCase().includes(placaSearch.toLowerCase())
+    );
+  }, [availableFilters.placas, placaSearch]);
+
   const handleMultipleSelectChange = (key: string, value: string, currentValues: string | string[]) => {
     const currentArray = Array.isArray(currentValues) ? currentValues : (currentValues ? [currentValues] : []);
     const newValues = currentArray.includes(value) 
@@ -210,7 +219,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
           <div className="flex items-center justify-between">
             <Label className="text-sm flex items-center gap-1">
               <Truck className="h-4 w-4" />
-              {isEstoque ? 'Placa (AK)' : 'Placa (AB)'}
+              Placa
             </Label>
             {((Array.isArray(filters.placa) && filters.placa.length > 0) || (!Array.isArray(filters.placa) && filters.placa)) && (
               <Button variant="ghost" size="sm" onClick={() => clearFilter('placa')}>
@@ -218,7 +227,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
               </Button>
             )}
           </div>
-          {!isEstoque && availableFilters.placas ? (
+          {availableFilters.placas ? (
             <Select value="" onValueChange={(value) => handleMultipleSelectChange('placa', value, filters.placa || [])}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={getDisplayValue(filters.placa || [], "Todas as placas")} />
@@ -228,41 +237,11 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
                   <Input
                     placeholder="Pesquisar placa..."
                     className="w-full mb-2"
-                    onChange={(e) => {
-                      // This will be handled by the search functionality
-                    }}
+                    value={placaSearch}
+                    onChange={(e) => setPlacaSearch(e.target.value)}
                   />
                 </div>
-                {availableFilters.placas.map((placa) => {
-                  const isSelected = Array.isArray(filters.placa) && filters.placa.includes(placa);
-                  return (
-                    <div key={placa} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
-                      <Checkbox 
-                        checked={isSelected}
-                        onCheckedChange={() => handleMultipleSelectChange('placa', placa, filters.placa || [])}
-                      />
-                      <span className="text-sm">{placa}</span>
-                    </div>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          ) : isEstoque && availableFilters.placas ? (
-            <Select value="" onValueChange={(value) => handleMultipleSelectChange('placa', value, filters.placa || [])}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={getDisplayValue(filters.placa || [], "Todas as placas")} />
-              </SelectTrigger>
-              <SelectContent className="max-h-48 overflow-y-auto">
-                <div className="p-2">
-                  <Input
-                    placeholder="Pesquisar placa..."
-                    className="w-full mb-2"
-                    onChange={(e) => {
-                      // This will be handled by the search functionality
-                    }}
-                  />
-                </div>
-                {availableFilters.placas.map((placa) => {
+                {filteredPlacas.map((placa) => {
                   const isSelected = Array.isArray(filters.placa) && filters.placa.includes(placa);
                   return (
                     <div key={placa} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">

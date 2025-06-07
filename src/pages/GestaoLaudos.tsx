@@ -72,6 +72,7 @@ const GestaoLaudos = () => {
         <div className="w-full">
           <ComparativeChart 
             laudoData={laudoData}
+            filteredData={filteredData}
             drillDownMonth={drillDownMonth}
             setDrillDownMonth={setDrillDownMonth}
           />

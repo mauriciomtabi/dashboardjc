@@ -92,6 +92,7 @@ const Upload = () => {
         R: row.R || '',
         AB: row.AB || '',
         AK: row.AK || '',
+        AP: row.AP || '',
         AR: row.AR || '',
       }));
 

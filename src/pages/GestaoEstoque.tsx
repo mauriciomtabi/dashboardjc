@@ -86,6 +86,7 @@ const GestaoEstoque = () => {
         <div className="w-full">
           <EstoqueComparativeChart 
             estoqueData={estoqueData}
+            filteredData={filteredData}
             drillDownMonth={drillDownMonth}
             onDrillDown={setDrillDownMonth}
           />

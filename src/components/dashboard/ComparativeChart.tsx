@@ -10,14 +10,18 @@ const COLORS = ['#3b82f6', '#94a3b8'];
 
 interface ComparativeChartProps {
   laudoData: any[];
+  filteredData: any[];
   drillDownMonth: string | null;
   setDrillDownMonth: (month: string | null) => void;
 }
 
-const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: ComparativeChartProps) => {
+const ComparativeChart = ({ laudoData, filteredData, drillDownMonth, setDrillDownMonth }: ComparativeChartProps) => {
   const dadosComparativos = useMemo(() => {
     const anoAtual = new Date().getFullYear();
     const anoAnterior = anoAtual - 1;
+    
+    // Use filteredData instead of laudoData to respect filters
+    const dataToUse = filteredData;
     
     if (drillDownMonth) {
       const [ano, mes] = drillDownMonth.split('-');
@@ -26,7 +30,7 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
       return Array.from({length: daysInMonth}, (_, i) => {
         const dia = (i + 1).toString().padStart(2, '0');
         
-        const dadosAnoAtual = laudoData.filter(item => {
+        const dadosAnoAtual = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.P);
           if (!parsedDate) return false;
           return parsedDate.getFullYear() === anoAtual && 
@@ -34,7 +38,7 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
                  parsedDate.getDate().toString().padStart(2, '0') === dia;
         }).length;
         
-        const dadosAnoAnterior = laudoData.filter(item => {
+        const dadosAnoAnterior = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.P);
           if (!parsedDate) return false;
           return parsedDate.getFullYear() === anoAnterior && 
@@ -52,13 +56,13 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
       const meses = Array.from({length: 12}, (_, i) => (i + 1).toString().padStart(2, '0'));
       
       return meses.map(mes => {
-        const dadosAnoAtual = laudoData.filter(item => {
+        const dadosAnoAtual = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.P);
           if (!parsedDate) return false;
           return parsedDate.getFullYear() === anoAtual && (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes;
         }).length;
         
-        const dadosAnoAnterior = laudoData.filter(item => {
+        const dadosAnoAnterior = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.P);
           if (!parsedDate) return false;
           return parsedDate.getFullYear() === anoAnterior && (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes;
@@ -71,7 +75,7 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
         };
       });
     }
-  }, [laudoData, drillDownMonth]);
+  }, [filteredData, drillDownMonth]);
 
   const anoAtual = new Date().getFullYear();
   const anoAnterior = anoAtual - 1;

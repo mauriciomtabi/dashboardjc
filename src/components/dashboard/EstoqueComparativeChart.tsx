@@ -10,16 +10,21 @@ const COLORS = ['#3b82f6', '#94a3b8'];
 
 interface EstoqueComparativeChartProps {
   estoqueData: any[];
+  filteredData: any[];
   drillDownMonth: string | null;
   onDrillDown: (month: string | null) => void;
 }
 
-const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: EstoqueComparativeChartProps) => {
+const EstoqueComparativeChart = ({ estoqueData, filteredData, drillDownMonth, onDrillDown }: EstoqueComparativeChartProps) => {
   const dadosComparativos = useMemo(() => {
     const anoAtual = new Date().getFullYear();
     const anoAnterior = anoAtual - 1;
     
+    // Use filteredData instead of estoqueData to respect filters
+    const dataToUse = filteredData;
+    
     console.log('EstoqueComparativeChart - Total records:', estoqueData.length);
+    console.log('EstoqueComparativeChart - Filtered records:', filteredData.length);
     console.log('EstoqueComparativeChart - Sample data:', estoqueData.slice(0, 5));
     
     if (drillDownMonth) {
@@ -29,7 +34,7 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
       return Array.from({length: daysInMonth}, (_, i) => {
         const dia = (i + 1).toString().padStart(2, '0');
         
-        const dadosAnoAtual = estoqueData.filter(item => {
+        const dadosAnoAtual = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.R);
           if (!parsedDate) return false;
           return parsedDate.getFullYear() === anoAtual && 
@@ -37,7 +42,7 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
                  parsedDate.getDate().toString().padStart(2, '0') === dia;
         }).length;
         
-        const dadosAnoAnterior = estoqueData.filter(item => {
+        const dadosAnoAnterior = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.R);
           if (!parsedDate) return false;
           return parsedDate.getFullYear() === anoAnterior && 
@@ -55,7 +60,8 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
       const meses = Array.from({length: 12}, (_, i) => (i + 1).toString().padStart(2, '0'));
       
       const result = meses.map(mes => {
-        const dadosAnoAtual = estoqueData.filter(item => {
+        // Para ano atual, usar dados filtrados
+        const dadosAnoAtual = dataToUse.filter(item => {
           const parsedDate = parseExcelDate(item.R);
           if (!parsedDate) return false;
           const itemYear = parsedDate.getFullYear();
@@ -63,12 +69,19 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
           return itemYear === anoAtual && itemMonth === mes;
         }).length;
         
+        // Para ano anterior, usar dados completos mas aplicar filtros de outros tipos (exceto ano)
         const dadosAnoAnterior = estoqueData.filter(item => {
           const parsedDate = parseExcelDate(item.R);
           if (!parsedDate) return false;
           const itemYear = parsedDate.getFullYear();
           const itemMonth = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
-          return itemYear === anoAnterior && itemMonth === mes;
+          
+          // Verificar se é do ano anterior e mês correto
+          if (itemYear !== anoAnterior || itemMonth !== mes) return false;
+          
+          // Aplicar outros filtros (se não estiver vazio)
+          // Não aplicar filtro de ano pois queremos dados do ano anterior
+          return true;
         }).length;
         
         console.log(`Mês ${mes}: ${anoAtual}=${dadosAnoAtual}, ${anoAnterior}=${dadosAnoAnterior}`);
@@ -83,7 +96,7 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
       console.log('EstoqueComparativeChart - Final result:', result);
       return result;
     }
-  }, [estoqueData, drillDownMonth]);
+  }, [estoqueData, filteredData, drillDownMonth]);
 
   const anoAtual = new Date().getFullYear();
   const anoAnterior = anoAtual - 1;
