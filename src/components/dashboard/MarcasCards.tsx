@@ -19,13 +19,20 @@ const MarcasCards = ({ filteredData }: MarcasCardsProps) => {
     const total = filteredData.length;
     
     return Object.entries(marcas)
-      .sort(([,a], [,b]) => (b || 0) - (a || 0))
+      .sort(([,a], [,b]) => {
+        const numA = typeof a === 'number' ? a : 0;
+        const numB = typeof b === 'number' ? b : 0;
+        return numB - numA;
+      })
       .slice(0, 8)
-      .map(([name, value]) => ({
-        name,
-        value: value || 0,
-        percentage: total > 0 ? ((value || 0) / total) * 100 : 0
-      }));
+      .map(([name, value]) => {
+        const numValue = typeof value === 'number' ? value : 0;
+        return {
+          name,
+          value: numValue,
+          percentage: total > 0 ? (numValue / total) * 100 : 0
+        };
+      });
   }, [filteredData]);
 
   return (
@@ -44,7 +51,7 @@ const MarcasCards = ({ filteredData }: MarcasCardsProps) => {
               className="bg-muted/50 rounded-lg p-3 text-center border"
             >
               <div className="text-lg font-bold text-primary">{marca.value}</div>
-              <div className="text-xs text-muted-foreground mb-1">{String(marca.name)}</div>
+              <div className="text-xs text-muted-foreground mb-1">{marca.name}</div>
               <div className="text-xs font-medium">{marca.percentage.toFixed(1)}%</div>
             </div>
           ))}
