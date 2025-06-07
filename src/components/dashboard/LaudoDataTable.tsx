@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -100,11 +101,13 @@ const LaudoDataTable = ({ filteredData, isOpen, onOpenChange }: LaudoDataTablePr
                   <TableHead className="font-bold text-primary whitespace-nowrap">Cód Pneu</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Nº Série</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">DOT</TableHead>
+                  <TableHead className="font-bold text-primary whitespace-nowrap">Vida</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 1</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 2</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 3</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 4</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 5</TableHead>
+                  <TableHead className="font-bold text-primary whitespace-nowrap">Data</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Km</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Motivo do Laudo</TableHead>
                   <TableHead className="font-bold text-primary whitespace-nowrap">Modelo Pneu</TableHead>
@@ -122,17 +125,19 @@ const LaudoDataTable = ({ filteredData, isOpen, onOpenChange }: LaudoDataTablePr
                   >
                     <TableCell className="whitespace-nowrap">{item.D}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.E}</TableCell>
-                    <TableCell className="whitespace-nowrap">{item.Q}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.F}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.G}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.J}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.K}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.L}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.M}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.N}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.O}</TableCell>
-                    <TableCell className="whitespace-nowrap">{item.P}</TableCell>
-                    <TableCell className="whitespace-nowrap">{item.U}</TableCell>
-                    <TableCell className="whitespace-nowrap">{formatNumber(item.W)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.P)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatNumber(item.Q)}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.S}</TableCell>
-                    <TableCell className="whitespace-nowrap">{item.K}</TableCell>
-                    <TableCell className="whitespace-nowrap">{item.L}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.U}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.W}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.Y}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.AA}</TableCell>
                     <TableCell className="whitespace-nowrap">{item.AB}</TableCell>
