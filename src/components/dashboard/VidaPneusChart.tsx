@@ -96,7 +96,7 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   ></div>
                   <span className="text-sm font-medium">{item.name}</span>
-                  <span className="text-sm text-muted-foreground ml-auto">{item.value}</span>
+                  <span className="text-sm text-muted-foreground ml-auto">{item.value.toString()}</span>
                 </div>
               ))}
             </div>
