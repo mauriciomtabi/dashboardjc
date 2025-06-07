@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -19,11 +20,16 @@ const GestaoEstoque = () => {
     placa: [] as string[],
   });
   const [isTableOpen, setIsTableOpen] = useState(false);
+  const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
 
   const { filteredData, availableFilters, operacaoCards, estoqueCards } = useEstoqueData(filters);
 
   const handleFilterChange = (key: string, value: string | string[]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleDrillDown = (month: string | null) => {
+    setDrillDownMonth(month);
   };
 
   if (estoqueData.length === 0) {
@@ -94,6 +100,8 @@ const GestaoEstoque = () => {
             <EstoqueComparativeChart 
               estoqueData={estoqueData}
               filteredData={filteredData}
+              drillDownMonth={drillDownMonth}
+              onDrillDown={handleDrillDown}
             />
           </div>
 
