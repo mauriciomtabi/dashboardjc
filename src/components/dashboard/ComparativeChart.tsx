@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -116,6 +115,7 @@ const ComparativeChart = ({ laudoData, filteredData, drillDownMonth, setDrillDow
               dataKey={anoAtual.toString()} 
               fill={COLORS[0]} 
               name={`Ano ${anoAtual}`}
+              radius={[4, 4, 0, 0]}
             >
               <LabelList dataKey={anoAtual.toString()} position="top" />
             </Bar>
@@ -123,6 +123,7 @@ const ComparativeChart = ({ laudoData, filteredData, drillDownMonth, setDrillDow
               dataKey={anoAnterior.toString()} 
               fill={COLORS[1]} 
               name={`Ano ${anoAnterior}`}
+              radius={[4, 4, 0, 0]}
             >
               <LabelList dataKey={anoAnterior.toString()} position="top" />
             </Bar>

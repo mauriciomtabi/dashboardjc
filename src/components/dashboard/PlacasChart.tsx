@@ -48,7 +48,7 @@ const PlacasChart = ({ filteredData }: PlacasChartProps) => {
               />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill={COLORS[3]}>
+              <Bar dataKey="value" fill={COLORS[3]} radius={[8, 8, 0, 0]}>
                 <LabelList dataKey="value" position="top" />
                 {topPlacas.map((entry, index) => (
                   <Cell key={`cell-${index}`} />

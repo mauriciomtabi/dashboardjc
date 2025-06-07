@@ -55,7 +55,7 @@ const MotivosChart = ({ filteredData }: MotivosChartProps) => {
               labelStyle={{ whiteSpace: 'normal', wordBreak: 'break-word', maxWidth: '200px' }}
               contentStyle={{ maxWidth: '300px' }}
             />
-            <Bar dataKey="value" fill={COLORS[0]}>
+            <Bar dataKey="value" fill={COLORS[0]} radius={[8, 8, 0, 0]}>
               <LabelList dataKey="value" position="top" />
               {motivosLaudo.map((entry, index) => (
                 <Cell key={`cell-${index}`} />

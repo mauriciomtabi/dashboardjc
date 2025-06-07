@@ -47,7 +47,7 @@ const DOTsChart = ({ filteredData }: DOTsChartProps) => {
               />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill={COLORS[2]}>
+              <Bar dataKey="value" fill={COLORS[2]} radius={[8, 8, 0, 0]}>
                 <LabelList dataKey="value" position="top" />
                 {allDOTs.map((entry, index) => (
                   <Cell key={`cell-${index}`} />

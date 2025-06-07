@@ -52,7 +52,7 @@ const MarcasChart = ({ filteredData }: MarcasChartProps) => {
               formatter={(value, name) => [value, 'Quantidade']}
               labelFormatter={(label) => `Marca: ${label}`}
             />
-            <Bar dataKey="value" fill={COLORS[1]}>
+            <Bar dataKey="value" fill={COLORS[1]} radius={[0, 8, 8, 0]}>
               <LabelList dataKey="value" position="right" />
             </Bar>
           </BarChart>
