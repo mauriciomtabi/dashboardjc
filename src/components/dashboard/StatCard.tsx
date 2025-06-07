@@ -12,19 +12,33 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, percentage, icon, className }: StatCardProps) => {
   return (
-    <Card className={`shadow-lg border-l-4 border-l-primary/50 hover:shadow-xl transition-shadow ${className}`}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card className={`group hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-background to-muted/20 hover:scale-105 ${className}`}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
         </CardTitle>
-        {icon}
+        {icon && (
+          <div className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            {icon}
+          </div>
+        )}
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+      <CardContent className="space-y-2">
+        <div className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          {value}
+        </div>
         {percentage !== undefined && (
-          <p className="text-xs text-muted-foreground">
-            {percentage.toFixed(1)}% do total
-          </p>
+          <div className="flex items-center gap-1">
+            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500"
+                style={{ width: `${Math.min(percentage, 100)}%` }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">
+              {percentage.toFixed(1)}%
+            </span>
+          </div>
         )}
       </CardContent>
     </Card>
