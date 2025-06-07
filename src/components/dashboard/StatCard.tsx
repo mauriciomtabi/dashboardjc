@@ -13,7 +13,7 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, percentage, icon, className, variant = 'default' }: StatCardProps) => {
   const sideDetailColor = variant === 'estoque' 
-    ? 'bg-gradient-to-b from-emerald-500 to-emerald-600' 
+    ? 'bg-gradient-to-b from-blue-600 to-blue-700' 
     : 'bg-gradient-to-b from-primary to-primary/80';
 
   return (
@@ -66,20 +66,6 @@ const StatCard = ({ title, value, percentage, icon, className, variant = 'defaul
                 </div>
                 <span className="text-xs text-muted-foreground font-semibold whitespace-nowrap min-w-[3rem] group-hover:text-foreground transition-colors duration-300">
                   {percentage.toFixed(1)}%
-                </span>
-              </div>
-              {/* Detalhes adicionais */}
-              <div className="flex items-center justify-between text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                <span className="flex items-center gap-1">
-                  <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                    variant === 'estoque' 
-                      ? 'bg-emerald-500/60 group-hover:bg-emerald-500' 
-                      : 'bg-primary/60 group-hover:bg-primary'
-                  }`} />
-                  Meta atingida
-                </span>
-                <span className="font-medium">
-                  {percentage >= 100 ? 'Completo' : percentage >= 75 ? 'Alto' : percentage >= 50 ? 'Médio' : 'Baixo'}
                 </span>
               </div>
             </div>
