@@ -46,21 +46,20 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="flex items-center gap-12">
+        <div className="flex flex-col items-center space-y-6">
           {/* Gráfico */}
-          <div className="relative flex-1 max-w-[280px]">
-            <ResponsiveContainer width="100%" height={280}>
+          <div className="relative w-full max-w-[300px]">
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   data={vidaPneus}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={120}
+                  innerRadius={50}
+                  outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
-                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                  labelLine={false}
+                  label={false}
                 >
                   {vidaPneus.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -72,11 +71,11 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
             
             {/* Imagem do pneu no centro */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center shadow-2xl border-4 border-gray-600">
-                <div className="w-14 h-14 bg-gray-900 rounded-full flex items-center justify-center relative overflow-hidden">
+              <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center shadow-2xl border-4 border-gray-600">
+                <div className="w-11 h-11 bg-gray-900 rounded-full flex items-center justify-center relative overflow-hidden">
                   {/* Padrão de banda de rodagem */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="grid grid-cols-3 gap-0.5 w-10 h-10">
+                    <div className="grid grid-cols-3 gap-0.5 w-8 h-8">
                       {Array.from({ length: 9 }).map((_, i) => (
                         <div key={i} className="bg-gray-700 rounded-sm"></div>
                       ))}
@@ -89,23 +88,25 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
             </div>
           </div>
           
-          {/* Legenda bem mais à direita */}
+          {/* Legenda abaixo em linha */}
           {vidaPneus.length > 0 && (
-            <div className="w-56 space-y-3 ml-8">
-              {vidaPneus.map((item, index) => (
-                <div key={item.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                  <div 
-                    className="w-4 h-4 rounded-full flex-shrink-0 shadow-sm" 
-                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                  ></div>
-                  <div className="flex-1">
-                    <div className="font-medium text-sm">{item.name} {Number(item.value)}</div>
-                    <div className="text-xs text-muted-foreground">
-                      ({((Number(item.value) / filteredData.length) * 100).toFixed(1)}%)
+            <div className="w-full">
+              <div className="flex flex-wrap justify-center gap-4">
+                {vidaPneus.map((item, index) => (
+                  <div key={item.name} className="flex items-center gap-2 p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                    <div 
+                      className="w-3 h-3 rounded-full flex-shrink-0 shadow-sm" 
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                    ></div>
+                    <div className="text-sm">
+                      <span className="font-medium">{item.name}</span>
+                      <span className="text-muted-foreground ml-1">
+                        ({Number(item.value)} - {((Number(item.value) / filteredData.length) * 100).toFixed(1)}%)
+                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>

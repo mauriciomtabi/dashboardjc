@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -64,7 +63,7 @@ const GestaoEstoque = () => {
         </div>
 
         <div className="p-6 pt-8 space-y-8">
-          {/* Cards de Operações com tema azul */}
+          {/* Cards de Operações */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Operações</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -74,13 +73,12 @@ const GestaoEstoque = () => {
                   title={card.title}
                   value={card.value}
                   percentage={card.percentage}
-                  className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-200 hover:border-blue-300"
                 />
               ))}
             </div>
           </div>
 
-          {/* Cards de Estoque com tema verde */}
+          {/* Cards de Estoque */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Estoque</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -90,7 +88,6 @@ const GestaoEstoque = () => {
                   title={card.title}
                   value={card.value}
                   percentage={card.percentage}
-                  className="bg-gradient-to-br from-green-50 to-green-100/50 border-green-200 hover:border-green-300"
                 />
               ))}
             </div>
