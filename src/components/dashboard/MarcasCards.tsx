@@ -19,7 +19,7 @@ const MarcasCards = ({ filteredData }: MarcasCardsProps) => {
     const total = filteredData.length;
     
     return Object.entries(marcas)
-      .sort(([,a]: [string, number], [,b]: [string, number]) => b - a)
+      .sort(([,a], [,b]) => b - a)
       .slice(0, 8)
       .map(([name, value]) => ({
         name,

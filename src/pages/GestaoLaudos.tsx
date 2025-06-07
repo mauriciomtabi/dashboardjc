@@ -46,66 +46,73 @@ const GestaoLaudos = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      <div className="max-w-7xl mx-auto p-6 space-y-8">
-        <h2 className="text-3xl font-bold">Gestão de Laudos</h2>
+      <div className="max-w-7xl mx-auto">
+        <div className="p-6 pb-4">
+          <h2 className="text-3xl font-bold">Gestão de Laudos</h2>
+        </div>
         
-        <FilterBar
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          availableFilters={availableFilters}
-          showStockFilter={false}
-        />
+        {/* Filtros fixos */}
+        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b p-6 pt-2">
+          <FilterBar
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            availableFilters={availableFilters}
+            showStockFilter={false}
+          />
+        </div>
 
-        {/* Cards de Operações */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {operacaoCards.map((card, index) => (
-            <StatCard
-              key={index}
-              title={card.title}
-              value={card.value}
-              percentage={card.percentage}
+        <div className="p-6 pt-8 space-y-8">
+          {/* Cards de Operações */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {operacaoCards.map((card, index) => (
+              <StatCard
+                key={index}
+                title={card.title}
+                value={card.value}
+                percentage={card.percentage}
+              />
+            ))}
+          </div>
+
+          {/* Comparativo Anual - Largura completa */}
+          <div className="w-full">
+            <ComparativeChart 
+              laudoData={laudoData}
+              filteredData={filteredData}
+              drillDownMonth={drillDownMonth}
+              setDrillDownMonth={setDrillDownMonth}
             />
-          ))}
-        </div>
+          </div>
 
-        {/* Comparativo Anual - Largura completa */}
-        <div className="w-full">
-          <ComparativeChart 
-            laudoData={laudoData}
-            filteredData={filteredData}
-            drillDownMonth={drillDownMonth}
-            setDrillDownMonth={setDrillDownMonth}
-          />
-        </div>
+          {/* Top 10 Motivos de Laudo - Largura completa */}
+          <div className="w-full">
+            <MotivosChart filteredData={filteredData} />
+          </div>
 
-        {/* Top 10 Motivos de Laudo - Largura completa */}
-        <div className="w-full">
-          <MotivosChart filteredData={filteredData} />
-        </div>
+          {/* Gráficos em grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <MarcasCards filteredData={filteredData} />
+            <VidaPneusChart filteredData={filteredData} />
+          </div>
 
-        {/* Gráficos em grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <MarcasCards filteredData={filteredData} />
-          <VidaPneusChart filteredData={filteredData} />
-        </div>
+          {/* DOTs - Largura completa */}
+          <div className="w-full">
+            <DOTsChart filteredData={filteredData} />
+          </div>
 
-        {/* DOTs - Largura completa */}
-        <div className="w-full">
-          <DOTsChart filteredData={filteredData} />
-        </div>
+          {/* Placas - Largura completa */}
+          <div className="w-full">
+            <PlacasChart filteredData={filteredData} />
+          </div>
 
-        {/* Placas - Largura completa */}
-        <div className="w-full">
-          <PlacasChart filteredData={filteredData} />
-        </div>
-
-        {/* Tabela Completa */}
-        <div className="flex justify-center pt-6">
-          <LaudoDataTable 
-            filteredData={filteredData}
-            isOpen={isTableOpen}
-            onOpenChange={setIsTableOpen}
-          />
+          {/* Tabela Completa */}
+          <div className="flex justify-center pt-6">
+            <LaudoDataTable 
+              filteredData={filteredData}
+              isOpen={isTableOpen}
+              onOpenChange={setIsTableOpen}
+            />
+          </div>
         </div>
       </div>
     </div>
