@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { Truck } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
 
@@ -27,12 +28,15 @@ const PlacasChart = ({ filteredData }: PlacasChartProps) => {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle>Placas</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Truck className="h-5 w-5" />
+          Placas
+        </CardTitle>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent className="pt-2 pb-2">
         <div className="overflow-x-auto">
           <ResponsiveContainer width={Math.max(1200, topPlacas.length * 40)} height={350}>
-            <BarChart data={topPlacas} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <BarChart data={topPlacas} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="name" 

@@ -2,8 +2,9 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LabelList } from 'recharts';
 import { parseExcelDate } from '@/utils/dateUtils';
+import { TrendingUp } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#94a3b8'];
 
@@ -17,6 +18,9 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
   const dadosComparativos = useMemo(() => {
     const anoAtual = new Date().getFullYear();
     const anoAnterior = anoAtual - 1;
+    
+    console.log('EstoqueComparativeChart - Total records:', estoqueData.length);
+    console.log('EstoqueComparativeChart - Sample data:', estoqueData.slice(0, 5));
     
     if (drillDownMonth) {
       const [ano, mes] = drillDownMonth.split('-');
@@ -50,18 +54,24 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
     } else {
       const meses = Array.from({length: 12}, (_, i) => (i + 1).toString().padStart(2, '0'));
       
-      return meses.map(mes => {
+      const result = meses.map(mes => {
         const dadosAnoAtual = estoqueData.filter(item => {
           const parsedDate = parseExcelDate(item.R);
           if (!parsedDate) return false;
-          return parsedDate.getFullYear() === anoAtual && (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes;
+          const itemYear = parsedDate.getFullYear();
+          const itemMonth = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+          return itemYear === anoAtual && itemMonth === mes;
         }).length;
         
         const dadosAnoAnterior = estoqueData.filter(item => {
           const parsedDate = parseExcelDate(item.R);
           if (!parsedDate) return false;
-          return parsedDate.getFullYear() === anoAnterior && (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes;
+          const itemYear = parsedDate.getFullYear();
+          const itemMonth = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+          return itemYear === anoAnterior && itemMonth === mes;
         }).length;
+        
+        console.log(`Mês ${mes}: ${anoAtual}=${dadosAnoAtual}, ${anoAnterior}=${dadosAnoAnterior}`);
         
         return {
           periodo: `${mes}/${anoAtual}`,
@@ -69,6 +79,9 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
           [`${anoAnterior}`]: dadosAnoAnterior
         };
       });
+      
+      console.log('EstoqueComparativeChart - Final result:', result);
+      return result;
     }
   }, [estoqueData, drillDownMonth]);
 
@@ -79,7 +92,10 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
     <Card className="col-span-full shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Comparativo Anual - Estoque
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Comparativo Anual - Estoque
+          </div>
           {drillDownMonth && (
             <Button variant="outline" size="sm" onClick={() => onDrillDown(null)}>
               Voltar
@@ -108,12 +124,16 @@ const EstoqueComparativeChart = ({ estoqueData, drillDownMonth, onDrillDown }: E
               dataKey={anoAtual.toString()} 
               fill={COLORS[0]} 
               name={`Ano ${anoAtual}`}
-            />
+            >
+              <LabelList dataKey={anoAtual.toString()} position="top" />
+            </Bar>
             <Bar 
               dataKey={anoAnterior.toString()} 
               fill={COLORS[1]} 
               name={`Ano ${anoAnterior}`}
-            />
+            >
+              <LabelList dataKey={anoAnterior.toString()} position="top" />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

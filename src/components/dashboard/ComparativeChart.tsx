@@ -2,8 +2,9 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, LabelList } from 'recharts';
 import { parseExcelDate } from '@/utils/dateUtils';
+import { TrendingUp } from 'lucide-react';
 
 const COLORS = ['#3b82f6', '#94a3b8'];
 
@@ -79,7 +80,10 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
     <Card className="col-span-full shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Comparativo Anual - Laudos
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Comparativo Anual - Laudos
+          </div>
           {drillDownMonth && (
             <Button variant="outline" size="sm" onClick={() => setDrillDownMonth(null)}>
               Voltar
@@ -108,12 +112,16 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
               dataKey={anoAtual.toString()} 
               fill={COLORS[0]} 
               name={`Ano ${anoAtual}`}
-            />
+            >
+              <LabelList dataKey={anoAtual.toString()} position="top" />
+            </Bar>
             <Bar 
               dataKey={anoAnterior.toString()} 
               fill={COLORS[1]} 
               name={`Ano ${anoAnterior}`}
-            />
+            >
+              <LabelList dataKey={anoAnterior.toString()} position="top" />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -10,11 +10,11 @@ import EstoqueDataTable from '@/components/dashboard/EstoqueDataTable';
 
 const GestaoEstoque = () => {
   const [filters, setFilters] = useState({
-    mes: '',
-    ano: '',
+    mes: [] as string[],
+    ano: [] as string[],
     estoque: [] as string[],
     operacao: [] as string[],
-    placa: '',
+    placa: [] as string[],
   });
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);

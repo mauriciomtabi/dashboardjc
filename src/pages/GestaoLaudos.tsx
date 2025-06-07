@@ -16,8 +16,8 @@ import { useLaudoData } from '@/hooks/useLaudoData';
 const GestaoLaudos = () => {
   const { laudoData } = useData();
   const [filters, setFilters] = useState({
-    mes: '',
-    ano: '',
+    mes: [] as string[],
+    ano: [] as string[],
     placa: [] as string[],
     operacao: '',
   });

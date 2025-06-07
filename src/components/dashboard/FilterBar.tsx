@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { X, Calendar, Building2, Truck, Package, Search } from 'lucide-react';
 
 interface FilterBarProps {
   filters: {
-    mes?: string;
-    ano?: string;
+    mes?: string | string[];
+    ano?: string | string[];
     placa?: string | string[];
     operacao?: string | string[];
     estoque?: string | string[];
@@ -36,11 +36,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
   };
 
   const clearFilter = (key: string) => {
-    if (key === 'placa' && !isEstoque) {
-      onFilterChange(key, []);
-    } else {
-      onFilterChange(key, isEstoque && (key === 'operacao' || key === 'estoque') ? [] : '');
-    }
+    onFilterChange(key, []);
   };
 
   const getDisplayValue = (values: string | string[], placeholder: string) => {
@@ -51,27 +47,42 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
   };
 
   return (
-    <div className="bg-card rounded-lg p-4 mb-6 space-y-4">
-      <h3 className="font-semibold text-lg">Filtros</h3>
+    <div className="bg-card rounded-lg p-4 mb-6 space-y-4 sticky top-0 z-10 shadow-lg border">
+      <h3 className="font-semibold text-lg flex items-center gap-2">
+        <Search className="h-5 w-5" />
+        Filtros
+      </h3>
       <div className={`grid gap-4 ${isEstoque ? 'grid-cols-5' : 'grid-cols-4'}`}>
         {availableFilters.meses && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm">Mês</Label>
-              {filters.mes && (
+              <Label className="text-sm flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                Mês
+              </Label>
+              {Array.isArray(filters.mes) && filters.mes.length > 0 && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('mes')}>
                   <X className="h-3 w-3" />
                 </Button>
               )}
             </div>
-            <Select value={filters.mes || ''} onValueChange={(value) => onFilterChange('mes', value)}>
+            <Select value="" onValueChange={(value) => handleMultipleSelectChange('mes', value, filters.mes || [])}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Todos" />
+                <SelectValue placeholder={getDisplayValue(filters.mes || [], "Todos")} />
               </SelectTrigger>
               <SelectContent>
-                {availableFilters.meses.map((mes) => (
-                  <SelectItem key={mes} value={mes}>{mes}</SelectItem>
-                ))}
+                {availableFilters.meses.map((mes) => {
+                  const isSelected = Array.isArray(filters.mes) && filters.mes.includes(mes);
+                  return (
+                    <div key={mes} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
+                      <Checkbox 
+                        checked={isSelected}
+                        onCheckedChange={() => handleMultipleSelectChange('mes', mes, filters.mes || [])}
+                      />
+                      <span className="text-sm">{mes}</span>
+                    </div>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
@@ -80,21 +91,33 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
         {availableFilters.anos && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm">Ano</Label>
-              {filters.ano && (
+              <Label className="text-sm flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                Ano
+              </Label>
+              {Array.isArray(filters.ano) && filters.ano.length > 0 && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('ano')}>
                   <X className="h-3 w-3" />
                 </Button>
               )}
             </div>
-            <Select value={filters.ano || ''} onValueChange={(value) => onFilterChange('ano', value)}>
+            <Select value="" onValueChange={(value) => handleMultipleSelectChange('ano', value, filters.ano || [])}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Todos" />
+                <SelectValue placeholder={getDisplayValue(filters.ano || [], "Todos")} />
               </SelectTrigger>
               <SelectContent>
-                {availableFilters.anos.map((ano) => (
-                  <SelectItem key={ano} value={ano}>{ano}</SelectItem>
-                ))}
+                {availableFilters.anos.map((ano) => {
+                  const isSelected = Array.isArray(filters.ano) && filters.ano.includes(ano);
+                  return (
+                    <div key={ano} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
+                      <Checkbox 
+                        checked={isSelected}
+                        onCheckedChange={() => handleMultipleSelectChange('ano', ano, filters.ano || [])}
+                      />
+                      <span className="text-sm">{ano}</span>
+                    </div>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
@@ -103,7 +126,10 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
         {availableFilters.operacoes && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm">Operação</Label>
+              <Label className="text-sm flex items-center gap-1">
+                <Building2 className="h-4 w-4" />
+                Operação
+              </Label>
               {((Array.isArray(filters.operacao) && filters.operacao.length > 0) || (!Array.isArray(filters.operacao) && filters.operacao)) && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('operacao')}>
                   <X className="h-3 w-3" />
@@ -148,7 +174,10 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
         {availableFilters.estoques && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-sm">Estoque</Label>
+              <Label className="text-sm flex items-center gap-1">
+                <Package className="h-4 w-4" />
+                Estoque
+              </Label>
               {((Array.isArray(filters.estoque) && filters.estoque.length > 0) || (!Array.isArray(filters.estoque) && filters.estoque)) && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('estoque')}>
                   <X className="h-3 w-3" />
@@ -179,7 +208,10 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-sm">{isEstoque ? 'Placa (AK)' : 'Placa (AB)'}</Label>
+            <Label className="text-sm flex items-center gap-1">
+              <Truck className="h-4 w-4" />
+              {isEstoque ? 'Placa (AK)' : 'Placa (AB)'}
+            </Label>
             {((Array.isArray(filters.placa) && filters.placa.length > 0) || (!Array.isArray(filters.placa) && filters.placa)) && (
               <Button variant="ghost" size="sm" onClick={() => clearFilter('placa')}>
                 <X className="h-3 w-3" />
@@ -192,6 +224,44 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
                 <SelectValue placeholder={getDisplayValue(filters.placa || [], "Todas as placas")} />
               </SelectTrigger>
               <SelectContent className="max-h-48 overflow-y-auto">
+                <div className="p-2">
+                  <Input
+                    placeholder="Pesquisar placa..."
+                    className="w-full mb-2"
+                    onChange={(e) => {
+                      // This will be handled by the search functionality
+                    }}
+                  />
+                </div>
+                {availableFilters.placas.map((placa) => {
+                  const isSelected = Array.isArray(filters.placa) && filters.placa.includes(placa);
+                  return (
+                    <div key={placa} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
+                      <Checkbox 
+                        checked={isSelected}
+                        onCheckedChange={() => handleMultipleSelectChange('placa', placa, filters.placa || [])}
+                      />
+                      <span className="text-sm">{placa}</span>
+                    </div>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          ) : isEstoque && availableFilters.placas ? (
+            <Select value="" onValueChange={(value) => handleMultipleSelectChange('placa', value, filters.placa || [])}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={getDisplayValue(filters.placa || [], "Todas as placas")} />
+              </SelectTrigger>
+              <SelectContent className="max-h-48 overflow-y-auto">
+                <div className="p-2">
+                  <Input
+                    placeholder="Pesquisar placa..."
+                    className="w-full mb-2"
+                    onChange={(e) => {
+                      // This will be handled by the search functionality
+                    }}
+                  />
+                </div>
                 {availableFilters.placas.map((placa) => {
                   const isSelected = Array.isArray(filters.placa) && filters.placa.includes(placa);
                   return (

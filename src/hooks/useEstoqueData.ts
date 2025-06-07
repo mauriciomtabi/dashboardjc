@@ -4,11 +4,11 @@ import { useData } from '@/contexts/DataContext';
 import { parseExcelDate } from '@/utils/dateUtils';
 
 export const useEstoqueData = (filters: {
-  mes: string;
-  ano: string;
+  mes: string | string[];
+  ano: string | string[];
   estoque: string[];
   operacao: string[];
-  placa: string;
+  placa: string | string[];
 }) => {
   const { estoqueData } = useData();
 
@@ -20,11 +20,23 @@ export const useEstoqueData = (filters: {
       const mes = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
       const ano = parsedDate.getFullYear().toString();
       
-      if (filters.mes && mes !== filters.mes) return false;
-      if (filters.ano && ano !== filters.ano) return false;
+      if (Array.isArray(filters.mes) && filters.mes.length > 0 && !filters.mes.includes(mes)) return false;
+      if (typeof filters.mes === 'string' && filters.mes && mes !== filters.mes) return false;
+      
+      if (Array.isArray(filters.ano) && filters.ano.length > 0 && !filters.ano.includes(ano)) return false;
+      if (typeof filters.ano === 'string' && filters.ano && ano !== filters.ano) return false;
+      
       if (filters.estoque.length > 0 && !filters.estoque.includes(item.N)) return false;
       if (filters.operacao.length > 0 && !filters.operacao.includes(item.AB)) return false;
-      if (filters.placa && !item.AK?.toLowerCase().includes(filters.placa.toLowerCase())) return false;
+      
+      if (Array.isArray(filters.placa) && filters.placa.length > 0) {
+        const hasMatchingPlaca = filters.placa.some(placa => 
+          item.AK?.toLowerCase().includes(placa.toLowerCase())
+        );
+        if (!hasMatchingPlaca) return false;
+      } else if (typeof filters.placa === 'string' && filters.placa && !item.AK?.toLowerCase().includes(filters.placa.toLowerCase())) {
+        return false;
+      }
       
       return true;
     });
@@ -45,8 +57,9 @@ export const useEstoqueData = (filters: {
     
     const operacoes = [...new Set(estoqueData.map(item => item.AB))].filter(Boolean).sort();
     const estoques = [...new Set(estoqueData.map(item => item.N))].filter(Boolean).sort();
+    const placas = [...new Set(estoqueData.map(item => item.AK))].filter(Boolean).sort();
     
-    return { meses, anos, operacoes, estoques };
+    return { meses, anos, operacoes, estoques, placas };
   }, [estoqueData]);
 
   const operacaoCards = useMemo(() => {
