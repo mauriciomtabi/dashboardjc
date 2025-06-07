@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -54,7 +55,7 @@ const GestaoEstoque = () => {
         </div>
         
         {/* Filtros fixos */}
-        <div className="sticky top-0 z-10 bg-background backdrop-blur-sm border-b p-6 pt-2">
+        <div className="sticky top-0 z-10 bg-background border-b p-6 pt-2">
           <FilterBar
             filters={filters}
             onFilterChange={handleFilterChange}

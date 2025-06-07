@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -52,7 +53,7 @@ const GestaoLaudos = () => {
         </div>
         
         {/* Filtros fixos */}
-        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b p-6 pt-2">
+        <div className="sticky top-0 z-10 bg-background border-b p-6 pt-2">
           <FilterBar
             filters={filters}
             onFilterChange={handleFilterChange}
