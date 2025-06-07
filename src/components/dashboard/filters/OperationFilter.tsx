@@ -71,6 +71,7 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
             <SelectValue placeholder="Todas" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="">Todas</SelectItem>
             {availableOperations.map((op) => (
               <SelectItem key={op} value={op}>{op}</SelectItem>
             ))}

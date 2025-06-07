@@ -37,7 +37,7 @@ const FilterBar = ({
   };
 
   return (
-    <Card className="shadow-lg border-l-4 border-l-primary">
+    <Card className="shadow-lg border-l-4 border-l-primary bg-card">
       <CardContent className="p-6">
         <div className="flex flex-wrap gap-6">
           <div className="min-w-[200px]">

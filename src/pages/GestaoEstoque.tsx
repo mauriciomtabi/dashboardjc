@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -73,6 +74,7 @@ const GestaoEstoque = () => {
                   title={card.title}
                   value={card.value}
                   percentage={card.percentage}
+                  variant="default"
                 />
               ))}
             </div>
@@ -88,6 +90,7 @@ const GestaoEstoque = () => {
                   title={card.title}
                   value={card.value}
                   percentage={card.percentage}
+                  variant="estoque"
                 />
               ))}
             </div>
