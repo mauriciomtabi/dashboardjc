@@ -26,9 +26,15 @@ const EstoqueVidaPneusChart = ({ filteredData }: EstoqueVidaPneusChartProps) => 
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3">
-          <p className="font-medium">{data.payload.name}</p>
-          <p className="text-primary font-semibold">{data.value} pneus</p>
+        <div className="bg-background border rounded-lg shadow-2xl p-4 border-primary/20 backdrop-blur-sm z-50 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5 rounded-lg" />
+          <div className="relative z-10">
+            <p className="font-semibold text-foreground text-base">{data.payload.name}</p>
+            <p className="text-primary font-bold text-lg">{data.value} pneus</p>
+            <p className="text-muted-foreground text-sm">
+              {((data.value / filteredData.length) * 100).toFixed(1)}% do total
+            </p>
+          </div>
         </div>
       );
     }
@@ -90,7 +96,11 @@ const EstoqueVidaPneusChart = ({ filteredData }: EstoqueVidaPneusChartProps) => 
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip 
+                  content={<CustomTooltip />}
+                  wrapperStyle={{ zIndex: 1000 }}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                />
               </PieChart>
             </ResponsiveContainer>
             

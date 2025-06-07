@@ -8,11 +8,19 @@ interface StatCardProps {
   percentage?: number;
   icon?: React.ReactNode;
   className?: string;
+  variant?: 'default' | 'estoque';
 }
 
-const StatCard = ({ title, value, percentage, icon, className }: StatCardProps) => {
+const StatCard = ({ title, value, percentage, icon, className, variant = 'default' }: StatCardProps) => {
+  const sideDetailColor = variant === 'estoque' 
+    ? 'bg-gradient-to-b from-emerald-500 to-emerald-600' 
+    : 'bg-gradient-to-b from-primary to-primary/80';
+
   return (
     <Card className={`group relative overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-background via-background to-muted/30 hover:scale-[1.02] ${className}`}>
+      {/* Detalhe lateral esquerdo */}
+      <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${sideDetailColor} group-hover:w-2 transition-all duration-300 shadow-lg`} />
+      
       {/* Efeito de luz de fundo */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
@@ -24,7 +32,7 @@ const StatCard = ({ title, value, percentage, icon, className }: StatCardProps) 
         <div className="w-full h-full rounded-lg bg-background" />
       </div>
       
-      <div className="relative z-10">
+      <div className="relative z-10 ml-2">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-300">
             {title}
@@ -63,7 +71,11 @@ const StatCard = ({ title, value, percentage, icon, className }: StatCardProps) 
               {/* Detalhes adicionais */}
               <div className="flex items-center justify-between text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
                 <span className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/60 group-hover:bg-primary transition-colors duration-300" />
+                  <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                    variant === 'estoque' 
+                      ? 'bg-emerald-500/60 group-hover:bg-emerald-500' 
+                      : 'bg-primary/60 group-hover:bg-primary'
+                  }`} />
                   Meta atingida
                 </span>
                 <span className="font-medium">
