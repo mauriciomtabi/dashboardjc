@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { parseExcelDate } from '@/utils/dateUtils';
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
 
@@ -25,17 +26,19 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
         const dia = (i + 1).toString().padStart(2, '0');
         
         const dadosAnoAtual = laudoData.filter(item => {
-          const date = new Date(item.P);
-          return date.getFullYear() === anoAtual && 
-                 (date.getMonth() + 1).toString().padStart(2, '0') === mes &&
-                 date.getDate().toString().padStart(2, '0') === dia;
+          const parsedDate = parseExcelDate(item.P);
+          if (!parsedDate) return false;
+          return parsedDate.getFullYear() === anoAtual && 
+                 (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes &&
+                 parsedDate.getDate().toString().padStart(2, '0') === dia;
         }).length;
         
         const dadosAnoAnterior = laudoData.filter(item => {
-          const date = new Date(item.P);
-          return date.getFullYear() === anoAnterior && 
-                 (date.getMonth() + 1).toString().padStart(2, '0') === mes &&
-                 date.getDate().toString().padStart(2, '0') === dia;
+          const parsedDate = parseExcelDate(item.P);
+          if (!parsedDate) return false;
+          return parsedDate.getFullYear() === anoAnterior && 
+                 (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes &&
+                 parsedDate.getDate().toString().padStart(2, '0') === dia;
         }).length;
         
         return {
@@ -49,13 +52,15 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
       
       return meses.map(mes => {
         const dadosAnoAtual = laudoData.filter(item => {
-          const date = new Date(item.P);
-          return date.getFullYear() === anoAtual && (date.getMonth() + 1).toString().padStart(2, '0') === mes;
+          const parsedDate = parseExcelDate(item.P);
+          if (!parsedDate) return false;
+          return parsedDate.getFullYear() === anoAtual && (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes;
         }).length;
         
         const dadosAnoAnterior = laudoData.filter(item => {
-          const date = new Date(item.P);
-          return date.getFullYear() === anoAnterior && (date.getMonth() + 1).toString().padStart(2, '0') === mes;
+          const parsedDate = parseExcelDate(item.P);
+          if (!parsedDate) return false;
+          return parsedDate.getFullYear() === anoAnterior && (parsedDate.getMonth() + 1).toString().padStart(2, '0') === mes;
         }).length;
         
         return {
@@ -68,7 +73,7 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
   }, [laudoData, drillDownMonth]);
 
   return (
-    <Card>
+    <Card className="col-span-full shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           Comparativo Anual

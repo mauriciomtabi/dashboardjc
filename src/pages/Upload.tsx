@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useData } from '@/contexts/DataContext';
+import Navigation from '@/components/dashboard/Navigation';
 import * as XLSX from 'xlsx';
 import { Upload as UploadIcon, FileSpreadsheet } from 'lucide-react';
 
@@ -120,14 +121,15 @@ const Upload = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <div className="max-w-4xl mx-auto p-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">GESTÃO DE PNEUS</h1>
           <p className="text-xl text-muted-foreground">Sistema de Gestão e Análise de Dados</p>
         </div>
 
-        <Card className="max-w-2xl mx-auto">
+        <Card className="max-w-2xl mx-auto shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center gap-2">
               <FileSpreadsheet className="h-6 w-6" />

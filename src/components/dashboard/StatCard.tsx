@@ -12,7 +12,7 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, percentage, icon, className }: StatCardProps) => {
   return (
-    <Card className={className}>
+    <Card className={`shadow-lg border-l-4 border-l-primary/50 hover:shadow-xl transition-shadow ${className}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}

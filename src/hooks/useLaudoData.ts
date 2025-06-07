@@ -1,6 +1,7 @@
 
 import { useMemo } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { parseExcelDate } from '@/utils/dateUtils';
 
 interface Filters {
   mes: string | string[];
@@ -14,9 +15,11 @@ export const useLaudoData = (filters: Filters) => {
 
   const filteredData = useMemo(() => {
     return laudoData.filter(item => {
-      const date = new Date(item.P);
-      const mes = (date.getMonth() + 1).toString().padStart(2, '0');
-      const ano = date.getFullYear().toString();
+      const parsedDate = parseExcelDate(item.P);
+      if (!parsedDate) return false;
+      
+      const mes = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+      const ano = parsedDate.getFullYear().toString();
       
       // Handle multiple selections for filters
       if (Array.isArray(filters.mes) && filters.mes.length > 0 && !filters.mes.includes(mes)) return false;
@@ -43,14 +46,16 @@ export const useLaudoData = (filters: Filters) => {
 
   const availableFilters = useMemo(() => {
     const meses = [...new Set(laudoData.map(item => {
-      const date = new Date(item.P);
-      return (date.getMonth() + 1).toString().padStart(2, '0');
-    }))].sort();
+      const parsedDate = parseExcelDate(item.P);
+      if (!parsedDate) return null;
+      return (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    }).filter(Boolean))].sort();
     
     const anos = [...new Set(laudoData.map(item => {
-      const date = new Date(item.P);
-      return date.getFullYear().toString();
-    }))].sort();
+      const parsedDate = parseExcelDate(item.P);
+      if (!parsedDate) return null;
+      return parsedDate.getFullYear().toString();
+    }).filter(Boolean))].sort();
     
     const operacoes = [...new Set(laudoData.map(item => item.D))].filter(Boolean).sort();
     const placas = [...new Set(laudoData.map(item => item.AB))].filter(Boolean).sort();
@@ -59,10 +64,10 @@ export const useLaudoData = (filters: Filters) => {
   }, [laudoData]);
 
   const operacaoCards = useMemo(() => {
-    const operacoes = [...new Set(laudoData.map(item => item.D))].filter(Boolean);
+    const operacoes = ['Bahia', 'Ceará', 'Pernambuco', 'Morare'];
     const total = filteredData.length;
     
-    return operacoes.slice(0, 4).map(op => {
+    return operacoes.map(op => {
       const count = filteredData.filter(item => item.D === op).length;
       return {
         title: op,
@@ -70,7 +75,7 @@ export const useLaudoData = (filters: Filters) => {
         percentage: total > 0 ? (count / total) * 100 : 0
       };
     });
-  }, [laudoData, filteredData]);
+  }, [filteredData]);
 
   return {
     filteredData,

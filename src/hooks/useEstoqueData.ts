@@ -1,6 +1,7 @@
 
 import { useMemo } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { parseExcelDate } from '@/utils/dateUtils';
 
 export const useEstoqueData = (filters: {
   mes: string;
@@ -13,9 +14,11 @@ export const useEstoqueData = (filters: {
 
   const filteredData = useMemo(() => {
     return estoqueData.filter(item => {
-      const date = new Date(item.R);
-      const mes = (date.getMonth() + 1).toString().padStart(2, '0');
-      const ano = date.getFullYear().toString();
+      const parsedDate = parseExcelDate(item.R);
+      if (!parsedDate) return false;
+      
+      const mes = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+      const ano = parsedDate.getFullYear().toString();
       
       if (filters.mes && mes !== filters.mes) return false;
       if (filters.ano && ano !== filters.ano) return false;
@@ -29,14 +32,16 @@ export const useEstoqueData = (filters: {
 
   const availableFilters = useMemo(() => {
     const meses = [...new Set(estoqueData.map(item => {
-      const date = new Date(item.R);
-      return (date.getMonth() + 1).toString().padStart(2, '0');
-    }))].sort();
+      const parsedDate = parseExcelDate(item.R);
+      if (!parsedDate) return null;
+      return (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    }).filter(Boolean))].sort();
     
     const anos = [...new Set(estoqueData.map(item => {
-      const date = new Date(item.R);
-      return date.getFullYear().toString();
-    }))].sort();
+      const parsedDate = parseExcelDate(item.R);
+      if (!parsedDate) return null;
+      return parsedDate.getFullYear().toString();
+    }).filter(Boolean))].sort();
     
     const operacoes = [...new Set(estoqueData.map(item => item.AB))].filter(Boolean).sort();
     const estoques = [...new Set(estoqueData.map(item => item.N))].filter(Boolean).sort();

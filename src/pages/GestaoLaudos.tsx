@@ -47,7 +47,7 @@ const GestaoLaudos = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="max-w-7xl mx-auto p-6 space-y-8">
         <h2 className="text-3xl font-bold">Gestão de Laudos</h2>
         
         <FilterBar
@@ -57,7 +57,7 @@ const GestaoLaudos = () => {
         />
 
         {/* Cards de Operações */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {operacaoCards.map((card, index) => (
             <StatCard
               key={index}
@@ -68,28 +68,44 @@ const GestaoLaudos = () => {
           ))}
         </div>
 
-        {/* Gráficos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Comparativo Anual - Largura completa */}
+        <div className="w-full">
           <ComparativeChart 
             laudoData={laudoData}
             drillDownMonth={drillDownMonth}
             setDrillDownMonth={setDrillDownMonth}
           />
+        </div>
+
+        {/* Top 10 Motivos de Laudo - Largura completa */}
+        <div className="w-full">
           <MotivosChart filteredData={filteredData} />
+        </div>
+
+        {/* Gráficos em grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <MarcasChart filteredData={filteredData} />
           <VidaPneusChart filteredData={filteredData} />
+        </div>
+
+        {/* DOTs - Largura completa */}
+        <div className="w-full">
           <DOTsChart filteredData={filteredData} />
         </div>
 
         {/* Placas - Largura completa */}
-        <PlacasChart filteredData={filteredData} />
+        <div className="w-full">
+          <PlacasChart filteredData={filteredData} />
+        </div>
 
         {/* Tabela Completa */}
-        <LaudoDataTable 
-          filteredData={filteredData}
-          isOpen={isTableOpen}
-          onOpenChange={setIsTableOpen}
-        />
+        <div className="flex justify-center pt-6">
+          <LaudoDataTable 
+            filteredData={filteredData}
+            isOpen={isTableOpen}
+            onOpenChange={setIsTableOpen}
+          />
+        </div>
       </div>
     </div>
   );

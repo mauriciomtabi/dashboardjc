@@ -3,6 +3,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { parseExcelDate, formatDateForDisplay } from '@/utils/dateUtils';
 
 interface LaudoDataTableProps {
   filteredData: any[];
@@ -11,17 +12,16 @@ interface LaudoDataTableProps {
 }
 
 const LaudoDataTable = ({ filteredData, isOpen, onOpenChange }: LaudoDataTableProps) => {
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('pt-BR');
+  const formatDate = (dateValue: any) => {
+    const parsedDate = parseExcelDate(dateValue);
+    return parsedDate ? formatDateForDisplay(parsedDate) : '';
   };
 
   return (
     <div className="flex justify-center">
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
-          <Button size="lg">Ver Tabela Completa</Button>
+          <Button size="lg" className="shadow-lg">Ver Tabela Completa</Button>
         </DialogTrigger>
         <DialogContent className="max-w-7xl max-h-[80vh] overflow-auto">
           <DialogHeader>
@@ -32,20 +32,20 @@ const LaudoDataTable = ({ filteredData, isOpen, onOpenChange }: LaudoDataTablePr
               <TableHeader>
                 <TableRow>
                   <TableHead>Operação</TableHead>
-                  <TableHead>Coluna E</TableHead>
-                  <TableHead>Coluna F</TableHead>
+                  <TableHead>Tipo de Evento</TableHead>
+                  <TableHead>Observação</TableHead>
                   <TableHead>DOT</TableHead>
                   <TableHead>Vida</TableHead>
-                  <TableHead>Coluna K</TableHead>
-                  <TableHead>Coluna L</TableHead>
-                  <TableHead>Coluna M</TableHead>
-                  <TableHead>Coluna N</TableHead>
-                  <TableHead>Coluna O</TableHead>
-                  <TableHead>Data</TableHead>
-                  <TableHead>Coluna Q</TableHead>
+                  <TableHead>Medida</TableHead>
+                  <TableHead>Marca Desenho</TableHead>
+                  <TableHead>Sulco</TableHead>
+                  <TableHead>Pressão</TableHead>
+                  <TableHead>Posição</TableHead>
+                  <TableHead>Data do Evento</TableHead>
+                  <TableHead>Número de Série</TableHead>
                   <TableHead>Motivo do Laudo</TableHead>
-                  <TableHead>Coluna U</TableHead>
-                  <TableHead>Coluna W</TableHead>
+                  <TableHead>Código do Defeito</TableHead>
+                  <TableHead>Descrição Técnica</TableHead>
                   <TableHead>Marca</TableHead>
                   <TableHead>Código Veículo</TableHead>
                   <TableHead>Placa</TableHead>

@@ -9,8 +9,19 @@ const Navigation = () => {
   const location = useLocation();
   const { lastUpdate } = useData();
 
+  const formatLastUpdate = (date: Date) => {
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
   return (
-    <div className="bg-card border-b border-border">
+    <div className="bg-card border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
@@ -25,7 +36,7 @@ const Navigation = () => {
             <nav className="flex space-x-4">
               <Button 
                 asChild 
-                variant={location.pathname === '/upload' ? 'default' : 'ghost'}
+                variant={location.pathname === '/upload' || location.pathname === '/' ? 'default' : 'ghost'}
               >
                 <Link to="/upload" className="flex items-center gap-2">
                   <FileSpreadsheet className="h-4 w-4" />
@@ -54,7 +65,7 @@ const Navigation = () => {
           </div>
           {lastUpdate && (
             <div className="text-sm text-muted-foreground">
-              Dados atualizados em: {lastUpdate.toLocaleString('pt-BR')}
+              Dados atualizados em: {formatLastUpdate(lastUpdate)}
             </div>
           )}
         </div>
