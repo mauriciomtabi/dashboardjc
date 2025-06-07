@@ -39,6 +39,7 @@ export interface EstoqueData {
   R: string; // Data
   AB: string; // Operação
   AK: string;
+  AP: string; // Placa
   AR: string;
 }
 
