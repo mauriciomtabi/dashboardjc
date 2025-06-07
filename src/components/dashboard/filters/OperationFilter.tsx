@@ -24,11 +24,7 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
   };
 
   const handleSingleSelectChange = (selectedValue: string) => {
-    if (selectedValue === 'ALL_OPERATIONS') {
-      onChange('');
-    } else {
-      onChange(selectedValue);
-    }
+    onChange(selectedValue);
   };
 
   const getDisplayValue = () => {
@@ -74,12 +70,11 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
           </SelectContent>
         </Select>
       ) : (
-        <Select value={value as string || 'ALL_OPERATIONS'} onValueChange={handleSingleSelectChange}>
+        <Select value={value as string || ''} onValueChange={handleSingleSelectChange}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Todas" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL_OPERATIONS">Todas</SelectItem>
             {availableOperations.map((op) => (
               <SelectItem key={op} value={op}>{op}</SelectItem>
             ))}
