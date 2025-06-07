@@ -46,17 +46,17 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-12">
           {/* Gráfico */}
-          <div className="relative flex-1">
-            <ResponsiveContainer width="100%" height={320}>
+          <div className="relative flex-1 max-w-[280px]">
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie
                   data={vidaPneus}
                   cx="50%"
                   cy="50%"
-                  innerRadius={80}
-                  outerRadius={140}
+                  innerRadius={60}
+                  outerRadius={120}
                   fill="#8884d8"
                   dataKey="value"
                   label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
@@ -72,11 +72,11 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
             
             {/* Imagem do pneu no centro */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center shadow-2xl border-4 border-gray-600">
-                <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center relative overflow-hidden">
+              <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center shadow-2xl border-4 border-gray-600">
+                <div className="w-14 h-14 bg-gray-900 rounded-full flex items-center justify-center relative overflow-hidden">
                   {/* Padrão de banda de rodagem */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="grid grid-cols-3 gap-0.5 w-12 h-12">
+                    <div className="grid grid-cols-3 gap-0.5 w-10 h-10">
                       {Array.from({ length: 9 }).map((_, i) => (
                         <div key={i} className="bg-gray-700 rounded-sm"></div>
                       ))}
@@ -89,9 +89,9 @@ const VidaPneusChart = ({ filteredData }: VidaPneusChartProps) => {
             </div>
           </div>
           
-          {/* Legenda no lado direito */}
+          {/* Legenda bem mais à direita */}
           {vidaPneus.length > 0 && (
-            <div className="w-48 space-y-3">
+            <div className="w-56 space-y-3 ml-8">
               {vidaPneus.map((item, index) => (
                 <div key={item.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                   <div 

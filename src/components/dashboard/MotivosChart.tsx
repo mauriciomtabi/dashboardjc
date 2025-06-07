@@ -34,17 +34,17 @@ const MotivosChart = ({ filteredData }: MotivosChartProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-2 pb-2">
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart 
             data={motivosLaudo} 
-            margin={{ top: 20, right: 30, left: 80, bottom: 80 }}
+            margin={{ top: 20, right: 30, left: 80, bottom: 60 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="name" 
               angle={-45} 
               textAnchor="end" 
-              height={120}
+              height={80}
               interval={0}
               tick={{ fontSize: 10, width: 200 }}
             />
