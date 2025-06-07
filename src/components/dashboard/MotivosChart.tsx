@@ -26,20 +26,23 @@ const MotivosChart = ({ filteredData }: MotivosChartProps) => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-2">
         <CardTitle>Top 10 Motivos de Laudo</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={motivosLaudo} margin={{ top: 20, right: 30, left: 20, bottom: 120 }}>
+      <CardContent className="pt-2">
+        <ResponsiveContainer width="100%" height={450}>
+          <BarChart 
+            data={motivosLaudo} 
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="name" 
               angle={-45} 
               textAnchor="end" 
-              height={120}
+              height={80}
               interval={0}
-              tick={{ fontSize: 10 }}
+              tick={{ fontSize: 11 }}
             />
             <YAxis />
             <Tooltip 

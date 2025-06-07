@@ -31,19 +31,24 @@ const MarcasChart = ({ filteredData }: MarcasChartProps) => {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={marcasPneus} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <BarChart 
+            data={marcasPneus} 
+            layout="horizontal"
+            margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
+            <XAxis type="number" />
+            <YAxis 
+              type="category" 
               dataKey="name" 
-              interval={0} 
-              tick={{ fontSize: 10 }}
+              width={80}
+              tick={{ fontSize: 11 }}
             />
-            <YAxis />
             <Tooltip 
               formatter={(value, name) => [value, 'Quantidade']}
             />
             <Bar dataKey="value" fill={COLORS[1]}>
-              <LabelList dataKey="value" position="top" />
+              <LabelList dataKey="value" position="right" />
               {marcasPneus.map((entry, index) => (
                 <Cell key={`cell-${index}`} />
               ))}

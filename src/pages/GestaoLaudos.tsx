@@ -18,7 +18,7 @@ const GestaoLaudos = () => {
   const [filters, setFilters] = useState({
     mes: '',
     ano: '',
-    placa: '',
+    placa: [] as string[],
     operacao: '',
   });
   const [isTableOpen, setIsTableOpen] = useState(false);

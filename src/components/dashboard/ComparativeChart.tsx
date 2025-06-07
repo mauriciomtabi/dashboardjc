@@ -2,10 +2,10 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
 import { parseExcelDate } from '@/utils/dateUtils';
 
-const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
+const COLORS = ['#3b82f6', '#94a3b8'];
 
 interface ComparativeChartProps {
   laudoData: any[];
@@ -42,9 +42,9 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
         }).length;
         
         return {
-          mes: `${dia}/${mes}`,
-          anoAtual: dadosAnoAtual,
-          anoAnterior: dadosAnoAnterior
+          periodo: `${dia}/${mes}`,
+          [`${anoAtual}`]: dadosAnoAtual,
+          [`${anoAnterior}`]: dadosAnoAnterior
         };
       });
     } else {
@@ -64,19 +64,22 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
         }).length;
         
         return {
-          mes: `${mes}/${anoAtual}`,
-          anoAtual: dadosAnoAtual,
-          anoAnterior: dadosAnoAnterior
+          periodo: `${mes}/${anoAtual}`,
+          [`${anoAtual}`]: dadosAnoAtual,
+          [`${anoAnterior}`]: dadosAnoAnterior
         };
       });
     }
   }, [laudoData, drillDownMonth]);
 
+  const anoAtual = new Date().getFullYear();
+  const anoAnterior = anoAtual - 1;
+
   return (
     <Card className="col-span-full shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Comparativo Anual
+          Comparativo Anual - Laudos
           {drillDownMonth && (
             <Button variant="outline" size="sm" onClick={() => setDrillDownMonth(null)}>
               Voltar
@@ -85,30 +88,32 @@ const ComparativeChart = ({ laudoData, drillDownMonth, setDrillDownMonth }: Comp
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart 
             data={dadosComparativos}
             onClick={(data) => {
               if (!drillDownMonth && data?.activeLabel) {
                 const [mes] = data.activeLabel.split('/');
-                setDrillDownMonth(`${new Date().getFullYear()}-${mes}`);
+                setDrillDownMonth(`${anoAtual}-${mes}`);
               }
             }}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
+            <XAxis dataKey="periodo" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="anoAtual" fill={COLORS[0]} name="Ano Atual">
-              {dadosComparativos.map((entry, index) => (
-                <Cell key={`cell-atual-${index}`} />
-              ))}
-            </Bar>
-            <Bar dataKey="anoAnterior" fill={COLORS[0]} fillOpacity={0.5} name="Ano Anterior">
-              {dadosComparativos.map((entry, index) => (
-                <Cell key={`cell-anterior-${index}`} />
-              ))}
-            </Bar>
+            <Legend />
+            <Bar 
+              dataKey={anoAtual.toString()} 
+              fill={COLORS[0]} 
+              name={`Ano ${anoAtual}`}
+            />
+            <Bar 
+              dataKey={anoAnterior.toString()} 
+              fill={COLORS[1]} 
+              name={`Ano ${anoAnterior}`}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

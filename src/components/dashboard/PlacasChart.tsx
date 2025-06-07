@@ -26,19 +26,19 @@ const PlacasChart = ({ filteredData }: PlacasChartProps) => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-2">
         <CardTitle>Placas</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-2">
         <div className="overflow-x-auto">
-          <ResponsiveContainer width={Math.max(1200, topPlacas.length * 40)} height={300}>
-            <BarChart data={topPlacas} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
+          <ResponsiveContainer width={Math.max(1200, topPlacas.length * 40)} height={350}>
+            <BarChart data={topPlacas} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="name" 
                 angle={-45} 
                 textAnchor="end" 
-                height={100}
+                height={60}
                 interval={0}
                 tick={{ fontSize: 10 }}
               />

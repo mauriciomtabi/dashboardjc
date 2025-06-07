@@ -27,9 +27,9 @@ const Navigation = () => {
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-3">
               <img 
-                src="/lovable-uploads/b3a23caf-4d12-4f1c-999b-4a3dc733e4c7.png" 
+                src="/lovable-uploads/c824e94f-2598-484e-bf3e-a66562f273ff.png" 
                 alt="JC Transportes" 
-                className="h-10 w-auto"
+                className="h-12 w-auto"
               />
               <h1 className="text-2xl font-bold">GESTÃO DE PNEUS</h1>
             </div>

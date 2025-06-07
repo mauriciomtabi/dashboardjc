@@ -82,9 +82,8 @@ const GestaoEstoque = () => {
           </div>
         </div>
 
-        {/* Gráficos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <EstoqueVidaPneusChart filteredData={filteredData} />
+        {/* Comparativo Anual - Largura completa */}
+        <div className="w-full">
           <EstoqueComparativeChart 
             estoqueData={estoqueData}
             drillDownMonth={drillDownMonth}
@@ -92,7 +91,12 @@ const GestaoEstoque = () => {
           />
         </div>
 
-        {/* Botão Ver Tabela Completa */}
+        {/* Gráfico Vida dos Pneus */}
+        <div className="w-full">
+          <EstoqueVidaPneusChart filteredData={filteredData} />
+        </div>
+
+        {/* Tabela Completa */}
         <div className="flex justify-center">
           <EstoqueDataTable 
             filteredData={filteredData}

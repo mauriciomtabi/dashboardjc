@@ -26,19 +26,19 @@ const DOTsChart = ({ filteredData }: DOTsChartProps) => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-2">
         <CardTitle>Top 20 DOTs mais recorrentes</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-2">
         <div className="overflow-x-auto">
-          <ResponsiveContainer width={Math.max(800, topDOTs.length * 40)} height={300}>
-            <BarChart data={topDOTs} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
+          <ResponsiveContainer width={Math.max(1000, topDOTs.length * 45)} height={350}>
+            <BarChart data={topDOTs} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="name" 
                 angle={-45} 
                 textAnchor="end" 
-                height={100}
+                height={60}
                 interval={0}
                 tick={{ fontSize: 10 }}
               />

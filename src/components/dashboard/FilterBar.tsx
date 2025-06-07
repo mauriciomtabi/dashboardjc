@@ -11,7 +11,7 @@ interface FilterBarProps {
   filters: {
     mes?: string;
     ano?: string;
-    placa?: string;
+    placa?: string | string[];
     operacao?: string | string[];
     estoque?: string | string[];
   };
@@ -21,6 +21,7 @@ interface FilterBarProps {
     anos?: string[];
     operacoes?: string[];
     estoques?: string[];
+    placas?: string[];
   };
   isEstoque?: boolean;
 }
@@ -35,7 +36,11 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
   };
 
   const clearFilter = (key: string) => {
-    onFilterChange(key, isEstoque && (key === 'operacao' || key === 'estoque') ? [] : '');
+    if (key === 'placa' && !isEstoque) {
+      onFilterChange(key, []);
+    } else {
+      onFilterChange(key, isEstoque && (key === 'operacao' || key === 'estoque') ? [] : '');
+    }
   };
 
   const getDisplayValue = (values: string | string[], placeholder: string) => {
@@ -48,11 +53,11 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
   return (
     <div className="bg-card rounded-lg p-4 mb-6 space-y-4">
       <h3 className="font-semibold text-lg">Filtros</h3>
-      <div className={`grid ${isEstoque ? 'grid-cols-1 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'} gap-4`}>
+      <div className={`grid gap-4 ${isEstoque ? 'grid-cols-5' : 'grid-cols-4'}`}>
         {availableFilters.meses && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Mês</Label>
+              <Label className="text-sm">Mês</Label>
               {filters.mes && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('mes')}>
                   <X className="h-3 w-3" />
@@ -60,7 +65,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
               )}
             </div>
             <Select value={filters.mes || ''} onValueChange={(value) => onFilterChange('mes', value)}>
-              <SelectTrigger className={isEstoque ? 'w-20' : ''}>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
@@ -75,7 +80,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
         {availableFilters.anos && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Ano</Label>
+              <Label className="text-sm">Ano</Label>
               {filters.ano && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('ano')}>
                   <X className="h-3 w-3" />
@@ -83,7 +88,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
               )}
             </div>
             <Select value={filters.ano || ''} onValueChange={(value) => onFilterChange('ano', value)}>
-              <SelectTrigger className={isEstoque ? 'w-24' : ''}>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
@@ -98,7 +103,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
         {availableFilters.operacoes && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Operação</Label>
+              <Label className="text-sm">Operação</Label>
               {((Array.isArray(filters.operacao) && filters.operacao.length > 0) || (!Array.isArray(filters.operacao) && filters.operacao)) && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('operacao')}>
                   <X className="h-3 w-3" />
@@ -107,8 +112,8 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
             </div>
             {isEstoque ? (
               <Select value="" onValueChange={(value) => handleMultipleSelectChange('operacao', value, filters.operacao || [])}>
-                <SelectTrigger>
-                  <SelectValue placeholder={getDisplayValue(filters.operacao || [], "Todas as operações")} />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={getDisplayValue(filters.operacao || [], "Todas")} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableFilters.operacoes.map((op) => {
@@ -119,7 +124,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
                           checked={isSelected}
                           onCheckedChange={() => handleMultipleSelectChange('operacao', op, filters.operacao || [])}
                         />
-                        <span>{op}</span>
+                        <span className="text-sm">{op}</span>
                       </div>
                     );
                   })}
@@ -127,8 +132,8 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
               </Select>
             ) : (
               <Select value={filters.operacao as string || ''} onValueChange={(value) => onFilterChange('operacao', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todas as operações" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Todas" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableFilters.operacoes.map((op) => (
@@ -143,7 +148,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
         {availableFilters.estoques && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Estoque</Label>
+              <Label className="text-sm">Estoque</Label>
               {((Array.isArray(filters.estoque) && filters.estoque.length > 0) || (!Array.isArray(filters.estoque) && filters.estoque)) && (
                 <Button variant="ghost" size="sm" onClick={() => clearFilter('estoque')}>
                   <X className="h-3 w-3" />
@@ -151,8 +156,8 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
               )}
             </div>
             <Select value="" onValueChange={(value) => handleMultipleSelectChange('estoque', value, filters.estoque || [])}>
-              <SelectTrigger>
-                <SelectValue placeholder={getDisplayValue(filters.estoque || [], "Todos os estoques")} />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={getDisplayValue(filters.estoque || [], "Todos")} />
               </SelectTrigger>
               <SelectContent>
                 {availableFilters.estoques.map((est) => {
@@ -163,7 +168,7 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
                         checked={isSelected}
                         onCheckedChange={() => handleMultipleSelectChange('estoque', est, filters.estoque || [])}
                       />
-                      <span>{est}</span>
+                      <span className="text-sm">{est}</span>
                     </div>
                   );
                 })}
@@ -174,18 +179,41 @@ const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = fals
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>{isEstoque ? 'Placa (AK)' : 'Placa (AB)'}</Label>
-            {filters.placa && (
+            <Label className="text-sm">{isEstoque ? 'Placa (AK)' : 'Placa (AB)'}</Label>
+            {((Array.isArray(filters.placa) && filters.placa.length > 0) || (!Array.isArray(filters.placa) && filters.placa)) && (
               <Button variant="ghost" size="sm" onClick={() => clearFilter('placa')}>
                 <X className="h-3 w-3" />
               </Button>
             )}
           </div>
-          <Input
-            placeholder="Pesquisar placa..."
-            value={filters.placa || ''}
-            onChange={(e) => onFilterChange('placa', e.target.value)}
-          />
+          {!isEstoque && availableFilters.placas ? (
+            <Select value="" onValueChange={(value) => handleMultipleSelectChange('placa', value, filters.placa || [])}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={getDisplayValue(filters.placa || [], "Todas as placas")} />
+              </SelectTrigger>
+              <SelectContent className="max-h-48 overflow-y-auto">
+                {availableFilters.placas.map((placa) => {
+                  const isSelected = Array.isArray(filters.placa) && filters.placa.includes(placa);
+                  return (
+                    <div key={placa} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
+                      <Checkbox 
+                        checked={isSelected}
+                        onCheckedChange={() => handleMultipleSelectChange('placa', placa, filters.placa || [])}
+                      />
+                      <span className="text-sm">{placa}</span>
+                    </div>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          ) : (
+            <Input
+              placeholder="Pesquisar placa..."
+              value={typeof filters.placa === 'string' ? filters.placa : ''}
+              onChange={(e) => onFilterChange('placa', e.target.value)}
+              className="w-full"
+            />
+          )}
         </div>
       </div>
     </div>
