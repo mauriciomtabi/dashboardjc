@@ -37,7 +37,7 @@ const FilterBar = ({
   };
 
   return (
-    <Card className="shadow-lg border-l-4 border-l-primary bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/95">
+    <Card className="shadow-lg border-l-4 border-l-primary bg-background border border-border">
       <CardContent className="p-6">
         <div className="flex flex-wrap gap-6">
           <div className="min-w-[200px]">
