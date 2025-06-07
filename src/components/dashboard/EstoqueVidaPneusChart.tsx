@@ -99,9 +99,9 @@ const EstoqueVidaPneusChart = ({ filteredData }: EstoqueVidaPneusChartProps) => 
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   ></div>
                   <div className="flex-1">
-                    <div className="font-medium text-sm">{item.name} {item.value.toString()}</div>
+                    <div className="font-medium text-sm">{item.name} {Number(item.value)}</div>
                     <div className="text-xs text-muted-foreground">
-                      {((item.value / filteredData.length) * 100).toFixed(1)}%
+                      ({((Number(item.value) / filteredData.length) * 100).toFixed(1)}%)
                     </div>
                   </div>
                 </div>
