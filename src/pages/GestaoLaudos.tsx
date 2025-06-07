@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -6,12 +5,12 @@ import FilterBar from '@/components/dashboard/FilterBar';
 import StatCard from '@/components/dashboard/StatCard';
 import ComparativeChart from '@/components/dashboard/ComparativeChart';
 import MotivosChart from '@/components/dashboard/MotivosChart';
-import MarcasChart from '@/components/dashboard/MarcasChart';
 import VidaPneusChart from '@/components/dashboard/VidaPneusChart';
 import DOTsChart from '@/components/dashboard/DOTsChart';
 import PlacasChart from '@/components/dashboard/PlacasChart';
 import LaudoDataTable from '@/components/dashboard/LaudoDataTable';
 import { useLaudoData } from '@/hooks/useLaudoData';
+import MarcasCards from '@/components/dashboard/MarcasCards';
 
 const GestaoLaudos = () => {
   const { laudoData } = useData();
@@ -54,6 +53,7 @@ const GestaoLaudos = () => {
           filters={filters}
           onFilterChange={handleFilterChange}
           availableFilters={availableFilters}
+          showStockFilter={false}
         />
 
         {/* Cards de Operações */}
@@ -85,7 +85,7 @@ const GestaoLaudos = () => {
 
         {/* Gráficos em grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <MarcasChart filteredData={filteredData} />
+          <MarcasCards filteredData={filteredData} />
           <VidaPneusChart filteredData={filteredData} />
         </div>
 

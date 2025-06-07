@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import MonthFilter from './filters/MonthFilter';
 import YearFilter from './filters/YearFilter';
 import OperationFilter from './filters/OperationFilter';
@@ -9,80 +9,86 @@ import PlateFilter from './filters/PlateFilter';
 
 interface FilterBarProps {
   filters: {
-    mes?: string | string[];
-    ano?: string | string[];
-    placa?: string | string[];
+    mes: string | string[];
+    ano: string | string[];
+    placa: string | string[];
     operacao?: string | string[];
-    estoque?: string | string[];
+    estoque?: string[];
   };
   onFilterChange: (key: string, value: string | string[]) => void;
   availableFilters: {
-    meses?: string[];
-    anos?: string[];
-    operacoes?: string[];
+    meses: string[];
+    anos: string[];
+    operacoes: string[];
+    placas: string[];
     estoques?: string[];
-    placas?: string[];
   };
-  isEstoque?: boolean;
+  showStockFilter?: boolean;
 }
 
-const FilterBar = ({ filters, onFilterChange, availableFilters, isEstoque = false }: FilterBarProps) => {
+const FilterBar = ({ 
+  filters, 
+  onFilterChange, 
+  availableFilters, 
+  showStockFilter = true 
+}: FilterBarProps) => {
   const clearFilter = (key: string) => {
     onFilterChange(key, []);
   };
 
   return (
-    <div className="bg-card rounded-lg p-4 mb-6 space-y-4 sticky top-0 z-10 shadow-lg border">
-      <h3 className="font-semibold text-lg flex items-center gap-2">
-        <Search className="h-5 w-5" />
-        Filtros
-      </h3>
-      <div className={`grid gap-4 ${isEstoque ? 'grid-cols-5' : 'grid-cols-4'}`}>
-        {availableFilters.meses && (
-          <MonthFilter
-            value={filters.mes || []}
-            onChange={(value) => onFilterChange('mes', value)}
-            availableMonths={availableFilters.meses}
-            onClear={() => clearFilter('mes')}
-          />
-        )}
-
-        {availableFilters.anos && (
-          <YearFilter
-            value={filters.ano || []}
-            onChange={(value) => onFilterChange('ano', value)}
-            availableYears={availableFilters.anos}
-            onClear={() => clearFilter('ano')}
-          />
-        )}
-
-        {availableFilters.operacoes && (
-          <OperationFilter
-            value={filters.operacao || []}
-            onChange={(value) => onFilterChange('operacao', value)}
-            availableOperations={availableFilters.operacoes}
-            onClear={() => clearFilter('operacao')}
-            isMultiple={isEstoque}
-          />
-        )}
-
-        {availableFilters.estoques && (
-          <StockFilter
-            value={filters.estoque || []}
-            onChange={(value) => onFilterChange('estoque', value)}
-            availableStocks={availableFilters.estoques}
-            onClear={() => clearFilter('estoque')}
-          />
-        )}
-
-        <PlateFilter
-          value={filters.placa || []}
-          onChange={(value) => onFilterChange('placa', value)}
-          availablePlates={availableFilters.placas}
-          onClear={() => clearFilter('placa')}
-        />
-      </div>
-    </div>
+    <Card className="shadow-lg border-l-4 border-l-primary">
+      <CardContent className="p-6">
+        <div className="flex flex-wrap gap-6">
+          <div className="min-w-[200px]">
+            <MonthFilter
+              value={filters.mes}
+              onChange={(value) => onFilterChange('mes', value)}
+              availableMonths={availableFilters.meses}
+              onClear={() => clearFilter('mes')}
+            />
+          </div>
+          
+          <div className="min-w-[200px]">
+            <YearFilter
+              value={filters.ano}
+              onChange={(value) => onFilterChange('ano', value)}
+              availableYears={availableFilters.anos}
+              onClear={() => clearFilter('ano')}
+            />
+          </div>
+          
+          <div className="min-w-[200px]">
+            <PlateFilter
+              value={filters.placa}
+              onChange={(value) => onFilterChange('placa', value)}
+              availablePlates={availableFilters.placas}
+              onClear={() => clearFilter('placa')}
+            />
+          </div>
+          
+          <div className="min-w-[200px]">
+            <OperationFilter
+              value={filters.operacao || []}
+              onChange={(value) => onFilterChange('operacao', value)}
+              availableOperations={availableFilters.operacoes}
+              onClear={() => clearFilter('operacao')}
+            />
+          </div>
+          
+          {showStockFilter && availableFilters.estoques && (
+            <div className="min-w-[200px]">
+              <StockFilter
+                value={filters.estoque || []}
+                onChange={(value) => onFilterChange('estoque', value)}
+                availableStocks={availableFilters.estoques}
+                onClear={() => clearFilter('estoque')}
+              />
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

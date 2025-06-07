@@ -17,6 +17,20 @@ const EstoqueDataTable = ({ filteredData, isOpen, onOpenChange }: EstoqueDataTab
     return parsedDate ? formatDateForDisplay(parsedDate) : '';
   };
 
+  const formatNumber = (value: any) => {
+    if (!value || isNaN(value)) return '';
+    return Number(value).toLocaleString('pt-BR');
+  };
+
+  const getSituacaoName = (code: string) => {
+    switch (code) {
+      case 'N': return 'Novo';
+      case 'U': return 'Usado';
+      case 'R': return 'Recapado';
+      default: return code;
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -30,23 +44,21 @@ const EstoqueDataTable = ({ filteredData, isOpen, onOpenChange }: EstoqueDataTab
           <Table>
             <TableHeader>
               <TableRow className="bg-primary/10">
-                <TableHead className="font-bold text-primary whitespace-nowrap">cd_veiculo</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">nm_modelo</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">Vida</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">cd_posicao</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">cd_destino</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">cd_evento</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">bl_saida</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">bl_recauch</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">bl_compra</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">bl_inst</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Cód Filial</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Cód Pneu</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 1</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 2</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 3</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 4</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Sulco 5</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Situação</TableHead>
                 <TableHead className="font-bold text-primary whitespace-nowrap">Estoque</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">cd_posicao</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">cd_destino</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">dh_evento</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">bl_filial</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">Placa</TableHead>
-                <TableHead className="font-bold text-primary whitespace-nowrap">bl_trent</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Cód Veículo</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Nome Modelo</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Data</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Nome Filial</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Km</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Nome Dimensão</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -57,20 +69,18 @@ const EstoqueDataTable = ({ filteredData, isOpen, onOpenChange }: EstoqueDataTab
                 >
                   <TableCell className="whitespace-nowrap">{item.B}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.D}</TableCell>
-                  <TableCell className="whitespace-nowrap">{item.F}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.G}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.H}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.I}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.J}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.K}</TableCell>
-                  <TableCell className="whitespace-nowrap">{item.L}</TableCell>
-                  <TableCell className="whitespace-nowrap">{item.M}</TableCell>
+                  <TableCell className="whitespace-nowrap">{getSituacaoName(item.M)}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.N}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.P}</TableCell>
-                  <TableCell className="whitespace-nowrap">{item.Q}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.D}</TableCell>
                   <TableCell className="whitespace-nowrap">{formatDate(item.R)}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.AB}</TableCell>
-                  <TableCell className="whitespace-nowrap">{item.AK}</TableCell>
+                  <TableCell className="whitespace-nowrap">{formatNumber(item.AK)}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.AR}</TableCell>
                 </TableRow>
               ))}

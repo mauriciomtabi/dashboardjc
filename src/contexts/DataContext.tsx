@@ -32,7 +32,7 @@ export interface EstoqueData {
   J: string;
   K: string;
   L: string;
-  M: string;
+  M: string; // Situação (N, U, R)
   N: string; // Estoque
   P: string;
   Q: string;
