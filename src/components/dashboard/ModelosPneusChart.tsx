@@ -39,14 +39,14 @@ const ModelosPneusChart = ({ filteredData }: ModelosPneusChartProps) => {
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-2 pb-2 relative z-10">
+      <CardContent className="pt-2 pb-6 relative z-10">
         <div className="overflow-x-auto">
           <div className="relative">
             {/* Fundo do gráfico com gradiente sutil */}
             <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-muted/20 rounded-lg opacity-50" />
             
-            <ResponsiveContainer width={Math.max(1200, topModelos.length * 60)} height={350}>
-              <BarChart data={topModelos} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
+            <ResponsiveContainer width={Math.max(1200, topModelos.length * 60)} height={400}>
+              <BarChart data={topModelos} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                 <CartesianGrid 
                   strokeDasharray="3 3" 
                   stroke="rgba(148, 163, 184, 0.2)"
@@ -56,7 +56,7 @@ const ModelosPneusChart = ({ filteredData }: ModelosPneusChartProps) => {
                   dataKey="name" 
                   angle={-45} 
                   textAnchor="end" 
-                  height={60}
+                  height={80}
                   interval={0}
                   tick={{ fontSize: 10 }}
                 />

@@ -5,9 +5,11 @@ import { Package } from 'lucide-react';
 
 interface MarcasCardsProps {
   filteredData: any[];
+  onMarcaClick?: (marca: string) => void;
+  selectedMarca?: string;
 }
 
-const MarcasCards = ({ filteredData }: MarcasCardsProps) => {
+const MarcasCards = ({ filteredData, onMarcaClick, selectedMarca }: MarcasCardsProps) => {
   const marcasPneus = useMemo(() => {
     const marcas = filteredData.reduce((acc, item) => {
       if (item.Y && typeof item.Y === 'string') {
@@ -41,6 +43,11 @@ const MarcasCards = ({ filteredData }: MarcasCardsProps) => {
         <CardTitle className="flex items-center gap-2 text-xl">
           <Package className="h-6 w-6 text-primary" />
           Marcas dos Pneus
+          {selectedMarca && (
+            <span className="text-sm font-normal text-muted-foreground">
+              (Filtrado por: {selectedMarca})
+            </span>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
@@ -48,7 +55,12 @@ const MarcasCards = ({ filteredData }: MarcasCardsProps) => {
           {marcasPneus.map((marca, index) => (
             <div 
               key={`${marca.name}-${index}`} 
-              className="group bg-gradient-to-br from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 rounded-xl p-4 text-center border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-md min-h-[120px] flex flex-col justify-center"
+              className={`group cursor-pointer bg-gradient-to-br transition-all duration-300 hover:shadow-md min-h-[120px] flex flex-col justify-center rounded-xl p-4 text-center border ${
+                selectedMarca === marca.name
+                  ? 'from-primary/20 to-primary/30 border-primary/60 shadow-lg scale-105'
+                  : 'from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 border-primary/20 hover:border-primary/40'
+              }`}
+              onClick={() => onMarcaClick?.(selectedMarca === marca.name ? '' : marca.name)}
             >
               <div className="text-2xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300">
                 {marca.value}

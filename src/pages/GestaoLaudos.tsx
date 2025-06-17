@@ -21,6 +21,7 @@ const GestaoLaudos = () => {
     ano: [] as string[],
     placa: [] as string[],
     operacao: '',
+    marca: '',
   });
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
@@ -29,6 +30,10 @@ const GestaoLaudos = () => {
 
   const handleFilterChange = (key: string, value: string | string[]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleMarcaClick = (marca: string) => {
+    setFilters(prev => ({ ...prev, marca }));
   };
 
   if (laudoData.length === 0) {
@@ -93,7 +98,11 @@ const GestaoLaudos = () => {
 
           {/* Gráficos em grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <MarcasCards filteredData={filteredData} />
+            <MarcasCards 
+              filteredData={filteredData} 
+              onMarcaClick={handleMarcaClick}
+              selectedMarca={filters.marca}
+            />
             <VidaPneusChart filteredData={filteredData} />
           </div>
 

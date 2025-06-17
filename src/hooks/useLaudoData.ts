@@ -8,6 +8,7 @@ interface Filters {
   ano: string | string[];
   placa: string | string[];
   operacao: string | string[];
+  marca?: string;
 }
 
 export const useLaudoData = (filters: Filters) => {
@@ -39,6 +40,9 @@ export const useLaudoData = (filters: Filters) => {
       
       if (Array.isArray(filters.operacao) && filters.operacao.length > 0 && !filters.operacao.includes(item.D)) return false;
       if (typeof filters.operacao === 'string' && filters.operacao && item.D !== filters.operacao) return false;
+      
+      // Filtro por marca
+      if (filters.marca && item.Y !== filters.marca) return false;
       
       return true;
     });
