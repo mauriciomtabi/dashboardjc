@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -17,33 +18,64 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
 
   const capturePageAsImage = async (): Promise<string> => {
     try {
-      const element = document.body;
-      const canvas = await html2canvas(element, {
-        height: window.innerHeight,
-        width: window.innerWidth,
+      console.log('Iniciando captura da página...');
+      
+      // Aguardar um pouco para garantir que a página está totalmente carregada
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const element = document.querySelector('.max-w-7xl') || document.body;
+      console.log('Elemento para captura:', element);
+      
+      const canvas = await html2canvas(element as HTMLElement, {
+        height: element.scrollHeight,
+        width: element.scrollWidth,
         useCORS: true,
-        background: '#ffffff',
-        logging: false,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: true,
+        removeContainer: true,
+        foreignObjectRendering: false,
+        imageTimeout: 15000,
+        onclone: (clonedDoc) => {
+          console.log('Documento clonado para captura');
+          // Garantir que estilos sejam aplicados no clone
+          const clonedElement = clonedDoc.querySelector('.max-w-7xl') || clonedDoc.body;
+          if (clonedElement) {
+            (clonedElement as HTMLElement).style.transform = 'none';
+          }
+        }
       });
-      return canvas.toDataURL('image/png');
+      
+      console.log('Canvas criado com sucesso:', canvas.width, 'x', canvas.height);
+      const dataUrl = canvas.toDataURL('image/png', 0.8);
+      console.log('DataURL gerado, tamanho:', dataUrl.length);
+      
+      return dataUrl;
     } catch (error) {
-      console.error('Erro ao capturar página:', error);
-      throw error;
+      console.error('Erro detalhado na captura:', error);
+      throw new Error(`Falha na captura da página: ${error.message}`);
     }
   };
 
   const generatePDF = async () => {
     setIsGenerating(true);
     try {
-      console.log('Iniciando geração de PDF...');
-      const imgData = await capturePageAsImage();
-      console.log('Imagem capturada com sucesso');
+      console.log('=== INICIANDO GERAÇÃO DE PDF ===');
       
+      toast({
+        title: "Gerando PDF...",
+        description: "Aguarde enquanto processamos sua solicitação.",
+      });
+
+      const imgData = await capturePageAsImage();
+      console.log('Imagem capturada com sucesso para PDF');
+      
+      // Criar PDF
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // Adicionar cabeçalho profissional
+      // Cabeçalho
       pdf.setFontSize(20);
       pdf.setTextColor(59, 130, 246);
       pdf.text(pageTitle, 20, 25);
@@ -52,27 +84,28 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
       pdf.setTextColor(128, 128, 128);
       pdf.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 20, 35);
       
-      // Adicionar linha separadora
+      // Linha separadora
       pdf.setDrawColor(59, 130, 246);
       pdf.line(20, 40, pdfWidth - 20, 40);
       
-      // Calcular dimensões da imagem
+      // Adicionar imagem
       const imgWidth = pdfWidth - 40;
-      const imgHeight = (imgWidth * window.innerHeight) / window.innerWidth;
+      const imgHeight = (imgWidth * 600) / 800; // Proporção fixa
       
       if (imgHeight <= pdfHeight - 60) {
         pdf.addImage(imgData, 'PNG', 20, 50, imgWidth, imgHeight);
       } else {
         const scaledHeight = pdfHeight - 60;
-        const scaledWidth = (scaledHeight * window.innerWidth) / window.innerHeight;
+        const scaledWidth = (scaledHeight * 800) / 600;
         pdf.addImage(imgData, 'PNG', 20, 50, scaledWidth, scaledHeight);
       }
       
-      // Adicionar rodapé
+      // Rodapé
       pdf.setFontSize(8);
       pdf.setTextColor(128, 128, 128);
       pdf.text('Relatório gerado automaticamente - Gestão de Pneus JC', 20, pdfHeight - 10);
       
+      // Salvar
       const fileName = `${pageTitle.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       console.log('Salvando PDF:', fileName);
       pdf.save(fileName);
@@ -83,11 +116,12 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
       });
       
       setIsOpen(false);
+      
     } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
+      console.error('=== ERRO NA GERAÇÃO DE PDF ===', error);
       toast({
         title: "Erro ao gerar PDF",
-        description: "Ocorreu um erro durante a geração do PDF. Tente novamente.",
+        description: `Falha: ${error.message}. Tente novamente.`,
         variant: "destructive",
       });
     } finally {
@@ -98,38 +132,50 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
   const shareWhatsApp = async () => {
     setIsGenerating(true);
     try {
-      console.log('Iniciando compartilhamento WhatsApp...');
+      console.log('=== INICIANDO COMPARTILHAMENTO WHATSAPP ===');
+      
+      toast({
+        title: "Preparando compartilhamento...",
+        description: "Gerando imagem para WhatsApp.",
+      });
+
       const imgData = await capturePageAsImage();
       console.log('Imagem capturada para WhatsApp');
       
-      // Criar um link de download da imagem
+      // Criar link para download da imagem
       const link = document.createElement('a');
       link.download = `${pageTitle.replace(/\s+/g, '_')}_${Date.now()}.png`;
       link.href = imgData;
+      
+      // Adicionar ao DOM temporariamente
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       
-      // Criar mensagem para WhatsApp
+      console.log('Download da imagem iniciado');
+      
+      // Preparar mensagem para WhatsApp
       const whatsappMessage = encodeURIComponent(`Confira este relatório: ${pageTitle}`);
       const whatsappUrl = `https://web.whatsapp.com/send?text=${whatsappMessage}`;
       
-      // Abrir WhatsApp em nova aba
+      // Aguardar um pouco antes de abrir WhatsApp
       setTimeout(() => {
+        console.log('Abrindo WhatsApp Web');
         window.open(whatsappUrl, '_blank');
       }, 1000);
       
       toast({
         title: "Imagem baixada!",
-        description: "A imagem foi baixada e o WhatsApp será aberto para compartilhamento.",
+        description: "A imagem foi baixada e o WhatsApp será aberto.",
       });
       
       setIsOpen(false);
+      
     } catch (error) {
-      console.error('Erro ao compartilhar no WhatsApp:', error);
+      console.error('=== ERRO NO COMPARTILHAMENTO WHATSAPP ===', error);
       toast({
         title: "Erro ao compartilhar",
-        description: "Ocorreu um erro durante o compartilhamento. Tente novamente.",
+        description: `Falha: ${error.message}. Tente novamente.`,
         variant: "destructive",
       });
     } finally {
