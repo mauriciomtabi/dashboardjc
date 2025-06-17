@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -20,7 +19,6 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
       height: window.innerHeight,
       width: window.innerWidth,
       useCORS: true,
-      scale: 2,
       backgroundColor: '#ffffff',
     });
     return canvas.toDataURL('image/png');
