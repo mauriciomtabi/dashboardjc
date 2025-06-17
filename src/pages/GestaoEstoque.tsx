@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import Navigation from '@/components/dashboard/Navigation';
@@ -7,6 +8,7 @@ import StatCard from '@/components/dashboard/StatCard';
 import EstoqueComparativeChart from '@/components/dashboard/EstoqueComparativeChart';
 import EstoqueVidaPneusChart from '@/components/dashboard/EstoqueVidaPneusChart';
 import EstoqueDataTable from '@/components/dashboard/EstoqueDataTable';
+import ShareButton from '@/components/dashboard/ShareButton';
 import { useEstoqueData } from '@/hooks/useEstoqueData';
 import SituacaoPneusChart from '@/components/dashboard/SituacaoPneusChart';
 
@@ -50,8 +52,9 @@ const GestaoEstoque = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <div className="max-w-7xl mx-auto">
-        <div className="p-6 pb-4">
+        <div className="p-6 pb-4 flex justify-between items-center">
           <h2 className="text-3xl font-bold">Gestão de Estoque</h2>
+          <ShareButton pageTitle="Gestão de Estoque" />
         </div>
         
         {/* Filtros fixos */}
@@ -127,3 +130,4 @@ const GestaoEstoque = () => {
 };
 
 export default GestaoEstoque;
+
