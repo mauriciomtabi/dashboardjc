@@ -11,6 +11,7 @@ import DOTsChart from '@/components/dashboard/DOTsChart';
 import PlacasChart from '@/components/dashboard/PlacasChart';
 import ModelosPneusChart from '@/components/dashboard/ModelosPneusChart';
 import LaudoDataTable from '@/components/dashboard/LaudoDataTable';
+import ShareButton from '@/components/dashboard/ShareButton';
 import { useLaudoData } from '@/hooks/useLaudoData';
 import MarcasCards from '@/components/dashboard/MarcasCards';
 
@@ -54,8 +55,9 @@ const GestaoLaudos = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <div className="max-w-7xl mx-auto">
-        <div className="p-6 pb-4">
+        <div className="p-6 pb-4 flex justify-between items-center">
           <h2 className="text-3xl font-bold">Gestão de Laudos</h2>
+          <ShareButton pageTitle="Gestão de Laudos" />
         </div>
         
         {/* Filtros fixos */}
