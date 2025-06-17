@@ -9,6 +9,7 @@ import MotivosChart from '@/components/dashboard/MotivosChart';
 import VidaPneusChart from '@/components/dashboard/VidaPneusChart';
 import DOTsChart from '@/components/dashboard/DOTsChart';
 import PlacasChart from '@/components/dashboard/PlacasChart';
+import ModelosPneusChart from '@/components/dashboard/ModelosPneusChart';
 import LaudoDataTable from '@/components/dashboard/LaudoDataTable';
 import { useLaudoData } from '@/hooks/useLaudoData';
 import MarcasCards from '@/components/dashboard/MarcasCards';
@@ -94,6 +95,11 @@ const GestaoLaudos = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <MarcasCards filteredData={filteredData} />
             <VidaPneusChart filteredData={filteredData} />
+          </div>
+
+          {/* Modelos dos Pneus - Largura completa */}
+          <div className="w-full">
+            <ModelosPneusChart filteredData={filteredData} />
           </div>
 
           {/* DOTs - Largura completa */}
