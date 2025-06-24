@@ -31,7 +31,7 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         width: element.scrollWidth,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         logging: true,
         removeContainer: true,
         foreignObjectRendering: false,
