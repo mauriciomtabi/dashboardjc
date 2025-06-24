@@ -20,13 +20,16 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
     try {
       console.log('Iniciando captura por seções...');
       
-      // Aguardar um pouco para garantir que a página está totalmente carregada
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       const sections = [
-        '.max-w-7xl > div:first-child', // Header
-        '[class*="grid"][class*="gap-6"]', // Cards sections
-        '[class*="w-full"]', // Charts sections
+        '.max-w-7xl > div:first-child',
+        '[class*="grid"][class*="gap-6"]',
+        '[class*="w-full"]',
+        '.grid.grid-cols-1',
+        '.grid.grid-cols-2',
+        '.grid.grid-cols-3',
+        '.grid.grid-cols-4',
       ];
       
       const images: string[] = [];
@@ -35,7 +38,7 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         const elements = document.querySelectorAll(selector);
         
         for (const element of elements) {
-          if (element && element.scrollHeight > 50) { // Só capturar elementos com conteúdo
+          if (element && element.scrollHeight > 50) {
             try {
               const canvas = await html2canvas(element as HTMLElement, {
                 height: element.scrollHeight,
@@ -44,11 +47,9 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
                 allowTaint: true,
                 background: '#ffffff',
                 logging: false,
-                foreignObjectRendering: true,
                 imageTimeout: 15000,
-                scale: 2, // Melhor qualidade
+                scale: 2,
                 onclone: (clonedDoc) => {
-                  // Garantir que estilos sejam aplicados no clone
                   const clonedElement = clonedDoc.querySelector(selector);
                   if (clonedElement) {
                     (clonedElement as HTMLElement).style.transform = 'none';
@@ -64,17 +65,15 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         }
       }
       
-      // Se não conseguiu capturar por seções, tenta capturar a página inteira
       if (images.length === 0) {
         const element = document.querySelector('.max-w-7xl') || document.body;
         const canvas = await html2canvas(element as HTMLElement, {
-          height: window.innerHeight * 3, // Altura maior para capturar scroll
+          height: Math.max(window.innerHeight * 3, element.scrollHeight),
           width: element.scrollWidth,
           useCORS: true,
           allowTaint: true,
           background: '#ffffff',
           logging: false,
-          foreignObjectRendering: true,
           imageTimeout: 15000,
           scale: 1.5,
           scrollX: 0,
@@ -106,12 +105,10 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
       const images = await capturePageSections();
       console.log('Imagens capturadas com sucesso para PDF');
       
-      // Criar PDF em modo paisagem
-      const pdf = new jsPDF('l', 'mm', 'a4'); // 'l' = landscape (paisagem)
+      const pdf = new jsPDF('l', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // Cabeçalho da primeira página
       pdf.setFontSize(24);
       pdf.setTextColor(59, 130, 246);
       pdf.text(pageTitle, 20, 25);
@@ -126,37 +123,30 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         minute: '2-digit'
       })}`, 20, 35);
       
-      // Linha separadora
       pdf.setDrawColor(59, 130, 246);
       pdf.line(20, 40, pdfWidth - 20, 40);
       
       let currentY = 50;
+      const maxImageHeight = pdfHeight - 80;
+      const maxImageWidth = pdfWidth - 40;
       
-      // Adicionar cada imagem capturada
       images.forEach((imgData, index) => {
         if (index > 0) {
-          // Nova página para cada seção (exceto a primeira)
           pdf.addPage();
           currentY = 20;
         }
         
-        // Calcular dimensões mantendo proporção
-        const maxWidth = pdfWidth - 40;
-        const maxHeight = pdfHeight - 80;
-        
-        // Criar imagem temporária para obter dimensões
         const img = new Image();
         img.onload = () => {
           const aspectRatio = img.width / img.height;
-          let imgWidth = maxWidth;
+          let imgWidth = maxImageWidth;
           let imgHeight = imgWidth / aspectRatio;
           
-          if (imgHeight > maxHeight) {
-            imgHeight = maxHeight;
+          if (imgHeight > maxImageHeight) {
+            imgHeight = maxImageHeight;
             imgWidth = imgHeight * aspectRatio;
           }
           
-          // Centralizar horizontalmente
           const x = (pdfWidth - imgWidth) / 2;
           
           try {
@@ -167,16 +157,15 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         };
         img.src = imgData;
         
-        // Valores padrão caso a imagem não carregue
-        const imgWidth = Math.min(maxWidth, 250);
-        const imgHeight = Math.min(maxHeight, 150);
+        const imgWidth = Math.min(maxImageWidth, 250);
+        const imgHeight = Math.min(maxImageHeight, 150);
         const x = (pdfWidth - imgWidth) / 2;
         
         pdf.addImage(imgData, 'PNG', x, currentY, imgWidth, imgHeight);
       });
       
-      // Rodapé na última página
-      const totalPages = pdf.internal.getNumberOfPages();
+      // Usando o método correto para obter número de páginas
+      const totalPages = pdf.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
         pdf.setFontSize(8);
@@ -185,12 +174,10 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         pdf.text(`Página ${i} de ${totalPages}`, pdfWidth - 40, pdfHeight - 10);
       }
       
-      // Salvar
       const fileName = `${pageTitle.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       console.log('Salvando PDF:', fileName);
       
       if (forWhatsApp) {
-        // Para WhatsApp, criar link de download
         const pdfBlob = pdf.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');
@@ -201,7 +188,6 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
         
-        // Preparar mensagem para WhatsApp
         setTimeout(() => {
           const whatsappMessage = encodeURIComponent(`Confira este relatório: ${pageTitle}`);
           const whatsappUrl = `https://web.whatsapp.com/send?text=${whatsappMessage}`;
@@ -247,26 +233,21 @@ const ShareButton = ({ pageTitle }: ShareButtonProps) => {
       const images = await capturePageSections();
       console.log('Imagens capturadas para WhatsApp');
       
-      // Para WhatsApp, vamos criar uma imagem compilada ou usar a primeira seção
       const mainImage = images[0];
       
-      // Criar link para download da imagem
       const link = document.createElement('a');
       link.download = `${pageTitle.replace(/\s+/g, '_')}_${Date.now()}.png`;
       link.href = mainImage;
       
-      // Adicionar ao DOM temporariamente
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       
       console.log('Download da imagem iniciado');
       
-      // Preparar mensagem para WhatsApp
       const whatsappMessage = encodeURIComponent(`Confira este relatório: ${pageTitle}`);
       const whatsappUrl = `https://web.whatsapp.com/send?text=${whatsappMessage}`;
       
-      // Aguardar um pouco antes de abrir WhatsApp
       setTimeout(() => {
         console.log('Abrindo WhatsApp Web');
         window.open(whatsappUrl, '_blank');
