@@ -30,7 +30,7 @@ export const capturePageSections = async (): Promise<string[]> => {
               width: element.scrollWidth,
               useCORS: true,
               allowTaint: true,
-              backgroundColor: '#ffffff',
+              background: '#ffffff',
               logging: false,
               scale: 2,
               onclone: (clonedDoc) => {
@@ -56,7 +56,7 @@ export const capturePageSections = async (): Promise<string[]> => {
         width: element.scrollWidth,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         logging: false,
         scale: 1.5,
         scrollX: 0,
