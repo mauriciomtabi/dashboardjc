@@ -30,9 +30,8 @@ export const capturePageSections = async (): Promise<string[]> => {
               width: element.scrollWidth,
               useCORS: true,
               allowTaint: true,
-              background: '#ffffff',
+              backgroundColor: '#ffffff',
               logging: false,
-              imageTimeout: 15000,
               scale: 2,
               onclone: (clonedDoc) => {
                 const clonedElement = clonedDoc.querySelector(selector);
@@ -57,9 +56,8 @@ export const capturePageSections = async (): Promise<string[]> => {
         width: element.scrollWidth,
         useCORS: true,
         allowTaint: true,
-        background: '#ffffff',
+        backgroundColor: '#ffffff',
         logging: false,
-        imageTimeout: 15000,
         scale: 1.5,
         scrollX: 0,
         scrollY: 0,
