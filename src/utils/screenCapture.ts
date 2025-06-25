@@ -32,7 +32,6 @@ export const capturePageSections = async (): Promise<string[]> => {
               allowTaint: true,
               background: '#ffffff',
               logging: false,
-              scale: 2,
               onclone: (clonedDoc) => {
                 const clonedElement = clonedDoc.querySelector(selector);
                 if (clonedElement) {
@@ -58,7 +57,6 @@ export const capturePageSections = async (): Promise<string[]> => {
         allowTaint: true,
         background: '#ffffff',
         logging: false,
-        scale: 1.5,
         scrollX: 0,
         scrollY: 0,
       });
