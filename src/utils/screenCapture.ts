@@ -32,12 +32,6 @@ export const capturePageSections = async (): Promise<string[]> => {
               allowTaint: true,
               background: '#ffffff',
               logging: false,
-              onclone: (clonedDoc) => {
-                const clonedElement = clonedDoc.querySelector(selector);
-                if (clonedElement) {
-                  (clonedElement as HTMLElement).style.transform = 'none';
-                }
-              }
             });
             
             images.push(canvas.toDataURL('image/png', 0.9));
@@ -57,8 +51,6 @@ export const capturePageSections = async (): Promise<string[]> => {
         allowTaint: true,
         background: '#ffffff',
         logging: false,
-        scrollX: 0,
-        scrollY: 0,
       });
       
       images.push(canvas.toDataURL('image/png', 0.9));
