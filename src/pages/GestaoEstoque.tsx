@@ -55,7 +55,7 @@ const GestaoEstoque = () => {
         </div>
         
         {/* Filtros fixos */}
-        <div className="sticky top-0 z-10 bg-background border-b p-6 pt-2">
+        <div className="sticky top-0 z-50 bg-background border-b p-6 pt-2">
           <FilterBar
             filters={filters}
             onFilterChange={handleFilterChange}
