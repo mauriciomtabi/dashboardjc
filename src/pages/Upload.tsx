@@ -12,7 +12,7 @@ import { Upload as UploadIcon, FileSpreadsheet } from 'lucide-react';
 const Upload = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const { setLaudoData, setEstoqueData, setLastUpdate } = useData();
+  const { setLaudoData, setEstoqueData, setCheckListData, setLastUpdate } = useData();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const Upload = () => {
       const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
       // Verificar se as abas obrigatórias existem
-      const requiredSheets = ['R LAUDO 15568', 'R ESTOQUE 15510'];
+      const requiredSheets = ['R LAUDO 15568', 'R ESTOQUE 15510', 'CHECK LIST'];
       const missingSheets = requiredSheets.filter(sheet => !workbook.SheetNames.includes(sheet));
 
       if (missingSheets.length > 0) {
@@ -96,9 +96,23 @@ const Upload = () => {
         AR: row.AR || '',
       }));
 
+      // Processar aba CHECK LIST
+      const checkListSheet = workbook.Sheets['CHECK LIST'];
+      const checkListJson = XLSX.utils.sheet_to_json(checkListSheet, { header: 'A' });
+      const checkListData = checkListJson.slice(1).map((row: any) => ({
+        D: row.D || '',
+        G: row.G || '',
+        N: row.N || '',
+        T: row.T || '',
+        V: row.V || '',
+        Y: row.Y || '',
+        AG: row.AG || '',
+      }));
+
       // Salvar dados no contexto
       setLaudoData(laudoData);
       setEstoqueData(estoqueData);
+      setCheckListData(checkListData);
       setLastUpdate(new Date());
 
       toast({
@@ -126,7 +140,7 @@ const Upload = () => {
       <Navigation />
       <div className="max-w-4xl mx-auto p-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-4">GESTÃO DE PNEUS</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-4">INDICADORES JC TRANSPORTES</h1>
           <p className="text-xl text-muted-foreground">Sistema de Gestão e Análise de Dados</p>
         </div>
 
@@ -137,7 +151,7 @@ const Upload = () => {
               Upload de Planilha
             </CardTitle>
             <CardDescription>
-              Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568" e "R ESTOQUE 15510"
+              Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510" e "CHECK LIST"
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -168,6 +182,7 @@ const Upload = () => {
               <ul className="text-sm space-y-1">
                 <li>• R LAUDO 15568</li>
                 <li>• R ESTOQUE 15510</li>
+                <li>• CHECK LIST</li>
               </ul>
             </div>
           </CardContent>
