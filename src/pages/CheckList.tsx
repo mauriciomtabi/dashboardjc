@@ -54,7 +54,12 @@ const CheckList = () => {
       {/* Filtros fixos */}
       <div className="sticky top-0 z-50 bg-background border-b p-6 pt-2">
         <FilterBar
-          filters={filters}
+          filters={{
+            mes: filters.mes,
+            ano: filters.ano,
+            placa: filters.placa,
+            operacao: filters.filial,
+          }}
           onFilterChange={handleFilterChange}
           availableFilters={availableFilters}
           showStockFilter={false}
@@ -70,7 +75,7 @@ const CheckList = () => {
               <StatCard
                 key={index}
                 title={card.title}
-                value={card.value}
+                value={card.value.toString()}
                 percentage={card.percentage}
                 variant="default"
               />

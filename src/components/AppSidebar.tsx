@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
-  Tire, 
+  Car, 
   Wrench, 
   ClipboardCheck, 
   FileText, 
@@ -28,7 +28,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 const menuItems = [
   {
     title: "Gestão de Pneus",
-    icon: Tire,
+    icon: Car,
     subItems: [
       { title: "Laudos", url: "/gestao-laudos", icon: FileText },
       { title: "Estoque", url: "/gestao-estoque", icon: Package }
@@ -62,7 +62,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r">
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center gap-2">
-          <Tire className="h-6 w-6 text-primary" />
+          <Car className="h-6 w-6 text-primary" />
           {!collapsed && (
             <div>
               <h2 className="font-bold text-lg">Indicadores</h2>

@@ -1,6 +1,6 @@
 
 import { useMemo } from 'react';
-import { CheckListData } from '@/contexts/DataContext';
+import { CheckListData, useData } from '@/contexts/DataContext';
 import { format, parseISO, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -13,16 +13,10 @@ interface CheckListFilters {
 }
 
 export const useCheckListData = (filters: CheckListFilters) => {
-  const processedData = useMemo(() => {
-    // Aqui você receberia os dados do contexto
-    // Por enquanto, vou simular alguns dados para demonstração
-    const mockData: CheckListData[] = [];
-    
-    return mockData;
-  }, []);
+  const { checkListData } = useData();
 
   const filteredData = useMemo(() => {
-    return processedData.filter(item => {
+    return checkListData.filter(item => {
       // Filtro por mês
       if (filters.mes.length > 0) {
         const date = new Date(item.N);
@@ -58,35 +52,32 @@ export const useCheckListData = (filters: CheckListFilters) => {
 
       return true;
     });
-  }, [processedData, filters]);
+  }, [checkListData, filters]);
 
   const availableFilters = useMemo(() => {
     const meses = new Set<string>();
     const anos = new Set<string>();
-    const filiais = new Set<string>();
-    const checkListTypes = new Set<string>();
+    const operacoes = new Set<string>();
     const placas = new Set<string>();
 
-    processedData.forEach(item => {
+    checkListData.forEach(item => {
       const date = new Date(item.N);
       if (isValid(date)) {
         meses.add(format(date, 'MM'));
         anos.add(format(date, 'yyyy'));
       }
       
-      if (item.D) filiais.add(item.D);
-      if (item.G) checkListTypes.add(item.G);
+      if (item.D) operacoes.add(item.D);
       if (item.AG) placas.add(item.AG);
     });
 
     return {
-      mes: Array.from(meses).sort(),
-      ano: Array.from(anos).sort(),
-      filial: Array.from(filiais).sort(),
-      checkListType: Array.from(checkListTypes).sort(),
-      placa: Array.from(placas).sort(),
+      meses: Array.from(meses).sort(),
+      anos: Array.from(anos).sort(),
+      operacoes: Array.from(operacoes).sort(),
+      placas: Array.from(placas).sort(),
     };
-  }, [processedData]);
+  }, [checkListData]);
 
   const checkListTypeCards = useMemo(() => {
     const typeCounts = filteredData.reduce((acc, item) => {
@@ -96,10 +87,12 @@ export const useCheckListData = (filters: CheckListFilters) => {
       return acc;
     }, {} as Record<string, number>);
 
+    const total = filteredData.length;
+
     return Object.entries(typeCounts).map(([type, count]) => ({
       title: type,
-      value: count.toString(),
-      percentage: '+0%', // Calcularia baseado em dados históricos
+      value: count,
+      percentage: total > 0 ? `${((count / total) * 100).toFixed(1)}%` : '0%',
     }));
   }, [filteredData]);
 
