@@ -92,7 +92,7 @@ export const useCheckListData = (filters: CheckListFilters) => {
     return Object.entries(typeCounts).map(([type, count]) => ({
       title: type,
       value: count,
-      percentage: total > 0 ? `${((count / total) * 100).toFixed(1)}%` : '0%',
+      percentage: total > 0 ? parseFloat(((count / total) * 100).toFixed(1)) : 0,
     }));
   }, [filteredData]);
 
