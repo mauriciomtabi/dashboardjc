@@ -75,7 +75,7 @@ const CheckList = () => {
               <StatCard
                 key={index}
                 title={card.title}
-                value={card.value.toString()}
+                value={card.value}
                 percentage={card.percentage}
                 variant="default"
               />
