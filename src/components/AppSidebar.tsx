@@ -2,7 +2,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
-  Car, 
   Wrench, 
   ClipboardCheck, 
   FileText, 
@@ -13,7 +12,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -25,10 +23,27 @@ import {
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
+// Custom Pneu icon component
+const PneuIcon = ({ className }: { className?: string }) => (
+  <svg 
+    className={className} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="6"/>
+    <circle cx="12" cy="12" r="2"/>
+  </svg>
+);
+
 const menuItems = [
   {
     title: "Gestão de Pneus",
-    icon: Car,
+    icon: PneuIcon,
     subItems: [
       { title: "Laudos", url: "/gestao-laudos", icon: FileText },
       { title: "Estoque", url: "/gestao-estoque", icon: Package }
@@ -61,15 +76,11 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r">
       <SidebarHeader className="border-b p-4">
-        <div className="flex items-center gap-2">
-          <Car className="h-6 w-6 text-primary" />
-          {!collapsed && (
-            <div>
-              <h2 className="font-bold text-lg">Indicadores</h2>
-              <p className="text-sm text-muted-foreground">JC Transportes</p>
-            </div>
-          )}
-        </div>
+        {!collapsed && (
+          <div>
+            <h2 className="font-bold text-lg">JC Transportes</h2>
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent>

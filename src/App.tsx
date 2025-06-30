@@ -12,6 +12,7 @@ import GestaoLaudos from "./pages/GestaoLaudos";
 import GestaoEstoque from "./pages/GestaoEstoque";
 import CheckList from "./pages/CheckList";
 import NotFound from "./pages/NotFound";
+import { Car } from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -21,8 +22,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col">
-          <header className="h-12 flex items-center border-b px-4">
-            <SidebarTrigger />
+          <header className="h-16 flex items-center border-b px-6 bg-background">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <div className="flex items-center gap-2">
+                <Car className="h-6 w-6 text-primary" />
+                <div>
+                  <h1 className="font-bold text-lg">INDICADORES</h1>
+                  <p className="text-sm text-muted-foreground">JC Transportes</p>
+                </div>
+              </div>
+            </div>
           </header>
           <main className="flex-1 bg-background">
             {children}
@@ -41,7 +51,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Navigate to="/upload" replace />} />
+            <Route path="/" element={<Upload />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/gestao-laudos" element={<DashboardLayout><GestaoLaudos /></DashboardLayout>} />
             <Route path="/gestao-estoque" element={<DashboardLayout><GestaoEstoque /></DashboardLayout>} />

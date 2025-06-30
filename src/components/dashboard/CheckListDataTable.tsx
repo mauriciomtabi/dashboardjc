@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckListData } from '@/contexts/DataContext';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 interface CheckListDataTableProps {
   filteredData: CheckListData[];
@@ -13,51 +14,43 @@ interface CheckListDataTableProps {
 }
 
 const CheckListDataTable = ({ filteredData, isOpen, onOpenChange }: CheckListDataTableProps) => {
-  if (!isOpen) {
-    return (
-      <Button
-        onClick={() => onOpenChange(true)}
-        variant="outline"
-        className="flex items-center gap-2"
-      >
-        <ChevronDown className="h-4 w-4" />
-        Ver Tabela Completa ({filteredData.length} registros)
-      </Button>
-    );
-  }
-
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Dados Completos do Check List</CardTitle>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
         <Button
-          onClick={() => onOpenChange(false)}
           variant="outline"
-          size="sm"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-gradient-to-r from-primary/10 to-primary/20 hover:from-primary/20 hover:to-primary/30 border-primary/20 text-primary hover:text-primary-foreground transition-all duration-300 shadow-lg hover:shadow-xl"
         >
-          <ChevronUp className="h-4 w-4" />
-          Recolher
+          <Eye className="h-4 w-4" />
+          Ver Tabela Completa ({filteredData.length} registros)
         </Button>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto max-h-[600px]">
+      </DialogTrigger>
+      <DialogContent className="max-w-7xl max-h-[90vh] bg-gradient-to-br from-background via-background to-muted/20">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+            Dados Completos do Check List
+          </DialogTitle>
+        </DialogHeader>
+        <ScrollArea className="h-[70vh] w-full rounded-md border bg-gradient-to-br from-muted/5 to-muted/10">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Filial</TableHead>
-                <TableHead>Check List</TableHead>
-                <TableHead>Data e Hora</TableHead>
-                <TableHead>Item</TableHead>
-                <TableHead>bl_Confrm</TableHead>
-                <TableHead>Lista</TableHead>
-                <TableHead>Placa</TableHead>
+            <TableHeader className="sticky top-0 bg-background/95 backdrop-blur-sm">
+              <TableRow className="border-b-2 border-primary/20">
+                <TableHead className="font-semibold text-primary">Filial</TableHead>
+                <TableHead className="font-semibold text-primary">Check List</TableHead>
+                <TableHead className="font-semibold text-primary">Data e Hora</TableHead>
+                <TableHead className="font-semibold text-primary">Item</TableHead>
+                <TableHead className="font-semibold text-primary">bl_Confrm</TableHead>
+                <TableHead className="font-semibold text-primary">Lista</TableHead>
+                <TableHead className="font-semibold text-primary">Placa</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredData.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>{item.D}</TableCell>
+                <TableRow 
+                  key={index} 
+                  className="hover:bg-muted/50 transition-colors duration-200 border-b border-muted/30"
+                >
+                  <TableCell className="font-medium">{item.D}</TableCell>
                   <TableCell>{item.G}</TableCell>
                   <TableCell>{item.N}</TableCell>
                   <TableCell>{item.T}</TableCell>
@@ -68,9 +61,9 @@ const CheckListDataTable = ({ filteredData, isOpen, onOpenChange }: CheckListDat
               ))}
             </TableBody>
           </Table>
-        </div>
-      </CardContent>
-    </Card>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
   );
 };
 
