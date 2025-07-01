@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useData } from '@/contexts/DataContext';
 import FilterBar from '@/components/dashboard/FilterBar';
 import StatCard from '@/components/dashboard/StatCard';
@@ -21,9 +21,19 @@ const CheckList = () => {
   });
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   console.log('CheckList - checkListData length:', checkListData.length);
   console.log('CheckList - checkListData sample:', checkListData.slice(0, 3));
+
+  // Use effect to handle loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [checkListData]);
 
   const { filteredData, availableFilters, checkListTypeCards } = useCheckListData(filters);
 
@@ -34,6 +44,17 @@ const CheckList = () => {
   const handleDrillDown = (month: string | null) => {
     setDrillDownMonth(month);
   };
+
+  // Show loading state briefly to prevent flickering
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (checkListData.length === 0) {
     return (

@@ -108,7 +108,7 @@ export function AppSidebar() {
                     >
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
-                          className={`${getNavCls(false)} text-slate-300 hover:bg-slate-700 hover:text-white`}
+                          className="text-slate-300 hover:bg-slate-700 hover:text-white"
                         >
                           <item.icon className="h-4 w-4 text-slate-300" />
                           {!collapsed && <span>{item.title}</span>}
@@ -122,7 +122,7 @@ export function AppSidebar() {
                                 <SidebarMenuSubButton asChild>
                                   <NavLink
                                     to={subItem.url}
-                                    className={({ isActive }) => `${getSubNavCls(isActive)}`}
+                                    className={({ isActive }) => `${getSubNavCls(isActive)} flex items-center gap-2 px-2 py-1 rounded-md`}
                                   >
                                     <subItem.icon className="h-4 w-4 text-slate-300" />
                                     <span>{subItem.title}</span>
