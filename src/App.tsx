@@ -49,7 +49,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/upload" replace />} />
-            <Route path="/upload" element={<Upload />} />
+            <Route path="/upload" element={<DashboardLayout><Upload /></DashboardLayout>} />
             <Route path="/gestao-laudos" element={<DashboardLayout><GestaoLaudos /></DashboardLayout>} />
             <Route path="/gestao-estoque" element={<DashboardLayout><GestaoEstoque /></DashboardLayout>} />
             <Route path="/checklist" element={<DashboardLayout><CheckList /></DashboardLayout>} />

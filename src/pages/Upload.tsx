@@ -135,68 +135,55 @@ const Upload = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="h-16 flex items-center border-b px-6 bg-background">
-        <div className="flex items-center gap-2">
-          <img 
-            src="/lovable-uploads/65ac0d2c-d82d-4a9d-8b11-a5088ebeceec.png" 
-            alt="JC Transportes Logo" 
-            className="h-8 w-8"
-          />
-          <h1 className="font-bold text-lg">Indicadores JC Transportes</h1>
-        </div>
-      </header>
-      
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Sistema de Gestão e Análise de Dados</h1>
-          <p className="text-xl text-muted-foreground">Faça o upload da sua planilha para começar</p>
-        </div>
-
-        <Card className="max-w-2xl mx-auto shadow-lg">
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center justify-center gap-2">
-              <FileSpreadsheet className="h-6 w-6" />
-              Upload de Planilha
-            </CardTitle>
-            <CardDescription>
-              Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510" e "CHECK LIST"
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-              <UploadIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".xlsx"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading}
-                size="lg"
-                className="mb-4"
-              >
-                {isUploading ? "Processando..." : "Selecionar Arquivo Excel"}
-              </Button>
-              <p className="text-sm text-muted-foreground">
-                Apenas arquivos .xlsx são aceitos
-              </p>
-            </div>
-
-            <div className="bg-muted rounded-lg p-4">
-              <h3 className="font-semibold mb-2">Abas Obrigatórias:</h3>
-              <ul className="text-sm space-y-1">
-                <li>• R LAUDO 15568</li>
-                <li>• R ESTOQUE 15510</li>
-                <li>• CHECK LIST</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-foreground mb-4">Sistema de Gestão e Análise de Dados</h1>
+        <p className="text-xl text-muted-foreground">Faça o upload da sua planilha para começar</p>
       </div>
+
+      <Card className="max-w-2xl mx-auto shadow-lg">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2">
+            <FileSpreadsheet className="h-6 w-6" />
+            Upload de Planilha
+          </CardTitle>
+          <CardDescription>
+            Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510" e "CHECK LIST"
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+            <UploadIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              size="lg"
+              className="mb-4"
+            >
+              {isUploading ? "Processando..." : "Selecionar Arquivo Excel"}
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              Apenas arquivos .xlsx são aceitos
+            </p>
+          </div>
+
+          <div className="bg-muted rounded-lg p-4">
+            <h3 className="font-semibold mb-2">Abas Obrigatórias:</h3>
+            <ul className="text-sm space-y-1">
+              <li>• R LAUDO 15568</li>
+              <li>• R ESTOQUE 15510</li>
+              <li>• CHECK LIST</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

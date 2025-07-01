@@ -76,15 +76,19 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
 
   const isActive = (path: string) => currentPath === path;
+  const isParentActive = (subItems: any[]) => subItems.some(sub => isActive(sub.url));
   
   const getNavCls = (active: boolean) =>
-    active ? "bg-accent text-accent-foreground font-medium" : "hover:bg-accent/50";
+    active ? "bg-blue-600 text-white font-medium" : "text-slate-300 hover:bg-blue-600 hover:text-white";
+
+  const getSubNavCls = (active: boolean) =>
+    active ? "bg-blue-600 text-white font-medium" : "text-slate-300 hover:bg-blue-600 hover:text-white";
 
   return (
     <Sidebar collapsible="icon" className="border-r bg-slate-800 text-white">
-      <SidebarHeader className="border-b border-slate-700 p-4">
+      <SidebarHeader className="border-b border-slate-700 p-4 bg-slate-800">
         <div className="flex items-center gap-2">
-          <SidebarTrigger className="text-white hover:bg-slate-700" />
+          <SidebarTrigger className="text-slate-300 hover:bg-slate-700 hover:text-white" />
           {!collapsed && (
             <h2 className="font-bold text-lg text-white">JC Transportes</h2>
           )}
@@ -99,14 +103,14 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   {item.subItems ? (
                     <Collapsible 
-                      defaultOpen={item.subItems.some(sub => isActive(sub.url))}
+                      defaultOpen={isParentActive(item.subItems)}
                       className="group/collapsible"
                     >
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
-                          className={`${getNavCls(item.subItems.some(sub => isActive(sub.url)))} text-white hover:bg-slate-700`}
+                          className={`${getNavCls(false)} text-slate-300 hover:bg-slate-700 hover:text-white`}
                         >
-                          <item.icon className="h-4 w-4" />
+                          <item.icon className="h-4 w-4 text-slate-300" />
                           {!collapsed && <span>{item.title}</span>}
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
@@ -118,9 +122,9 @@ export function AppSidebar() {
                                 <SidebarMenuSubButton asChild>
                                   <NavLink
                                     to={subItem.url}
-                                    className={({ isActive }) => `${getNavCls(isActive)} text-white hover:bg-slate-700`}
+                                    className={({ isActive }) => `${getSubNavCls(isActive)}`}
                                   >
-                                    <subItem.icon className="h-4 w-4" />
+                                    <subItem.icon className="h-4 w-4 text-slate-300" />
                                     <span>{subItem.title}</span>
                                   </NavLink>
                                 </SidebarMenuSubButton>
@@ -133,11 +137,11 @@ export function AppSidebar() {
                   ) : (
                     <SidebarMenuButton 
                       asChild
-                      className={`${getNavCls(isActive(item.url || ''))} text-white hover:bg-slate-700`}
+                      className={`${getNavCls(isActive(item.url || ''))} text-slate-300 hover:bg-slate-700 hover:text-white`}
                       disabled={item.disabled}
                     >
                       <NavLink to={item.url || '#'}>
-                        <item.icon className="h-4 w-4" />
+                        <item.icon className="h-4 w-4 text-slate-300" />
                         {!collapsed && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>

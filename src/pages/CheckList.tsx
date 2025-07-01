@@ -37,12 +37,10 @@ const CheckList = () => {
 
   if (checkListData.length === 0) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="max-w-7xl mx-auto p-6">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4">Nenhum dado disponível</h2>
-            <p className="text-muted-foreground">Faça o upload de uma planilha para visualizar os dados.</p>
-          </div>
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-semibold mb-4">Nenhum dado disponível</h2>
+          <p className="text-muted-foreground">Faça o upload de uma planilha para visualizar os dados.</p>
         </div>
       </div>
     );
