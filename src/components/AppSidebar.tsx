@@ -84,6 +84,9 @@ export function AppSidebar() {
   const getSubNavCls = (active: boolean) =>
     active ? "bg-blue-600 text-white font-medium" : "text-slate-300 hover:bg-blue-600 hover:text-white";
 
+  const getIconCls = (active: boolean) =>
+    active ? "text-white" : "text-slate-300";
+
   return (
     <Sidebar collapsible="icon" className="border-r bg-slate-800 text-white">
       <SidebarHeader className="border-b border-slate-700 p-4 bg-slate-800">
@@ -124,8 +127,8 @@ export function AppSidebar() {
                                     to={subItem.url}
                                     className={({ isActive }) => `${getSubNavCls(isActive)} flex items-center gap-2 px-2 py-1 rounded-md`}
                                   >
-                                    <subItem.icon className="h-4 w-4 text-slate-300" />
-                                    <span>{subItem.title}</span>
+                                    <subItem.icon className={`h-4 w-4 ${getIconCls(isActive(subItem.url))}`} />
+                                    <span className={getIconCls(isActive(subItem.url))}>{subItem.title}</span>
                                   </NavLink>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>

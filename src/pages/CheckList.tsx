@@ -22,26 +22,57 @@ const CheckList = () => {
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   console.log('CheckList - checkListData length:', checkListData.length);
   console.log('CheckList - checkListData sample:', checkListData.slice(0, 3));
 
-  // Use effect to handle loading state
+  // Use effect to handle loading state and error checking
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 100);
+    console.log('CheckList useEffect - checkListData changed:', checkListData.length);
+    
+    try {
+      const timer = setTimeout(() => {
+        console.log('CheckList - Setting isLoading to false');
+        setIsLoading(false);
+        setError(null);
+      }, 500);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    } catch (err) {
+      console.error('CheckList - Error in useEffect:', err);
+      setError('Erro ao carregar dados do CheckList');
+      setIsLoading(false);
+    }
   }, [checkListData]);
 
-  const { filteredData, availableFilters, checkListTypeCards } = useCheckListData(filters);
+  // Initialize hook with error handling
+  let filteredData, availableFilters, checkListTypeCards;
+  
+  try {
+    console.log('CheckList - Calling useCheckListData with filters:', filters);
+    const hookResult = useCheckListData(filters);
+    filteredData = hookResult.filteredData;
+    availableFilters = hookResult.availableFilters;
+    checkListTypeCards = hookResult.checkListTypeCards;
+    
+    console.log('CheckList - Hook result:', {
+      filteredDataLength: filteredData?.length,
+      availableFilters,
+      checkListTypeCardsLength: checkListTypeCards?.length
+    });
+  } catch (err) {
+    console.error('CheckList - Error in useCheckListData hook:', err);
+    setError('Erro ao processar dados do CheckList');
+  }
 
   const handleFilterChange = (key: string, value: string | string[]) => {
+    console.log('CheckList - Filter change:', key, value);
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const handleDrillDown = (month: string | null) => {
+    console.log('CheckList - Drill down:', month);
     setDrillDownMonth(month);
   };
 
@@ -51,6 +82,18 @@ const CheckList = () => {
       <div className="max-w-7xl mx-auto p-6">
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-semibold mb-4 text-red-600">Erro</h2>
+          <p className="text-muted-foreground">{error}</p>
         </div>
       </div>
     );
@@ -66,6 +109,21 @@ const CheckList = () => {
       </div>
     );
   }
+
+  // Additional safety check for hook results
+  if (!filteredData || !availableFilters || !checkListTypeCards) {
+    console.error('CheckList - Missing hook results:', { filteredData, availableFilters, checkListTypeCards });
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-semibold mb-4 text-red-600">Erro de Processamento</h2>
+          <p className="text-muted-foreground">Erro ao processar os dados do CheckList. Verifique o console para mais detalhes.</p>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('CheckList - About to render main content');
 
   return (
     <div className="max-w-7xl mx-auto">
