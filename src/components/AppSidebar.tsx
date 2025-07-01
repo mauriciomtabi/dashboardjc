@@ -5,7 +5,8 @@ import {
   Wrench, 
   ClipboardCheck, 
   FileText, 
-  Package
+  Package,
+  Upload as UploadIcon
 } from 'lucide-react';
 import {
   Sidebar,
@@ -19,6 +20,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -41,6 +43,11 @@ const PneuIcon = ({ className }: { className?: string }) => (
 );
 
 const menuItems = [
+  {
+    title: "Upload",
+    icon: UploadIcon,
+    url: "/upload"
+  },
   {
     title: "Gestão de Pneus",
     icon: PneuIcon,
@@ -74,16 +81,17 @@ export function AppSidebar() {
     active ? "bg-accent text-accent-foreground font-medium" : "hover:bg-accent/50";
 
   return (
-    <Sidebar collapsible="icon" className="border-r">
-      <SidebarHeader className="border-b p-4">
-        {!collapsed && (
-          <div>
-            <h2 className="font-bold text-lg">JC Transportes</h2>
-          </div>
-        )}
+    <Sidebar collapsible="icon" className="border-r bg-slate-800 text-white">
+      <SidebarHeader className="border-b border-slate-700 p-4">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger className="text-white hover:bg-slate-700" />
+          {!collapsed && (
+            <h2 className="font-bold text-lg text-white">JC Transportes</h2>
+          )}
+        </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-slate-800">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -96,7 +104,7 @@ export function AppSidebar() {
                     >
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
-                          className={getNavCls(item.subItems.some(sub => isActive(sub.url)))}
+                          className={`${getNavCls(item.subItems.some(sub => isActive(sub.url)))} text-white hover:bg-slate-700`}
                         >
                           <item.icon className="h-4 w-4" />
                           {!collapsed && <span>{item.title}</span>}
@@ -110,7 +118,7 @@ export function AppSidebar() {
                                 <SidebarMenuSubButton asChild>
                                   <NavLink
                                     to={subItem.url}
-                                    className={({ isActive }) => getNavCls(isActive)}
+                                    className={({ isActive }) => `${getNavCls(isActive)} text-white hover:bg-slate-700`}
                                   >
                                     <subItem.icon className="h-4 w-4" />
                                     <span>{subItem.title}</span>
@@ -125,7 +133,7 @@ export function AppSidebar() {
                   ) : (
                     <SidebarMenuButton 
                       asChild
-                      className={getNavCls(isActive(item.url || ''))}
+                      className={`${getNavCls(isActive(item.url || ''))} text-white hover:bg-slate-700`}
                       disabled={item.disabled}
                     >
                       <NavLink to={item.url || '#'}>

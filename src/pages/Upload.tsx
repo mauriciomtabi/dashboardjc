@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useData } from '@/contexts/DataContext';
-import Navigation from '@/components/dashboard/Navigation';
 import * as XLSX from 'xlsx';
 import { Upload as UploadIcon, FileSpreadsheet } from 'lucide-react';
 
@@ -137,11 +136,21 @@ const Upload = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <header className="h-16 flex items-center border-b px-6 bg-background">
+        <div className="flex items-center gap-2">
+          <img 
+            src="/lovable-uploads/65ac0d2c-d82d-4a9d-8b11-a5088ebeceec.png" 
+            alt="JC Transportes Logo" 
+            className="h-8 w-8"
+          />
+          <h1 className="font-bold text-lg">Indicadores JC Transportes</h1>
+        </div>
+      </header>
+      
       <div className="max-w-4xl mx-auto p-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-4">INDICADORES JC TRANSPORTES</h1>
-          <p className="text-xl text-muted-foreground">Sistema de Gestão e Análise de Dados</p>
+          <h1 className="text-4xl font-bold text-foreground mb-4">Sistema de Gestão e Análise de Dados</h1>
+          <p className="text-xl text-muted-foreground">Faça o upload da sua planilha para começar</p>
         </div>
 
         <Card className="max-w-2xl mx-auto shadow-lg">

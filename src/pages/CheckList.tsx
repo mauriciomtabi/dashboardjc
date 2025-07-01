@@ -22,6 +22,9 @@ const CheckList = () => {
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
 
+  console.log('CheckList - checkListData length:', checkListData.length);
+  console.log('CheckList - checkListData sample:', checkListData.slice(0, 3));
+
   const { filteredData, availableFilters, checkListTypeCards } = useCheckListData(filters);
 
   const handleFilterChange = (key: string, value: string | string[]) => {
