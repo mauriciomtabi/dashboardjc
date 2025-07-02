@@ -27,44 +27,15 @@ const CheckList = () => {
   console.log('CheckList - checkListData length:', checkListData.length);
   console.log('CheckList - checkListData sample:', checkListData.slice(0, 3));
 
-  // Use effect to handle loading state and error checking
+  // Use effect to handle loading state
   useEffect(() => {
     console.log('CheckList useEffect - checkListData changed:', checkListData.length);
-    
-    try {
-      const timer = setTimeout(() => {
-        console.log('CheckList - Setting isLoading to false');
-        setIsLoading(false);
-        setError(null);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    } catch (err) {
-      console.error('CheckList - Error in useEffect:', err);
-      setError('Erro ao carregar dados do CheckList');
-      setIsLoading(false);
-    }
+    setIsLoading(false);
+    setError(null);
   }, [checkListData]);
 
-  // Initialize hook with error handling
-  let filteredData, availableFilters, checkListTypeCards;
-  
-  try {
-    console.log('CheckList - Calling useCheckListData with filters:', filters);
-    const hookResult = useCheckListData(filters);
-    filteredData = hookResult.filteredData;
-    availableFilters = hookResult.availableFilters;
-    checkListTypeCards = hookResult.checkListTypeCards;
-    
-    console.log('CheckList - Hook result:', {
-      filteredDataLength: filteredData?.length,
-      availableFilters,
-      checkListTypeCardsLength: checkListTypeCards?.length
-    });
-  } catch (err) {
-    console.error('CheckList - Error in useCheckListData hook:', err);
-    setError('Erro ao processar dados do CheckList');
-  }
+  // Use hook with error handling
+  const { filteredData, availableFilters, checkListTypeCards } = useCheckListData(filters);
 
   const handleFilterChange = (key: string, value: string | string[]) => {
     console.log('CheckList - Filter change:', key, value);
@@ -110,18 +81,6 @@ const CheckList = () => {
     );
   }
 
-  // Additional safety check for hook results
-  if (!filteredData || !availableFilters || !checkListTypeCards) {
-    console.error('CheckList - Missing hook results:', { filteredData, availableFilters, checkListTypeCards });
-    return (
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold mb-4 text-red-600">Erro de Processamento</h2>
-          <p className="text-muted-foreground">Erro ao processar os dados do CheckList. Verifique o console para mais detalhes.</p>
-        </div>
-      </div>
-    );
-  }
 
   console.log('CheckList - About to render main content');
 

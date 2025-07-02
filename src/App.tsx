@@ -11,6 +11,7 @@ import Upload from "./pages/Upload";
 import GestaoLaudos from "./pages/GestaoLaudos";
 import GestaoEstoque from "./pages/GestaoEstoque";
 import CheckList from "./pages/CheckList";
+import GestaoManutencao from "./pages/GestaoManutencao";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/upload" element={<DashboardLayout><Upload /></DashboardLayout>} />
             <Route path="/gestao-laudos" element={<DashboardLayout><GestaoLaudos /></DashboardLayout>} />
             <Route path="/gestao-estoque" element={<DashboardLayout><GestaoEstoque /></DashboardLayout>} />
+            <Route path="/gestao-manutencao" element={<DashboardLayout><GestaoManutencao /></DashboardLayout>} />
             <Route path="/checklist" element={<DashboardLayout><CheckList /></DashboardLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
