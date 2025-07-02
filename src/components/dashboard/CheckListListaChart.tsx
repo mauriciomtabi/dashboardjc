@@ -49,52 +49,54 @@ const CheckListListaChart = ({ filteredData }: CheckListListaChartProps) => {
           {/* Fundo do gráfico com gradiente sutil */}
           <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-muted/20 rounded-lg opacity-50" />
           
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-              <CartesianGrid 
-                strokeDasharray="3 3" 
-                stroke="rgba(148, 163, 184, 0.2)"
-                strokeWidth={1}
-              />
-              <XAxis 
-                dataKey="name" 
-                tick={{ fontSize: 10 }}
-                angle={-45}
-                textAnchor="end"
-                height={80}
-                interval={0}
-              />
-              <YAxis />
-              <ChartTooltip 
-                formatter={(value, name) => [value, 'Quantidade']}
-                labelFormatter={(label) => label}
-                labelStyle={{ whiteSpace: 'normal', wordBreak: 'break-word', maxWidth: '200px' }}
-                contentStyle={{ 
-                  maxWidth: '300px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(59, 130, 246, 0.2)',
-                  borderRadius: '12px',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-                }}
-              />
-              <Bar dataKey="value" fill="url(#listaGradient)" radius={[8, 8, 0, 0]} className="drop-shadow-lg">
-                <LabelList dataKey="value" position="top" className="fill-primary font-semibold" />
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} />
-                ))}
-              </Bar>
-              
-              {/* Definindo gradiente personalizado */}
-              <defs>
-                <linearGradient id="listaGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity={1}/>
-                  <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.9}/>
-                  <stop offset="100%" stopColor="#7c3aed" stopOpacity={0.8}/>
-                </linearGradient>
-              </defs>
-            </BarChart>
-          </ResponsiveContainer>
+          <ChartContainer config={{}} className="w-full h-[300px]">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                <CartesianGrid 
+                  strokeDasharray="3 3" 
+                  stroke="rgba(148, 163, 184, 0.2)"
+                  strokeWidth={1}
+                />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: 10 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
+                  interval={0}
+                />
+                <YAxis />
+                <ChartTooltip 
+                  formatter={(value, name) => [value, 'Quantidade']}
+                  labelFormatter={(label) => label}
+                  labelStyle={{ whiteSpace: 'normal', wordBreak: 'break-word', maxWidth: '200px' }}
+                  contentStyle={{ 
+                    maxWidth: '300px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(59, 130, 246, 0.2)',
+                    borderRadius: '12px',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                  }}
+                />
+                <Bar dataKey="value" fill="url(#listaGradient)" radius={[8, 8, 0, 0]} className="drop-shadow-lg">
+                  <LabelList dataKey="value" position="top" className="fill-primary font-semibold" />
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} />
+                  ))}
+                </Bar>
+                
+                {/* Definindo gradiente personalizado */}
+                <defs>
+                  <linearGradient id="listaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity={1}/>
+                    <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.9}/>
+                    <stop offset="100%" stopColor="#7c3aed" stopOpacity={0.8}/>
+                  </linearGradient>
+                </defs>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </CardContent>
     </Card>
