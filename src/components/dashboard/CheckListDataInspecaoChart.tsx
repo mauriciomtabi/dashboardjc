@@ -26,8 +26,22 @@ const CheckListDataInspecaoChart = ({
     if (drillDownMonth) {
       // Drill down por dia
       const dailyData = filteredData.reduce((acc, item) => {
-        const date = new Date(item.N);
-        if (isValid(date) && format(date, 'yyyy-MM') === drillDownMonth) {
+        // Tentar converter diferentes formatos de data
+        let date: Date | null = null;
+        
+        if (typeof item.N === 'string' && item.N.includes('/')) {
+          // Formato DD/MM/YYYY
+          const [day, month, year] = item.N.split('/');
+          date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        } else if (typeof item.N === 'number') {
+          // Excel serial date
+          date = new Date((item.N - 25569) * 86400 * 1000);
+        } else {
+          // Tentar parseISO
+          date = new Date(item.N);
+        }
+        
+        if (date && isValid(date) && format(date, 'yyyy-MM') === drillDownMonth) {
           const day = format(date, 'dd');
           acc[day] = (acc[day] || 0) + 1;
         }
@@ -43,8 +57,22 @@ const CheckListDataInspecaoChart = ({
     } else {
       // Dados mensais
       const monthlyData = filteredData.reduce((acc, item) => {
-        const date = new Date(item.N);
-        if (isValid(date)) {
+        // Tentar converter diferentes formatos de data
+        let date: Date | null = null;
+        
+        if (typeof item.N === 'string' && item.N.includes('/')) {
+          // Formato DD/MM/YYYY
+          const [day, month, year] = item.N.split('/');
+          date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        } else if (typeof item.N === 'number') {
+          // Excel serial date
+          date = new Date((item.N - 25569) * 86400 * 1000);
+        } else {
+          // Tentar parseISO
+          date = new Date(item.N);
+        }
+        
+        if (date && isValid(date)) {
           const month = format(date, 'yyyy-MM');
           acc[month] = (acc[month] || 0) + 1;
         }

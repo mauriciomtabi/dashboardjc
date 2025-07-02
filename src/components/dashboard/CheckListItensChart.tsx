@@ -25,7 +25,8 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
         name: item,
         value: count,
       }))
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 20); // Top 20 itens
   }, [filteredData]);
 
   return (
@@ -40,7 +41,7 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
             <ClipboardList className="h-5 w-5 text-primary relative z-10" />
           </div>
           <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-            Itens Inspecionados
+            Top 20 Itens mais inspecionados
           </span>
         </CardTitle>
       </CardHeader>
