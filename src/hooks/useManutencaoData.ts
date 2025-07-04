@@ -90,7 +90,7 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
       return {
         title: operacao,
         value: custoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-        percentage: percentage.toFixed(1),
+        percentage: parseFloat(percentage.toFixed(1)),
       };
     });
   }, [filteredData, manutencaoData]);
