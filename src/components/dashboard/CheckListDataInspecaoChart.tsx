@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
@@ -56,6 +57,7 @@ const CheckListDataInspecaoChart = ({
           name: `Dia ${day}`,
           conforme: counts.conforme,
           naoConforme: counts.naoConforme,
+          total: counts.conforme + counts.naoConforme,
         }))
         .sort((a, b) => parseInt(a.name.split(' ')[1]) - parseInt(b.name.split(' ')[1]));
     } else {
@@ -103,6 +105,7 @@ const CheckListDataInspecaoChart = ({
           conforme: counts.conforme,
           naoConforme: counts.naoConforme,
           fullMonth: yearMonth,
+          total: counts.conforme + counts.naoConforme,
         };
       });
 
@@ -159,6 +162,16 @@ const CheckListDataInspecaoChart = ({
           <ChartContainer config={chartConfig} className="w-full h-[300px]">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="conformeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.3} />
+                  </linearGradient>
+                  <linearGradient id="naoConformeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid 
                   strokeDasharray="3 3" 
                   stroke="rgba(148, 163, 184, 0.2)"
@@ -177,7 +190,7 @@ const CheckListDataInspecaoChart = ({
                 <Bar 
                   dataKey="conforme" 
                   stackId="conformidade"
-                  fill="#10b981"
+                  fill="url(#conformeGradient)"
                   onClick={handleBarClick}
                   className="cursor-pointer"
                   radius={[0, 0, 0, 0]}
@@ -185,11 +198,13 @@ const CheckListDataInspecaoChart = ({
                 <Bar 
                   dataKey="naoConforme" 
                   stackId="conformidade"
-                  fill="#ef4444"
+                  fill="url(#naoConformeGradient)"
                   onClick={handleBarClick}
                   className="cursor-pointer"
                   radius={[8, 8, 0, 0]}
-                />
+                >
+                  <LabelList dataKey="total" position="top" fontSize={10} />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>

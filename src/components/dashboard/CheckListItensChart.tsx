@@ -61,7 +61,7 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
             <ClipboardList className="h-5 w-5 text-primary relative z-10" />
           </div>
           <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-            Top itens não conformes
+            Top Itens Não Conformes
           </span>
         </CardTitle>
       </CardHeader>
@@ -76,6 +76,16 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
                   data={chartData} 
                   margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                 >
+                  <defs>
+                    <linearGradient id="conformeGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity={0.3} />
+                    </linearGradient>
+                    <linearGradient id="naoConformeGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
+                      <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid 
                     strokeDasharray="3 3" 
                     stroke="rgba(148, 163, 184, 0.2)"
@@ -94,13 +104,13 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
                   <Bar 
                     dataKey="conforme" 
                     stackId="conformidade"
-                    fill="#10b981"
+                    fill="url(#conformeGradient)"
                     radius={[0, 0, 0, 0]}
                   />
                   <Bar 
                     dataKey="naoConforme" 
                     stackId="conformidade"
-                    fill="#ef4444"
+                    fill="url(#naoConformeGradient)"
                     radius={[8, 8, 0, 0]}
                   >
                     <LabelList dataKey="total" position="top" fontSize={10} />

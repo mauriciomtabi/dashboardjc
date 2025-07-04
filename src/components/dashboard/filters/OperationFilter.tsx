@@ -58,10 +58,17 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
             {availableOperations.map((op) => {
               const isSelected = Array.isArray(value) && value.includes(op);
               return (
-                <div key={op} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer" onClick={() => handleMultipleSelectChange(op, !isSelected)}>
+                <div 
+                  key={op} 
+                  className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer rounded-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleMultipleSelectChange(op, !isSelected);
+                  }}
+                >
                   <Checkbox 
                     checked={isSelected}
-                    onChange={() => {}}
+                    readOnly
                   />
                   <span className="text-sm">{op}</span>
                 </div>

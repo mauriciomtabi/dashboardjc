@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
 import { ManutencaoData } from '@/contexts/DataContext';
-import { Settings } from 'lucide-react';
+import { Wrench } from 'lucide-react';
 
 interface ManutencaoPecasChartProps {
   filteredData: ManutencaoData[];
@@ -14,29 +14,26 @@ const ManutencaoPecasChart = ({ filteredData }: ManutencaoPecasChartProps) => {
   
   const chartData = React.useMemo(() => {
     const pecaCounts = filteredData.reduce((acc, item) => {
-      if (item.L) {
-        if (!acc[item.L]) {
-          acc[item.L] = { preventiva: 0, corretiva: 0, custoTotal: 0 };
+      if (item.T) {
+        if (!acc[item.T]) {
+          acc[item.T] = { preventiva: 0, corretiva: 0 };
         }
         
-        const valor = parseFloat(item.Q) || 0;
-        acc[item.L].custoTotal += valor;
-        
-        if (item.Z === 'P') {
-          acc[item.L].preventiva += valor;
-        } else if (item.Z === 'C') {
-          acc[item.L].corretiva += valor;
+        if (item.G === 'Preventiva') {
+          acc[item.T].preventiva++;
+        } else if (item.G === 'Corretiva') {
+          acc[item.T].corretiva++;
         }
       }
       return acc;
-    }, {} as Record<string, { preventiva: number; corretiva: number; custoTotal: number }>);
+    }, {} as Record<string, { preventiva: number; corretiva: number }>);
 
     return Object.entries(pecaCounts)
       .map(([peca, counts]) => ({
         name: peca,
         preventiva: counts.preventiva,
         corretiva: counts.corretiva,
-        total: counts.custoTotal,
+        total: counts.preventiva + counts.corretiva,
       }))
       .sort((a, b) => b.total - a.total)
       .slice(0, 15);
@@ -61,10 +58,10 @@ const ManutencaoPecasChart = ({ filteredData }: ManutencaoPecasChartProps) => {
         <CardTitle className="flex items-center gap-3 group-hover:text-primary transition-colors duration-300">
           <div className="p-2.5 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 group-hover:from-primary/20 group-hover:to-primary/30 transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
-            <Settings className="h-5 w-5 text-primary relative z-10" />
+            <Wrench className="h-5 w-5 text-primary relative z-10" />
           </div>
           <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-            Top 15 Peças - Custo de Manutenção
+            Peças
           </span>
         </CardTitle>
       </CardHeader>
@@ -74,8 +71,21 @@ const ManutencaoPecasChart = ({ filteredData }: ManutencaoPecasChartProps) => {
             <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-muted/20 rounded-lg opacity-50" />
             
             <ChartContainer config={chartConfig} className="w-full h-[300px]">
-              <ResponsiveContainer width={Math.max(1000, chartData.length * 60)} height={300}>
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+              <ResponsiveContainer width={Math.max(1200, chartData.length * 80)} height={300}>
+                <BarChart 
+                  data={chartData} 
+                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                >
+                  <defs>
+                    <linearGradient id="preventivaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity={0.3} />
+                    </linearGradient>
+                    <linearGradient id="corretivaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
+                      <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid 
                     strokeDasharray="3 3" 
                     stroke="rgba(148, 163, 184, 0.2)"
@@ -89,30 +99,21 @@ const ManutencaoPecasChart = ({ filteredData }: ManutencaoPecasChartProps) => {
                     height={80}
                     interval={0}
                   />
-                  <YAxis 
-                    tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`}
-                  />
-                  <ChartTooltip 
-                    content={<ChartTooltipContent 
-                      formatter={(value, name) => [
-                        `R$ ${Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-                        name === 'preventiva' ? 'Preventiva' : 'Corretiva'
-                      ]}
-                    />} 
-                  />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
                   <Bar 
                     dataKey="preventiva" 
                     stackId="manutencao"
-                    fill="#10b981"
+                    fill="url(#preventivaGradient)"
                     radius={[0, 0, 0, 0]}
                   />
                   <Bar 
                     dataKey="corretiva" 
                     stackId="manutencao"
-                    fill="#ef4444"
+                    fill="url(#corretivaGradient)"
                     radius={[8, 8, 0, 0]}
                   >
-                    <LabelList dataKey="total" position="top" fontSize={10} formatter={(value) => `R$ ${(Number(value) / 1000).toFixed(0)}k`} />
+                    <LabelList dataKey="total" position="top" fontSize={10} />
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
