@@ -68,7 +68,6 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
                 >
                   <Checkbox 
                     checked={isSelected}
-                    readOnly
                   />
                   <span className="text-sm">{op}</span>
                 </div>

@@ -14,15 +14,15 @@ const ManutencaoFornecedoresChart = ({ filteredData }: ManutencaoFornecedoresCha
   
   const chartData = React.useMemo(() => {
     const fornecedorCounts = filteredData.reduce((acc, item) => {
-      if (item.S) {
-        if (!acc[item.S]) {
-          acc[item.S] = { preventiva: 0, corretiva: 0 };
+      if (item.AJ) {
+        if (!acc[item.AJ]) {
+          acc[item.AJ] = { preventiva: 0, corretiva: 0 };
         }
         
-        if (item.G === 'Preventiva') {
-          acc[item.S].preventiva++;
-        } else if (item.G === 'Corretiva') {
-          acc[item.S].corretiva++;
+        if (item.Z === 'P') {
+          acc[item.AJ].preventiva++;
+        } else if (item.Z === 'C') {
+          acc[item.AJ].corretiva++;
         }
       }
       return acc;

@@ -14,15 +14,15 @@ const ManutencaoVeiculosChart = ({ filteredData }: ManutencaoVeiculosChartProps)
   
   const chartData = React.useMemo(() => {
     const veiculoCounts = filteredData.reduce((acc, item) => {
-      if (item.H) {
-        if (!acc[item.H]) {
-          acc[item.H] = { preventiva: 0, corretiva: 0 };
+      if (item.B) {
+        if (!acc[item.B]) {
+          acc[item.B] = { preventiva: 0, corretiva: 0 };
         }
         
-        if (item.G === 'Preventiva') {
-          acc[item.H].preventiva++;
-        } else if (item.G === 'Corretiva') {
-          acc[item.H].corretiva++;
+        if (item.Z === 'P') {
+          acc[item.B].preventiva++;
+        } else if (item.Z === 'C') {
+          acc[item.B].corretiva++;
         }
       }
       return acc;

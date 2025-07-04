@@ -14,15 +14,15 @@ const ManutencaoPecasChart = ({ filteredData }: ManutencaoPecasChartProps) => {
   
   const chartData = React.useMemo(() => {
     const pecaCounts = filteredData.reduce((acc, item) => {
-      if (item.T) {
-        if (!acc[item.T]) {
-          acc[item.T] = { preventiva: 0, corretiva: 0 };
+      if (item.L) {
+        if (!acc[item.L]) {
+          acc[item.L] = { preventiva: 0, corretiva: 0 };
         }
         
-        if (item.G === 'Preventiva') {
-          acc[item.T].preventiva++;
-        } else if (item.G === 'Corretiva') {
-          acc[item.T].corretiva++;
+        if (item.Z === 'P') {
+          acc[item.L].preventiva++;
+        } else if (item.Z === 'C') {
+          acc[item.L].corretiva++;
         }
       }
       return acc;
