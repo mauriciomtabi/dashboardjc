@@ -68,7 +68,7 @@ const TipoManutencaoCard = ({ title, custo, veiculos, percentage, variant }: Tip
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className={`text-2xl font-bold bg-gradient-to-r ${variant === 'preventiva' ? 'from-green-600 via-green-500 to-green-600' : 'from-red-600 via-red-500 to-red-600'} bg-clip-text text-transparent group-hover:from-current group-hover:via-current group-hover:to-current transition-all duration-300 drop-shadow-sm`}>
+          <div className={`text-2xl font-bold ${variant === 'preventiva' ? 'text-green-600' : 'text-red-600'} transition-all duration-300 drop-shadow-sm`}>
             {custo}
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">

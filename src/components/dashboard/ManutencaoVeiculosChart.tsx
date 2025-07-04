@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ManutencaoData } from '@/contexts/DataContext';
 import { Truck } from 'lucide-react';
 
@@ -113,7 +113,7 @@ const ManutencaoVeiculosChart = ({ filteredData }: ManutencaoVeiculosChartProps)
               fontSize={12}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ fontSize: '14px', fontWeight: '600', paddingTop: '20px' }} />
+            
             <Bar dataKey="Corretiva" stackId="a" fill="#ef4444" radius={[0, 0, 0, 0]} />
             <Bar dataKey="Preventiva" stackId="a" fill="#22c55e" radius={[4, 4, 0, 0]} />
           </BarChart>

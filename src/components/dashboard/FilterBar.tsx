@@ -73,6 +73,7 @@ const FilterBar = ({
               onChange={(value) => onFilterChange('operacao', value)}
               availableOperations={availableFilters.operacoes}
               onClear={() => clearFilter('operacao')}
+              isMultiple={true}
             />
           </div>
           
