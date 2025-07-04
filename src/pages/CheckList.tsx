@@ -109,7 +109,7 @@ const CheckList = () => {
       <div className="p-6 pt-8 space-y-8">
         {/* Cards de Conformidade */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Conformidade</h3>
+          <h3 className="text-lg font-semibold">Conformidade das Inspeções</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {conformidadeCards.map((card, index) => (
               <StatCard
@@ -117,7 +117,7 @@ const CheckList = () => {
                 title={card.title}
                 value={card.value}
                 percentage={card.percentage}
-                variant="default"
+                variant={card.title === 'Conforme' ? 'conforme' : 'nao-conforme'}
               />
             ))}
           </div>
