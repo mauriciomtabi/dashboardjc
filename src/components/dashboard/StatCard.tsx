@@ -69,7 +69,7 @@ const StatCard = ({ title, value, percentage, icon, className, variant = 'defaul
           )}
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className={`text-3xl font-bold bg-gradient-to-r ${variant === 'estoque' ? 'from-emerald-600 via-emerald-500 to-emerald-600' : 'from-primary via-primary to-primary/70'} bg-clip-text text-transparent group-hover:from-current group-hover:via-current group-hover:to-current transition-all duration-300 drop-shadow-sm`}>
+          <div className={`text-2xl font-bold bg-gradient-to-r ${variant === 'estoque' ? 'from-emerald-600 via-emerald-500 to-emerald-600' : 'from-primary via-primary to-primary/70'} bg-clip-text text-transparent group-hover:from-current group-hover:via-current group-hover:to-current transition-all duration-300 drop-shadow-sm`}>
             {value}
           </div>
           {percentage !== undefined && (

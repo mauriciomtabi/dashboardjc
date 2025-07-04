@@ -36,7 +36,7 @@ const StockFilter = ({ value, onChange, availableStocks, onClear }: StockFilterP
       <div className="flex items-center justify-between">
         <Label className="text-sm flex items-center gap-1">
           <Package className="h-4 w-4" />
-          Estoque
+          Tipo de Manutenção
         </Label>
         {hasValue && (
           <Button variant="ghost" size="sm" onClick={onClear}>

@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 import { ManutencaoData } from '@/contexts/DataContext';
 import { parseExcelDate } from '@/utils/dateUtils';
@@ -17,7 +16,8 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
       const parsedDate = parseExcelDate(item.W);
       if (!parsedDate) return false;
       
-      const mes = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const mes = monthNames[parsedDate.getMonth()];
       const ano = parsedDate.getFullYear().toString();
       
       if (Array.isArray(filters.mes) && filters.mes.length > 0 && !filters.mes.includes(mes)) return false;
@@ -38,11 +38,16 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
   }, [manutencaoData, filters]);
 
   const availableFilters = useMemo(() => {
+    const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    
     const meses = [...new Set(manutencaoData.map(item => {
       const parsedDate = parseExcelDate(item.W);
       if (!parsedDate) return null;
-      return (parsedDate.getMonth() + 1).toString().padStart(2, '0');
-    }).filter(Boolean))].sort();
+      const monthIndex = parsedDate.getMonth();
+      return monthNames[monthIndex];
+    }).filter(Boolean))].sort((a, b) => {
+      return monthNames.indexOf(a) - monthNames.indexOf(b);
+    });
 
     const anos = [...new Set(manutencaoData.map(item => {
       const parsedDate = parseExcelDate(item.W);
@@ -66,6 +71,12 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
   const operacaoCards = useMemo(() => {
     const operacoes = [...new Set(filteredData.map(item => item.AI))].filter(Boolean);
     
+    // Calcular custo total de todas as operações
+    const custoTotalGeral = filteredData.reduce((acc, item) => {
+      const valor = parseFloat(item.Q) || 0;
+      return acc + valor;
+    }, 0);
+    
     return operacoes.map(operacao => {
       const dadosOperacao = filteredData.filter(item => item.AI === operacao);
       const custoTotal = dadosOperacao.reduce((acc, item) => {
@@ -73,19 +84,8 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
         return acc + valor;
       }, 0);
 
-      const dadosOperacaoAnterior = manutencaoData.filter(item => {
-        const parsedDate = parseExcelDate(item.W);
-        if (!parsedDate) return false;
-        const anoAnterior = new Date().getFullYear() - 1;
-        return parsedDate.getFullYear() === anoAnterior && item.AI === operacao;
-      });
-
-      const custoAnterior = dadosOperacaoAnterior.reduce((acc, item) => {
-        const valor = parseFloat(item.Q) || 0;
-        return acc + valor;
-      }, 0);
-
-      const percentage = custoAnterior > 0 ? ((custoTotal - custoAnterior) / custoAnterior) * 100 : 0;
+      // Calcular percentual sobre o total
+      const percentage = custoTotalGeral > 0 ? (custoTotal / custoTotalGeral) * 100 : 0;
 
       return {
         title: operacao,
@@ -93,7 +93,7 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
         percentage: parseFloat(percentage.toFixed(1)),
       };
     });
-  }, [filteredData, manutencaoData]);
+  }, [filteredData]);
 
   return {
     filteredData,

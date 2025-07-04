@@ -9,6 +9,7 @@ import ManutencaoFornecedoresChart from '@/components/dashboard/ManutencaoFornec
 import ManutencaoPecasChart from '@/components/dashboard/ManutencaoPecasChart';
 import ManutencaoServicosChart from '@/components/dashboard/ManutencaoServicosChart';
 import ManutencaoDataTable from '@/components/dashboard/ManutencaoDataTable';
+import ManutencaoTipoChart from '@/components/dashboard/ManutencaoTipoChart';
 import { useManutencaoData } from '@/hooks/useManutencaoData';
 
 const GestaoManutencao = () => {
@@ -111,9 +112,10 @@ const GestaoManutencao = () => {
           <ManutencaoFornecedoresChart filteredData={filteredData} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <ManutencaoPecasChart filteredData={filteredData} />
           <ManutencaoServicosChart filteredData={filteredData} />
+          <ManutencaoTipoChart filteredData={filteredData} />
         </div>
 
         {/* Tabela Completa */}
