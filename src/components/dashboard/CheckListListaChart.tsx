@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Cell, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { CheckListData } from '@/contexts/DataContext';
 import { List } from 'lucide-react';
 
@@ -15,22 +15,42 @@ const CheckListListaChart = ({ filteredData }: CheckListListaChartProps) => {
   const chartData = React.useMemo(() => {
     const listaCounts = filteredData.reduce((acc, item) => {
       if (item.Y) {
-        acc[item.Y] = (acc[item.Y] || 0) + 1;
+        if (!acc[item.Y]) {
+          acc[item.Y] = { conforme: 0, naoConforme: 0 };
+        }
+        
+        if (item.V === 1) {
+          acc[item.Y].conforme++;
+        } else {
+          acc[item.Y].naoConforme++;
+        }
       }
       return acc;
-    }, {} as Record<string, number>);
+    }, {} as Record<string, { conforme: number; naoConforme: number }>);
 
     return Object.entries(listaCounts)
-      .map(([lista, count]) => ({
+      .map(([lista, counts]) => ({
         name: lista,
-        value: count,
+        conforme: counts.conforme,
+        naoConforme: counts.naoConforme,
+        total: counts.conforme + counts.naoConforme,
       }))
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => b.total - a.total);
   }, [filteredData]);
+
+  const chartConfig = {
+    conforme: {
+      label: "Conforme",
+      color: "#10b981",
+    },
+    naoConforme: {
+      label: "Não conforme", 
+      color: "#ef4444",
+    },
+  };
 
   return (
     <Card className="shadow-2xl border-0 bg-gradient-to-br from-background via-background to-muted/20 hover:shadow-3xl transition-all duration-500 group relative overflow-hidden">
-      {/* Efeito de brilho premium */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <CardHeader className="pb-2 relative z-10">
@@ -46,10 +66,9 @@ const CheckListListaChart = ({ filteredData }: CheckListListaChartProps) => {
       </CardHeader>
       <CardContent className="pt-2 pb-2 relative z-10">
         <div className="relative">
-          {/* Fundo do gráfico com gradiente sutil */}
           <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-muted/20 rounded-lg opacity-50" />
           
-          <ChartContainer config={{}} className="w-full h-[300px]">
+          <ChartContainer config={chartConfig} className="w-full h-[300px]">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                 <CartesianGrid 
@@ -66,34 +85,19 @@ const CheckListListaChart = ({ filteredData }: CheckListListaChartProps) => {
                   interval={0}
                 />
                 <YAxis />
-                <ChartTooltip 
-                  formatter={(value, name) => [value, 'Quantidade']}
-                  labelFormatter={(label) => label}
-                  labelStyle={{ whiteSpace: 'normal', wordBreak: 'break-word', maxWidth: '200px' }}
-                  contentStyle={{ 
-                    maxWidth: '300px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(59, 130, 246, 0.2)',
-                    borderRadius: '12px',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-                  }}
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar 
+                  dataKey="conforme" 
+                  stackId="conformidade"
+                  fill="#10b981"
+                  radius={[0, 0, 0, 0]}
                 />
-                <Bar dataKey="value" fill="url(#listaGradient)" radius={[8, 8, 0, 0]} className="drop-shadow-lg">
-                  <LabelList dataKey="value" position="top" className="fill-primary font-semibold" />
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} />
-                  ))}
-                </Bar>
-                
-                {/* Definindo gradiente personalizado */}
-                <defs>
-                  <linearGradient id="listaGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity={1}/>
-                    <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.9}/>
-                    <stop offset="100%" stopColor="#7c3aed" stopOpacity={0.8}/>
-                  </linearGradient>
-                </defs>
+                <Bar 
+                  dataKey="naoConforme" 
+                  stackId="conformidade"
+                  fill="#ef4444"
+                  radius={[8, 8, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>

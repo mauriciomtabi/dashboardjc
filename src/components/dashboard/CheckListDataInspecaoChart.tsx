@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Cell, LabelList } from 'recharts';
 import { CheckListData } from '@/contexts/DataContext';
 import { format, parseISO, isValid } from 'date-fns';
@@ -26,80 +26,112 @@ const CheckListDataInspecaoChart = ({
     if (drillDownMonth) {
       // Drill down por dia
       const dailyData = filteredData.reduce((acc, item) => {
-        // Tentar converter diferentes formatos de data
         let date: Date | null = null;
         
         if (typeof item.N === 'string' && item.N.includes('/')) {
-          // Formato DD/MM/YYYY
           const [day, month, year] = item.N.split('/');
           date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         } else if (typeof item.N === 'number') {
-          // Excel serial date
           date = new Date((item.N - 25569) * 86400 * 1000);
         } else {
-          // Tentar parseISO
           date = new Date(item.N);
         }
         
         if (date && isValid(date) && format(date, 'yyyy-MM') === drillDownMonth) {
           const day = format(date, 'dd');
-          acc[day] = (acc[day] || 0) + 1;
+          if (!acc[day]) {
+            acc[day] = { conforme: 0, naoConforme: 0 };
+          }
+          
+          if (item.V === 1) {
+            acc[day].conforme++;
+          } else {
+            acc[day].naoConforme++;
+          }
         }
         return acc;
-      }, {} as Record<string, number>);
+      }, {} as Record<string, { conforme: number; naoConforme: number }>);
 
       return Object.entries(dailyData)
-        .map(([day, count]) => ({
+        .map(([day, counts]) => ({
           name: `Dia ${day}`,
-          value: count,
+          conforme: counts.conforme,
+          naoConforme: counts.naoConforme,
         }))
         .sort((a, b) => parseInt(a.name.split(' ')[1]) - parseInt(b.name.split(' ')[1]));
     } else {
-      // Dados mensais
+      // Dados mensais - mostrar todos os meses do ano
+      const allMonths = [
+        '01', '02', '03', '04', '05', '06',
+        '07', '08', '09', '10', '11', '12'
+      ];
+
       const monthlyData = filteredData.reduce((acc, item) => {
-        // Tentar converter diferentes formatos de data
         let date: Date | null = null;
         
         if (typeof item.N === 'string' && item.N.includes('/')) {
-          // Formato DD/MM/YYYY
           const [day, month, year] = item.N.split('/');
           date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         } else if (typeof item.N === 'number') {
-          // Excel serial date
           date = new Date((item.N - 25569) * 86400 * 1000);
         } else {
-          // Tentar parseISO
           date = new Date(item.N);
         }
         
         if (date && isValid(date)) {
           const month = format(date, 'yyyy-MM');
-          acc[month] = (acc[month] || 0) + 1;
+          if (!acc[month]) {
+            acc[month] = { conforme: 0, naoConforme: 0 };
+          }
+          
+          if (item.V === 1) {
+            acc[month].conforme++;
+          } else {
+            acc[month].naoConforme++;
+          }
         }
         return acc;
-      }, {} as Record<string, number>);
+      }, {} as Record<string, { conforme: number; naoConforme: number }>);
 
-      return Object.entries(monthlyData)
-        .map(([month, count]) => ({
-          name: format(parseISO(month + '-01'), 'MMM yyyy', { locale: ptBR }),
-          value: count,
-          fullMonth: month,
-        }))
-        .sort((a, b) => a.fullMonth.localeCompare(b.fullMonth));
+      // Garantir que todos os meses apareçam
+      const currentYear = new Date().getFullYear();
+      const result = allMonths.map(month => {
+        const yearMonth = `${currentYear}-${month}`;
+        const counts = monthlyData[yearMonth] || { conforme: 0, naoConforme: 0 };
+        
+        return {
+          name: format(new Date(currentYear, parseInt(month) - 1, 1), 'MMM yyyy', { locale: ptBR }),
+          conforme: counts.conforme,
+          naoConforme: counts.naoConforme,
+          fullMonth: yearMonth,
+        };
+      });
+
+      return result;
     }
   }, [filteredData, drillDownMonth]);
 
   const handleBarClick = (data: any) => {
     if (drillDownMonth) {
-      onDrillDown(null); // Voltar para visão mensal
+      onDrillDown(null);
     } else {
-      onDrillDown(data.fullMonth); // Drill down para o mês
+      onDrillDown(data.fullMonth);
     }
+  };
+
+  const chartConfig = {
+    conforme: {
+      label: "Conforme",
+      color: "#10b981",
+    },
+    naoConforme: {
+      label: "Não conforme", 
+      color: "#ef4444",
+    },
   };
 
   return (
     <Card className="shadow-2xl border-0 bg-gradient-to-br from-background via-background to-muted/20 hover:shadow-3xl transition-all duration-500 group relative overflow-hidden">
-      {/* Efeito de brilho premium */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <CardHeader className="pb-2 relative z-10 flex flex-row items-center justify-between">
@@ -123,10 +155,9 @@ const CheckListDataInspecaoChart = ({
       </CardHeader>
       <CardContent className="pt-2 pb-2 relative z-10">
         <div className="relative">
-          {/* Fundo do gráfico com gradiente sutil */}
           <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-muted/20 rounded-lg opacity-50" />
           
-          <ChartContainer config={{}} className="w-full h-[300px]">
+          <ChartContainer config={chartConfig} className="w-full h-[300px]">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid 
@@ -142,37 +173,24 @@ const CheckListDataInspecaoChart = ({
                   height={80}
                 />
                 <YAxis tick={{ fontSize: 12 }} />
-                <ChartTooltip 
-                  content={<ChartTooltipContent />}
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(59, 130, 246, 0.2)',
-                    borderRadius: '12px',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-                  }}
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar 
+                  dataKey="conforme" 
+                  stackId="conformidade"
+                  fill="#10b981"
+                  onClick={handleBarClick}
+                  className="cursor-pointer"
+                  radius={[0, 0, 0, 0]}
                 />
                 <Bar 
-                  dataKey="value" 
-                  fill="url(#dataInspecaoGradient)"
+                  dataKey="naoConforme" 
+                  stackId="conformidade"
+                  fill="#ef4444"
                   onClick={handleBarClick}
-                  className="cursor-pointer drop-shadow-lg"
+                  className="cursor-pointer"
                   radius={[8, 8, 0, 0]}
-                >
-                  <LabelList dataKey="value" position="top" className="fill-primary font-semibold" />
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} />
-                  ))}
-                </Bar>
-                
-                {/* Definindo gradiente personalizado */}
-                <defs>
-                  <linearGradient id="dataInspecaoGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={1}/>
-                    <stop offset="50%" stopColor="#3b82f6" stopOpacity={0.9}/>
-                    <stop offset="100%" stopColor="#2563eb" stopOpacity={0.8}/>
-                  </linearGradient>
-                </defs>
+                />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>

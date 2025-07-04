@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import MonthFilter from './filters/MonthFilter';
@@ -6,6 +5,7 @@ import YearFilter from './filters/YearFilter';
 import OperationFilter from './filters/OperationFilter';
 import StockFilter from './filters/StockFilter';
 import PlateFilter from './filters/PlateFilter';
+import ConformidadeFilter from './filters/ConformidadeFilter';
 
 interface FilterBarProps {
   filters: {
@@ -14,6 +14,7 @@ interface FilterBarProps {
     placa: string | string[];
     operacao?: string | string[];
     estoque?: string[];
+    conformidade?: string[];
   };
   onFilterChange: (key: string, value: string | string[]) => void;
   availableFilters: {
@@ -22,15 +23,18 @@ interface FilterBarProps {
     operacoes: string[];
     placas: string[];
     estoques?: string[];
+    conformidades?: string[];
   };
   showStockFilter?: boolean;
+  showConformidadeFilter?: boolean;
 }
 
 const FilterBar = ({ 
   filters, 
   onFilterChange, 
   availableFilters, 
-  showStockFilter = true 
+  showStockFilter = true,
+  showConformidadeFilter = false
 }: FilterBarProps) => {
   const clearFilter = (key: string) => {
     onFilterChange(key, []);
@@ -84,6 +88,17 @@ const FilterBar = ({
                 onChange={(value) => onFilterChange('estoque', value)}
                 availableStocks={availableFilters.estoques}
                 onClear={() => clearFilter('estoque')}
+              />
+            </div>
+          )}
+
+          {showConformidadeFilter && availableFilters.conformidades && (
+            <div className="min-w-[200px]">
+              <ConformidadeFilter
+                value={filters.conformidade || []}
+                onChange={(value) => onFilterChange('conformidade', value)}
+                availableConformidades={availableFilters.conformidades}
+                onClear={() => clearFilter('conformidade')}
               />
             </div>
           )}

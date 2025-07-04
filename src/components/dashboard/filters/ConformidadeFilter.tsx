@@ -4,26 +4,21 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { X, Calendar } from 'lucide-react';
+import { X, CheckCircle } from 'lucide-react';
 
-interface MonthFilterProps {
+interface ConformidadeFilterProps {
   value: string | string[];
   onChange: (value: string | string[]) => void;
-  availableMonths: string[];
+  availableConformidades: string[];
   onClear: () => void;
 }
 
-const MonthFilter = ({ value, onChange, availableMonths, onClear }: MonthFilterProps) => {
-  const monthNames = [
-    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
-  ];
-
-  const handleMultipleSelectChange = (month: string) => {
+const ConformidadeFilter = ({ value, onChange, availableConformidades, onClear }: ConformidadeFilterProps) => {
+  const handleMultipleSelectChange = (conformidade: string) => {
     const currentArray = Array.isArray(value) ? value : (value ? [value] : []);
-    const newValues = currentArray.includes(month) 
-      ? currentArray.filter(v => v !== month)
-      : [...currentArray, month];
+    const newValues = currentArray.includes(conformidade) 
+      ? currentArray.filter(v => v !== conformidade)
+      : [...currentArray, conformidade];
     onChange(newValues);
   };
 
@@ -34,17 +29,12 @@ const MonthFilter = ({ value, onChange, availableMonths, onClear }: MonthFilterP
     return value || "Todos";
   };
 
-  const getMonthName = (monthNumber: string) => {
-    const index = parseInt(monthNumber) - 1;
-    return monthNames[index] || monthNumber;
-  };
-
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <Label className="text-sm flex items-center gap-1">
-          <Calendar className="h-4 w-4" />
-          Mês
+          <CheckCircle className="h-4 w-4" />
+          Conformidade
         </Label>
         {Array.isArray(value) && value.length > 0 && (
           <Button variant="ghost" size="sm" onClick={onClear}>
@@ -57,15 +47,15 @@ const MonthFilter = ({ value, onChange, availableMonths, onClear }: MonthFilterP
           <SelectValue placeholder={getDisplayValue()} />
         </SelectTrigger>
         <SelectContent>
-          {availableMonths.map((mes) => {
-            const isSelected = Array.isArray(value) && value.includes(mes);
+          {availableConformidades.map((conformidade) => {
+            const isSelected = Array.isArray(value) && value.includes(conformidade);
             return (
-              <div key={mes} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
+              <div key={conformidade} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
                 <Checkbox 
                   checked={isSelected}
-                  onCheckedChange={() => handleMultipleSelectChange(mes)}
+                  onCheckedChange={() => handleMultipleSelectChange(conformidade)}
                 />
-                <span className="text-sm">{getMonthName(mes)}</span>
+                <span className="text-sm">{conformidade}</span>
               </div>
             );
           })}
@@ -75,4 +65,4 @@ const MonthFilter = ({ value, onChange, availableMonths, onClear }: MonthFilterP
   );
 };
 
-export default MonthFilter;
+export default ConformidadeFilter;

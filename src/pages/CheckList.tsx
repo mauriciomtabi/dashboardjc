@@ -18,6 +18,7 @@ const CheckList = () => {
     filial: [] as string[],
     checkListType: [] as string[],
     placa: [] as string[],
+    conformidade: [] as string[],
   });
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
@@ -35,7 +36,7 @@ const CheckList = () => {
   }, [checkListData]);
 
   // Use hook with error handling
-  const { filteredData, availableFilters, checkListTypeCards } = useCheckListData(filters);
+  const { filteredData, availableFilters, checkListTypeCards, conformidadeCards } = useCheckListData(filters);
 
   const handleFilterChange = (key: string, value: string | string[]) => {
     console.log('CheckList - Filter change:', key, value);
@@ -81,7 +82,6 @@ const CheckList = () => {
     );
   }
 
-
   console.log('CheckList - About to render main content');
 
   return (
@@ -98,14 +98,32 @@ const CheckList = () => {
             ano: filters.ano,
             placa: filters.placa,
             operacao: filters.filial,
+            conformidade: filters.conformidade,
           }}
           onFilterChange={handleFilterChange}
           availableFilters={availableFilters}
           showStockFilter={false}
+          showConformidadeFilter={true}
         />
       </div>
 
       <div className="p-6 pt-8 space-y-8">
+        {/* Cards de Conformidade */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Conformidade</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {conformidadeCards.map((card, index) => (
+              <StatCard
+                key={index}
+                title={card.title}
+                value={card.value}
+                percentage={card.percentage}
+                variant={card.title === 'Conforme' ? 'success' : 'destructive'}
+              />
+            ))}
+          </div>
+        </div>
+
         {/* Cards de Tipo de Check List */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Tipo de Check List</h3>

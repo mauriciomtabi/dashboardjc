@@ -10,6 +10,7 @@ interface CheckListFilters {
   filial: string[];
   checkListType: string[];
   placa: string[];
+  conformidade: string[];
 }
 
 export const useCheckListData = (filters: CheckListFilters) => {
@@ -25,8 +26,18 @@ export const useCheckListData = (filters: CheckListFilters) => {
       const result = checkListData.filter(item => {
         // Filtro por mês
         if (filters.mes.length > 0) {
-          const date = new Date(item.N);
-          if (isValid(date)) {
+          let date: Date | null = null;
+          
+          if (typeof item.N === 'string' && item.N.includes('/')) {
+            const [day, month, year] = item.N.split('/');
+            date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+          } else if (typeof item.N === 'number') {
+            date = new Date((item.N - 25569) * 86400 * 1000);
+          } else {
+            date = new Date(item.N);
+          }
+          
+          if (date && isValid(date)) {
             const month = format(date, 'MM');
             if (!filters.mes.includes(month)) return false;
           }
@@ -34,8 +45,18 @@ export const useCheckListData = (filters: CheckListFilters) => {
 
         // Filtro por ano
         if (filters.ano.length > 0) {
-          const date = new Date(item.N);
-          if (isValid(date)) {
+          let date: Date | null = null;
+          
+          if (typeof item.N === 'string' && item.N.includes('/')) {
+            const [day, month, year] = item.N.split('/');
+            date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+          } else if (typeof item.N === 'number') {
+            date = new Date((item.N - 25569) * 86400 * 1000);
+          } else {
+            date = new Date(item.N);
+          }
+          
+          if (date && isValid(date)) {
             const year = format(date, 'yyyy');
             if (!filters.ano.includes(year)) return false;
           }
@@ -54,6 +75,14 @@ export const useCheckListData = (filters: CheckListFilters) => {
         // Filtro por placa
         if (filters.placa.length > 0 && !filters.placa.includes(item.AG)) {
           return false;
+        }
+
+        // Filtro por conformidade
+        if (filters.conformidade.length > 0) {
+          const conformidade = item.V === 1 ? 'Conforme' : 'Não conforme';
+          if (!filters.conformidade.includes(conformidade)) {
+            return false;
+          }
         }
 
         return true;
@@ -78,8 +107,18 @@ export const useCheckListData = (filters: CheckListFilters) => {
 
       checkListData.forEach(item => {
         try {
-          const date = new Date(item.N);
-          if (isValid(date)) {
+          let date: Date | null = null;
+          
+          if (typeof item.N === 'string' && item.N.includes('/')) {
+            const [day, month, year] = item.N.split('/');
+            date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+          } else if (typeof item.N === 'number') {
+            date = new Date((item.N - 25569) * 86400 * 1000);
+          } else {
+            date = new Date(item.N);
+          }
+          
+          if (date && isValid(date)) {
             meses.add(format(date, 'MM'));
             anos.add(format(date, 'yyyy'));
           }
@@ -96,6 +135,7 @@ export const useCheckListData = (filters: CheckListFilters) => {
         anos: Array.from(anos).sort(),
         operacoes: Array.from(operacoes).sort(),
         placas: Array.from(placas).sort(),
+        conformidades: ['Conforme', 'Não conforme'],
       };
       
       console.log('useCheckListData - Available filters:', result);
@@ -107,6 +147,7 @@ export const useCheckListData = (filters: CheckListFilters) => {
         anos: [],
         operacoes: [],
         placas: [],
+        conformidades: [],
       };
     }
   }, [checkListData]);
@@ -138,9 +179,34 @@ export const useCheckListData = (filters: CheckListFilters) => {
     }
   }, [filteredData]);
 
+  const conformidadeCards = useMemo(() => {
+    try {
+      const conforme = filteredData.filter(item => item.V === 1).length;
+      const naoConforme = filteredData.filter(item => item.V === 0).length;
+      const total = filteredData.length;
+
+      return [
+        {
+          title: 'Conforme',
+          value: conforme,
+          percentage: total > 0 ? parseFloat(((conforme / total) * 100).toFixed(1)) : 0,
+        },
+        {
+          title: 'Não conforme',
+          value: naoConforme,
+          percentage: total > 0 ? parseFloat(((naoConforme / total) * 100).toFixed(1)) : 0,
+        }
+      ];
+    } catch (error) {
+      console.error('useCheckListData - Error processing conformidadeCards:', error);
+      return [];
+    }
+  }, [filteredData]);
+
   return {
     filteredData,
     availableFilters,
     checkListTypeCards,
+    conformidadeCards,
   };
 };
