@@ -68,6 +68,50 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
     };
   }, [manutencaoData]);
 
+  const tipoManutencaoCards = useMemo(() => {
+    // Calcular custo total de todas as manutenções
+    const custoTotalGeral = filteredData.reduce((acc, item) => {
+      const valor = parseFloat(item.Q) || 0;
+      return acc + valor;
+    }, 0);
+
+    const preventiva = filteredData.filter(item => item.Z === 'P');
+    const corretiva = filteredData.filter(item => item.Z === 'C');
+
+    const custoPreventiva = preventiva.reduce((acc, item) => {
+      const valor = parseFloat(item.Q) || 0;
+      return acc + valor;
+    }, 0);
+
+    const custoCorretiva = corretiva.reduce((acc, item) => {
+      const valor = parseFloat(item.Q) || 0;
+      return acc + valor;
+    }, 0);
+
+    const veiculosPreventiva = [...new Set(preventiva.map(item => item.B))].filter(Boolean).length;
+    const veiculosCorretiva = [...new Set(corretiva.map(item => item.B))].filter(Boolean).length;
+
+    const percentualPreventiva = custoTotalGeral > 0 ? (custoPreventiva / custoTotalGeral) * 100 : 0;
+    const percentualCorretiva = custoTotalGeral > 0 ? (custoCorretiva / custoTotalGeral) * 100 : 0;
+
+    return [
+      {
+        title: 'Manutenção Preventiva',
+        custo: custoPreventiva.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        veiculos: veiculosPreventiva,
+        percentage: parseFloat(percentualPreventiva.toFixed(1)),
+        variant: 'preventiva' as const,
+      },
+      {
+        title: 'Manutenção Corretiva',
+        custo: custoCorretiva.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        veiculos: veiculosCorretiva,
+        percentage: parseFloat(percentualCorretiva.toFixed(1)),
+        variant: 'corretiva' as const,
+      },
+    ];
+  }, [filteredData]);
+
   const operacaoCards = useMemo(() => {
     const operacoes = [...new Set(filteredData.map(item => item.AI))].filter(Boolean);
     
@@ -98,6 +142,7 @@ export const useManutencaoData = (filters: ManutencaoFilters, manutencaoData: Ma
   return {
     filteredData,
     availableFilters,
+    tipoManutencaoCards,
     operacaoCards,
   };
 };

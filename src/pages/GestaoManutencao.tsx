@@ -9,7 +9,7 @@ import ManutencaoFornecedoresChart from '@/components/dashboard/ManutencaoFornec
 import ManutencaoPecasChart from '@/components/dashboard/ManutencaoPecasChart';
 import ManutencaoServicosChart from '@/components/dashboard/ManutencaoServicosChart';
 import ManutencaoDataTable from '@/components/dashboard/ManutencaoDataTable';
-import ManutencaoTipoChart from '@/components/dashboard/ManutencaoTipoChart';
+import TipoManutencaoCard from '@/components/dashboard/TipoManutencaoCard';
 import { useManutencaoData } from '@/hooks/useManutencaoData';
 
 const GestaoManutencao = () => {
@@ -24,7 +24,7 @@ const GestaoManutencao = () => {
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [drillDownMonth, setDrillDownMonth] = useState<string | null>(null);
 
-  const { filteredData, availableFilters, operacaoCards } = useManutencaoData(filters, manutencaoData);
+  const { filteredData, availableFilters, tipoManutencaoCards, operacaoCards } = useManutencaoData(filters, manutencaoData);
 
   const handleFilterChange = (key: string, value: string | string[]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -80,6 +80,23 @@ const GestaoManutencao = () => {
       </div>
 
       <div className="p-6 pt-8 space-y-8">
+        {/* Cards de Tipo de Manutenção */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Tipos de Manutenção</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {tipoManutencaoCards.map((card, index) => (
+              <TipoManutencaoCard
+                key={index}
+                title={card.title}
+                custo={card.custo}
+                veiculos={card.veiculos}
+                percentage={card.percentage}
+                variant={card.variant}
+              />
+            ))}
+          </div>
+        </div>
+
         {/* Cards de Operações */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Custo por Operação</h3>
@@ -112,10 +129,9 @@ const GestaoManutencao = () => {
           <ManutencaoFornecedoresChart filteredData={filteredData} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <ManutencaoPecasChart filteredData={filteredData} />
           <ManutencaoServicosChart filteredData={filteredData} />
-          <ManutencaoTipoChart filteredData={filteredData} />
         </div>
 
         {/* Tabela Completa */}
