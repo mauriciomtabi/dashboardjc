@@ -11,7 +11,7 @@ import { Upload as UploadIcon, FileSpreadsheet } from 'lucide-react';
 const Upload = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const { setLaudoData, setEstoqueData, setCheckListData, setLastUpdate } = useData();
+  const { setLaudoData, setEstoqueData, setCheckListData, setManutencaoData, setLastUpdate } = useData();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const Upload = () => {
       const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
       // Verificar se as abas obrigatórias existem
-      const requiredSheets = ['R LAUDO 15568', 'R ESTOQUE 15510', 'CHECK LIST'];
+      const requiredSheets = ['R LAUDO 15568', 'R ESTOQUE 15510', 'CHECK LIST', 'MANUTENÇÃO'];
       const missingSheets = requiredSheets.filter(sheet => !workbook.SheetNames.includes(sheet));
 
       if (missingSheets.length > 0) {
@@ -108,10 +108,25 @@ const Upload = () => {
         AG: row.AG || '',
       }));
 
+      // Processar aba MANUTENÇÃO
+      const manutencaoSheet = workbook.Sheets['MANUTENÇÃO'];
+      const manutencaoJson = XLSX.utils.sheet_to_json(manutencaoSheet, { header: 'A' });
+      const manutencaoData = manutencaoJson.slice(1).map((row: any) => ({
+        B: row.B || '',
+        L: row.L || '',
+        Q: row.Q || '',
+        W: row.W || '',
+        Z: row.Z || '',
+        AI: row.AI || '',
+        AJ: row.AJ || '',
+        AK: row.AK || '',
+      }));
+
       // Salvar dados no contexto
       setLaudoData(laudoData);
       setEstoqueData(estoqueData);
       setCheckListData(checkListData);
+      setManutencaoData(manutencaoData);
       setLastUpdate(new Date());
 
       toast({
@@ -148,7 +163,7 @@ const Upload = () => {
             Upload de Planilha
           </CardTitle>
           <CardDescription>
-            Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510" e "CHECK LIST"
+            Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510", "CHECK LIST" e "MANUTENÇÃO"
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -180,6 +195,7 @@ const Upload = () => {
               <li>• R LAUDO 15568</li>
               <li>• R ESTOQUE 15510</li>
               <li>• CHECK LIST</li>
+              <li>• MANUTENÇÃO</li>
             </ul>
           </div>
         </CardContent>
