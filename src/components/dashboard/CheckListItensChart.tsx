@@ -8,9 +8,10 @@ import { ClipboardList } from 'lucide-react';
 
 interface CheckListItensChartProps {
   filteredData: CheckListData[];
+  conformidadeFilter?: string[];
 }
 
-const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
+const CheckListItensChart = ({ filteredData, conformidadeFilter }: CheckListItensChartProps) => {
   
   const chartData = React.useMemo(() => {
     const itemCounts = filteredData.reduce((acc, item) => {
@@ -35,7 +36,14 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
         naoConforme: counts.naoConforme,
         total: counts.conforme + counts.naoConforme,
       }))
-      .sort((a, b) => b.naoConforme - a.naoConforme)
+      .sort((a, b) => {
+        // Se filtrado apenas por "não conforme", ordena por não conforme
+        if (conformidadeFilter && conformidadeFilter.length === 1 && conformidadeFilter[0] === 'Não conforme') {
+          return b.naoConforme - a.naoConforme;
+        }
+        // Caso contrário, ordena por total
+        return b.total - a.total;
+      })
       .slice(0, 20);
   }, [filteredData]);
 

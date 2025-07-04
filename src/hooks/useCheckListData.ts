@@ -7,7 +7,7 @@ import { ptBR } from 'date-fns/locale';
 interface CheckListFilters {
   mes: string[];
   ano: string[];
-  filial: string[];
+  operacao: string[];
   checkListType: string[];
   placa: string[];
   conformidade: string[];
@@ -62,8 +62,8 @@ export const useCheckListData = (filters: CheckListFilters) => {
           }
         }
 
-        // Filtro por filial
-        if (filters.filial.length > 0 && !filters.filial.includes(item.D)) {
+        // Filtro por operação
+        if (filters.operacao.length > 0 && !filters.operacao.includes(item.D)) {
           return false;
         }
 

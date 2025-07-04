@@ -14,7 +14,7 @@ const CheckList = () => {
   const [filters, setFilters] = useState({
     mes: [] as string[],
     ano: [] as string[],
-    filial: [] as string[],
+    operacao: [] as string[],
     checkListType: [] as string[],
     placa: [] as string[],
     conformidade: [] as string[],
@@ -96,7 +96,7 @@ const CheckList = () => {
             mes: filters.mes,
             ano: filters.ano,
             placa: filters.placa,
-            operacao: filters.filial,
+            operacao: filters.operacao,
             conformidade: filters.conformidade,
           }}
           onFilterChange={handleFilterChange}
@@ -156,7 +156,10 @@ const CheckList = () => {
 
         {/* Top itens não conformes - Largura completa */}
         <div className="w-full">
-          <CheckListItensChart filteredData={filteredData} />
+          <CheckListItensChart 
+            filteredData={filteredData} 
+            conformidadeFilter={filters.conformidade}
+          />
         </div>
 
         {/* Placas - Largura completa */}
