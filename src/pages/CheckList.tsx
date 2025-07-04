@@ -149,14 +149,14 @@ const CheckList = () => {
           />
         </div>
 
-        {/* Itens Inspecionados - Largura completa */}
-        <div className="w-full">
-          <CheckListItensChart filteredData={filteredData} />
-        </div>
-
         {/* Lista de Inspeção - Largura completa */}
         <div className="w-full">
           <CheckListListaChart filteredData={filteredData} />
+        </div>
+
+        {/* Top itens não conformes - Largura completa */}
+        <div className="w-full">
+          <CheckListItensChart filteredData={filteredData} />
         </div>
 
         {/* Placas - Largura completa */}

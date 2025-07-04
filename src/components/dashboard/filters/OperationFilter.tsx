@@ -15,11 +15,11 @@ interface OperationFilterProps {
 }
 
 const OperationFilter = ({ value, onChange, availableOperations, onClear, isMultiple = false }: OperationFilterProps) => {
-  const handleMultipleSelectChange = (operation: string) => {
+  const handleMultipleSelectChange = (operation: string, checked: boolean) => {
     const currentArray = Array.isArray(value) ? value : (value ? [value] : []);
-    const newValues = currentArray.includes(operation) 
-      ? currentArray.filter(v => v !== operation)
-      : [...currentArray, operation];
+    const newValues = checked 
+      ? [...currentArray, operation]
+      : currentArray.filter(v => v !== operation);
     onChange(newValues);
   };
 
@@ -50,7 +50,7 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
         )}
       </div>
       {isMultiple ? (
-        <Select value="" onValueChange={handleMultipleSelectChange}>
+        <Select>
           <SelectTrigger className="w-full">
             <SelectValue placeholder={getDisplayValue()} />
           </SelectTrigger>
@@ -58,10 +58,10 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
             {availableOperations.map((op) => {
               const isSelected = Array.isArray(value) && value.includes(op);
               return (
-                <div key={op} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer">
+                <div key={op} className="flex items-center space-x-2 px-2 py-1 hover:bg-accent cursor-pointer" onClick={() => handleMultipleSelectChange(op, !isSelected)}>
                   <Checkbox 
                     checked={isSelected}
-                    onCheckedChange={() => handleMultipleSelectChange(op)}
+                    onChange={() => {}}
                   />
                   <span className="text-sm">{op}</span>
                 </div>

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
 import { CheckListData } from '@/contexts/DataContext';
 import { List } from 'lucide-react';
 
@@ -97,7 +97,9 @@ const CheckListListaChart = ({ filteredData }: CheckListListaChartProps) => {
                   stackId="conformidade"
                   fill="#ef4444"
                   radius={[8, 8, 0, 0]}
-                />
+                >
+                  <LabelList dataKey="total" position="top" fontSize={10} />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>

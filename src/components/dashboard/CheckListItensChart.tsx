@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
 import { CheckListData } from '@/contexts/DataContext';
 import { ClipboardList } from 'lucide-react';
 
@@ -35,7 +35,7 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
         naoConforme: counts.naoConforme,
         total: counts.conforme + counts.naoConforme,
       }))
-      .sort((a, b) => b.total - a.total)
+      .sort((a, b) => b.naoConforme - a.naoConforme)
       .slice(0, 20);
   }, [filteredData]);
 
@@ -61,7 +61,7 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
             <ClipboardList className="h-5 w-5 text-primary relative z-10" />
           </div>
           <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-            Top 20 Itens mais inspecionados
+            Top itens não conformes
           </span>
         </CardTitle>
       </CardHeader>
@@ -102,7 +102,9 @@ const CheckListItensChart = ({ filteredData }: CheckListItensChartProps) => {
                     stackId="conformidade"
                     fill="#ef4444"
                     radius={[8, 8, 0, 0]}
-                  />
+                  >
+                    <LabelList dataKey="total" position="top" fontSize={10} />
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
