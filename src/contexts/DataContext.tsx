@@ -53,14 +53,27 @@ export interface CheckListData {
   AG: string; // Placa
 }
 
+export interface ManutencaoData {
+  B: string; // Placa
+  L: string; // Peça
+  Q: string; // Valor
+  W: string; // Data
+  Z: string; // Tipo de Manutenção (C=Corretiva, P=Preventiva)
+  AI: string; // Filial
+  AJ: string; // Fornecedor
+  AK: string; // Serviço
+}
+
 interface DataContextType {
   laudoData: LaudoData[];
   estoqueData: EstoqueData[];
   checkListData: CheckListData[];
+  manutencaoData: ManutencaoData[];
   lastUpdate: Date | null;
   setLaudoData: (data: LaudoData[]) => void;
   setEstoqueData: (data: EstoqueData[]) => void;
   setCheckListData: (data: CheckListData[]) => void;
+  setManutencaoData: (data: ManutencaoData[]) => void;
   setLastUpdate: (date: Date) => void;
 }
 
@@ -70,6 +83,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [laudoData, setLaudoData] = useState<LaudoData[]>([]);
   const [estoqueData, setEstoqueData] = useState<EstoqueData[]>([]);
   const [checkListData, setCheckListData] = useState<CheckListData[]>([]);
+  const [manutencaoData, setManutencaoData] = useState<ManutencaoData[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   return (
@@ -78,10 +92,12 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         laudoData,
         estoqueData,
         checkListData,
+        manutencaoData,
         lastUpdate,
         setLaudoData,
         setEstoqueData,
         setCheckListData,
+        setManutencaoData,
         setLastUpdate,
       }}
     >
