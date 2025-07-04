@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
@@ -43,7 +42,7 @@ const CheckListDataInspecaoChart = ({
             acc[day] = { conforme: 0, naoConforme: 0 };
           }
           
-          if (item.V === 1) {
+          if (Number(item.V) === 1) {
             acc[day].conforme++;
           } else {
             acc[day].naoConforme++;
@@ -84,7 +83,7 @@ const CheckListDataInspecaoChart = ({
             acc[month] = { conforme: 0, naoConforme: 0 };
           }
           
-          if (item.V === 1) {
+          if (Number(item.V) === 1) {
             acc[month].conforme++;
           } else {
             acc[month].naoConforme++;

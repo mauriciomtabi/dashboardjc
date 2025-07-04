@@ -79,7 +79,7 @@ export const useCheckListData = (filters: CheckListFilters) => {
 
         // Filtro por conformidade
         if (filters.conformidade.length > 0) {
-          const conformidade = item.V === 1 ? 'Conforme' : 'Não conforme';
+          const conformidade = Number(item.V) === 1 ? 'Conforme' : 'Não conforme';
           if (!filters.conformidade.includes(conformidade)) {
             return false;
           }
@@ -181,8 +181,8 @@ export const useCheckListData = (filters: CheckListFilters) => {
 
   const conformidadeCards = useMemo(() => {
     try {
-      const conforme = filteredData.filter(item => item.V === 1).length;
-      const naoConforme = filteredData.filter(item => item.V === 0).length;
+      const conforme = filteredData.filter(item => Number(item.V) === 1).length;
+      const naoConforme = filteredData.filter(item => Number(item.V) === 0).length;
       const total = filteredData.length;
 
       return [

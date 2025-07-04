@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useData } from '@/contexts/DataContext';
 import FilterBar from '@/components/dashboard/FilterBar';
@@ -118,7 +117,7 @@ const CheckList = () => {
                 title={card.title}
                 value={card.value}
                 percentage={card.percentage}
-                variant={card.title === 'Conforme' ? 'success' : 'destructive'}
+                variant="default"
               />
             ))}
           </div>

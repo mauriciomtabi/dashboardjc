@@ -46,9 +46,9 @@ export interface EstoqueData {
 export interface CheckListData {
   D: string; // Filial
   G: string; // Check List
-  N: string; // Data e Hora
+  N: string | number; // Data e Hora
   T: string; // Item
-  V: string; // bl_Confrm
+  V: number; // bl_Confrm (0 ou 1)
   Y: string; // Lista
   AG: string; // Placa
 }

@@ -19,7 +19,7 @@ const CheckListListaChart = ({ filteredData }: CheckListListaChartProps) => {
           acc[item.Y] = { conforme: 0, naoConforme: 0 };
         }
         
-        if (item.V === 1) {
+        if (Number(item.V) === 1) {
           acc[item.Y].conforme++;
         } else {
           acc[item.Y].naoConforme++;
