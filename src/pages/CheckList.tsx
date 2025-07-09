@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { InteractiveFilterProvider } from '@/contexts/InteractiveFilterContext';
 import FilterBar from '@/components/dashboard/FilterBar';
 import StatCard from '@/components/dashboard/StatCard';
 import { useCheckListData } from '@/hooks/useCheckListData';
@@ -9,7 +11,7 @@ import CheckListListaChart from '@/components/dashboard/CheckListListaChart';
 import CheckListPlacasChart from '@/components/dashboard/CheckListPlacasChart';
 import CheckListDataTable from '@/components/dashboard/CheckListDataTable';
 
-const CheckList = () => {
+const CheckListContent = () => {
   const { checkListData } = useData();
   const [filters, setFilters] = useState({
     mes: [] as string[],
@@ -177,6 +179,14 @@ const CheckList = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const CheckList = () => {
+  return (
+    <InteractiveFilterProvider>
+      <CheckListContent />
+    </InteractiveFilterProvider>
   );
 };
 

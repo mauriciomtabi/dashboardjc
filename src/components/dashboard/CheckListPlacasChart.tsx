@@ -5,15 +5,21 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
 import { CheckListData } from '@/contexts/DataContext';
 import { Car } from 'lucide-react';
+import { useInteractiveFilter } from '@/contexts/InteractiveFilterContext';
+import { useInteractiveCheckListData } from '@/hooks/useInteractiveCheckListData';
 
 interface CheckListPlacasChartProps {
   filteredData: CheckListData[];
 }
 
 const CheckListPlacasChart = ({ filteredData }: CheckListPlacasChartProps) => {
+  const { activeFilter, setActiveFilter, clearActiveFilter } = useInteractiveFilter();
+  const interactiveFilteredData = useInteractiveCheckListData(filteredData);
   
   const chartData = React.useMemo(() => {
-    const placaCounts = filteredData.reduce((acc, item) => {
+    const dataToUse = activeFilter.type === 'placa' ? filteredData : interactiveFilteredData;
+    
+    const placaCounts = dataToUse.reduce((acc, item) => {
       if (item.AG) {
         if (!acc[item.AG]) {
           acc[item.AG] = { conforme: 0, naoConforme: 0 };
@@ -37,7 +43,15 @@ const CheckListPlacasChart = ({ filteredData }: CheckListPlacasChartProps) => {
       }))
       .sort((a, b) => b.total - a.total)
       .slice(0, 25);
-  }, [filteredData]);
+  }, [filteredData, interactiveFilteredData, activeFilter.type]);
+
+  const handleBarClick = (data: any) => {
+    if (activeFilter.type === 'placa' && activeFilter.value === data.name) {
+      clearActiveFilter();
+    } else {
+      setActiveFilter({ type: 'placa', value: data.name });
+    }
+  };
 
   const chartConfig = {
     conforme: {
@@ -55,14 +69,24 @@ const CheckListPlacasChart = ({ filteredData }: CheckListPlacasChartProps) => {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <CardHeader className="pb-2 relative z-10">
-        <CardTitle className="flex items-center gap-3 group-hover:text-primary transition-colors duration-300">
-          <div className="p-2.5 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 group-hover:from-primary/20 group-hover:to-primary/30 transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
-            <Car className="h-5 w-5 text-primary relative z-10" />
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-3 group-hover:text-primary transition-colors duration-300">
+            <div className="p-2.5 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 group-hover:from-primary/20 group-hover:to-primary/30 transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
+              <Car className="h-5 w-5 text-primary relative z-10" />
+            </div>
+            <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+              Placas
+            </span>
           </div>
-          <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-            Placas
-          </span>
+          {activeFilter.type === 'placa' && (
+            <button
+              onClick={clearActiveFilter}
+              className="text-sm text-primary hover:underline"
+            >
+              Limpar filtro: {activeFilter.value}
+            </button>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-2 pb-2 relative z-10">
@@ -74,11 +98,11 @@ const CheckListPlacasChart = ({ filteredData }: CheckListPlacasChartProps) => {
               <ResponsiveContainer width={Math.max(1200, chartData.length * 40)} height={300}>
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                   <defs>
-                    <linearGradient id="conformeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="conformeGradientPlacas" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
                       <stop offset="100%" stopColor="#10b981" stopOpacity={0.3} />
                     </linearGradient>
-                    <linearGradient id="naoConformeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="naoConformeGradientPlacas" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
                       <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
                     </linearGradient>
@@ -101,14 +125,18 @@ const CheckListPlacasChart = ({ filteredData }: CheckListPlacasChartProps) => {
                   <Bar 
                     dataKey="conforme" 
                     stackId="conformidade"
-                    fill="url(#conformeGradient)"
+                    fill="url(#conformeGradientPlacas)"
                     radius={[0, 0, 0, 0]}
+                    onClick={handleBarClick}
+                    className="cursor-pointer"
                   />
                   <Bar 
                     dataKey="naoConforme" 
                     stackId="conformidade"
-                    fill="url(#naoConformeGradient)"
+                    fill="url(#naoConformeGradientPlacas)"
                     radius={[8, 8, 0, 0]}
+                    onClick={handleBarClick}
+                    className="cursor-pointer"
                   >
                     <LabelList dataKey="total" position="top" fontSize={10} />
                   </Bar>

@@ -5,6 +5,8 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
 import { CheckListData } from '@/contexts/DataContext';
 import { ClipboardList } from 'lucide-react';
+import { useInteractiveFilter } from '@/contexts/InteractiveFilterContext';
+import { useInteractiveCheckListData } from '@/hooks/useInteractiveCheckListData';
 
 interface CheckListItensChartProps {
   filteredData: CheckListData[];
@@ -12,9 +14,13 @@ interface CheckListItensChartProps {
 }
 
 const CheckListItensChart = ({ filteredData, conformidadeFilter }: CheckListItensChartProps) => {
+  const { activeFilter, setActiveFilter, clearActiveFilter } = useInteractiveFilter();
+  const interactiveFilteredData = useInteractiveCheckListData(filteredData);
   
   const chartData = React.useMemo(() => {
-    const itemCounts = filteredData.reduce((acc, item) => {
+    const dataToUse = activeFilter.type === 'item' ? filteredData : interactiveFilteredData;
+    
+    const itemCounts = dataToUse.reduce((acc, item) => {
       if (item.T) {
         if (!acc[item.T]) {
           acc[item.T] = { conforme: 0, naoConforme: 0 };
@@ -45,7 +51,15 @@ const CheckListItensChart = ({ filteredData, conformidadeFilter }: CheckListIten
         return b.total - a.total;
       })
       .slice(0, 20);
-  }, [filteredData]);
+  }, [filteredData, interactiveFilteredData, activeFilter.type, conformidadeFilter]);
+
+  const handleBarClick = (data: any) => {
+    if (activeFilter.type === 'item' && activeFilter.value === data.name) {
+      clearActiveFilter();
+    } else {
+      setActiveFilter({ type: 'item', value: data.name });
+    }
+  };
 
   const chartConfig = {
     conforme: {
@@ -63,14 +77,24 @@ const CheckListItensChart = ({ filteredData, conformidadeFilter }: CheckListIten
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <CardHeader className="pb-2 relative z-10">
-        <CardTitle className="flex items-center gap-3 group-hover:text-primary transition-colors duration-300">
-          <div className="p-2.5 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 group-hover:from-primary/20 group-hover:to-primary/30 transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
-            <ClipboardList className="h-5 w-5 text-primary relative z-10" />
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-3 group-hover:text-primary transition-colors duration-300">
+            <div className="p-2.5 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 group-hover:from-primary/20 group-hover:to-primary/30 transition-all duration-300 group-hover:scale-110 shadow-lg relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
+              <ClipboardList className="h-5 w-5 text-primary relative z-10" />
+            </div>
+            <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+              Top Itens Não Conformes
+            </span>
           </div>
-          <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-            Top Itens Não Conformes
-          </span>
+          {activeFilter.type === 'item' && (
+            <button
+              onClick={clearActiveFilter}
+              className="text-sm text-primary hover:underline"
+            >
+              Limpar filtro: {activeFilter.value}
+            </button>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-2 pb-2 relative z-10">
@@ -85,11 +109,11 @@ const CheckListItensChart = ({ filteredData, conformidadeFilter }: CheckListIten
                   margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                 >
                   <defs>
-                    <linearGradient id="conformeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="conformeGradientItens" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
                       <stop offset="100%" stopColor="#10b981" stopOpacity={0.3} />
                     </linearGradient>
-                    <linearGradient id="naoConformeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="naoConformeGradientItens" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
                       <stop offset="100%" stopColor="#ef4444" stopOpacity={0.3} />
                     </linearGradient>
@@ -112,14 +136,18 @@ const CheckListItensChart = ({ filteredData, conformidadeFilter }: CheckListIten
                   <Bar 
                     dataKey="conforme" 
                     stackId="conformidade"
-                    fill="url(#conformeGradient)"
+                    fill="url(#conformeGradientItens)"
                     radius={[0, 0, 0, 0]}
+                    onClick={handleBarClick}
+                    className="cursor-pointer"
                   />
                   <Bar 
                     dataKey="naoConforme" 
                     stackId="conformidade"
-                    fill="url(#naoConformeGradient)"
+                    fill="url(#naoConformeGradientItens)"
                     radius={[8, 8, 0, 0]}
+                    onClick={handleBarClick}
+                    className="cursor-pointer"
                   >
                     <LabelList dataKey="total" position="top" fontSize={10} />
                   </Bar>
