@@ -12,6 +12,7 @@ import GestaoLaudos from "./pages/GestaoLaudos";
 import GestaoEstoque from "./pages/GestaoEstoque";
 import CheckList from "./pages/CheckList";
 import GestaoManutencao from "./pages/GestaoManutencao";
+import Preventivas from "./pages/Preventivas";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/gestao-laudos" element={<DashboardLayout><GestaoLaudos /></DashboardLayout>} />
             <Route path="/gestao-estoque" element={<DashboardLayout><GestaoEstoque /></DashboardLayout>} />
             <Route path="/gestao-manutencao" element={<DashboardLayout><GestaoManutencao /></DashboardLayout>} />
+            <Route path="/preventivas" element={<DashboardLayout><Preventivas /></DashboardLayout>} />
             <Route path="/checklist" element={<DashboardLayout><CheckList /></DashboardLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

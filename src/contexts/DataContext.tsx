@@ -64,16 +64,27 @@ export interface ManutencaoData {
   AK: string; // Serviço
 }
 
+export interface PreventivaData {
+  D: string; // Preventiva
+  F: string; // Operação
+  K: string; // Placa
+  L: string; // Última Manutenção
+  U: string; // Vencida (Km)
+  V: string; // Vencida (dias)
+}
+
 interface DataContextType {
   laudoData: LaudoData[];
   estoqueData: EstoqueData[];
   checkListData: CheckListData[];
   manutencaoData: ManutencaoData[];
+  preventivaData: PreventivaData[];
   lastUpdate: Date | null;
   setLaudoData: (data: LaudoData[]) => void;
   setEstoqueData: (data: EstoqueData[]) => void;
   setCheckListData: (data: CheckListData[]) => void;
   setManutencaoData: (data: ManutencaoData[]) => void;
+  setPreventivaData: (data: PreventivaData[]) => void;
   setLastUpdate: (date: Date) => void;
 }
 
@@ -84,6 +95,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [estoqueData, setEstoqueData] = useState<EstoqueData[]>([]);
   const [checkListData, setCheckListData] = useState<CheckListData[]>([]);
   const [manutencaoData, setManutencaoData] = useState<ManutencaoData[]>([]);
+  const [preventivaData, setPreventivaData] = useState<PreventivaData[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   return (
@@ -93,11 +105,13 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         estoqueData,
         checkListData,
         manutencaoData,
+        preventivaData,
         lastUpdate,
         setLaudoData,
         setEstoqueData,
         setCheckListData,
         setManutencaoData,
+        setPreventivaData,
         setLastUpdate,
       }}
     >

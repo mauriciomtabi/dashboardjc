@@ -11,7 +11,7 @@ import { Upload as UploadIcon, FileSpreadsheet } from 'lucide-react';
 const Upload = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const { setLaudoData, setEstoqueData, setCheckListData, setManutencaoData, setLastUpdate } = useData();
+  const { setLaudoData, setEstoqueData, setCheckListData, setManutencaoData, setPreventivaData, setLastUpdate } = useData();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -122,11 +122,27 @@ const Upload = () => {
         AK: row.AK || '',
       }));
 
+      // Processar aba PREVENTIVAS (opcional)
+      let preventivaData: any[] = [];
+      if (workbook.Sheets['PREVENTIVAS']) {
+        const preventivaSheet = workbook.Sheets['PREVENTIVAS'];
+        const preventivaJson = XLSX.utils.sheet_to_json(preventivaSheet, { header: 'A' });
+        preventivaData = preventivaJson.slice(1).map((row: any) => ({
+          D: row.D || '',
+          F: row.F || '',
+          K: row.K || '',
+          L: row.L || '',
+          U: row.U || '',
+          V: row.V || '',
+        }));
+      }
+
       // Salvar dados no contexto
       setLaudoData(laudoData);
       setEstoqueData(estoqueData);
       setCheckListData(checkListData);
       setManutencaoData(manutencaoData);
+      setPreventivaData(preventivaData);
       setLastUpdate(new Date());
 
       toast({
@@ -163,7 +179,7 @@ const Upload = () => {
             Upload de Planilha
           </CardTitle>
           <CardDescription>
-            Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510", "CHECK LIST" e "MANUTENÇÃO"
+            Faça o upload da planilha Excel (.xlsx) contendo as abas "R LAUDO 15568", "R ESTOQUE 15510", "CHECK LIST", "MANUTENÇÃO" e "PREVENTIVAS"
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -196,6 +212,7 @@ const Upload = () => {
               <li>• R ESTOQUE 15510</li>
               <li>• CHECK LIST</li>
               <li>• MANUTENÇÃO</li>
+              <li>• PREVENTIVAS</li>
             </ul>
           </div>
         </CardContent>

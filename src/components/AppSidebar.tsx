@@ -6,6 +6,7 @@ import {
   ClipboardCheck, 
   FileText, 
   Package,
+  Calendar,
   Upload as UploadIcon
 } from 'lucide-react';
 import {
@@ -59,8 +60,12 @@ const menuItems = [
   {
     title: "Gestão de Manutenção",
     icon: Wrench,
-    url: "/gestao-manutencao",
-    disabled: true
+    url: "/gestao-manutencao"
+  },
+  {
+    title: "Preventivas",
+    icon: Calendar,
+    url: "/preventivas"
   },
   {
     title: "Check List",
@@ -141,7 +146,6 @@ export function AppSidebar() {
                     <SidebarMenuButton 
                       asChild
                       className={`${getNavCls(isActive(item.url || ''))} text-slate-300 hover:bg-slate-700 hover:text-white`}
-                      disabled={item.disabled}
                     >
                       <NavLink to={item.url || '#'}>
                         <item.icon className="h-4 w-4 text-slate-300" />
