@@ -24,6 +24,10 @@ const Preventivas = () => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
+  console.log('Preventivas - Total de dados:', preventivaData.length);
+  console.log('Preventivas - Dados filtrados:', filteredData.length);
+  console.log('Preventivas - Dados brutos (primeiros 3):', preventivaData.slice(0, 3));
+
   if (preventivaData.length === 0) {
     return (
       <div className="max-w-7xl mx-auto p-6">

@@ -125,8 +125,11 @@ const Upload = () => {
       // Processar aba PREVENTIVAS (opcional)
       let preventivaData: any[] = [];
       if (workbook.Sheets['PREVENTIVAS']) {
+        console.log('Processando aba PREVENTIVAS...');
         const preventivaSheet = workbook.Sheets['PREVENTIVAS'];
         const preventivaJson = XLSX.utils.sheet_to_json(preventivaSheet, { header: 'A' });
+        console.log('Dados brutos da aba PREVENTIVAS:', preventivaJson.slice(0, 3));
+        
         preventivaData = preventivaJson.slice(1).map((row: any) => ({
           D: row.D || '',
           F: row.F || '',
@@ -135,6 +138,11 @@ const Upload = () => {
           U: row.U || '',
           V: row.V || '',
         }));
+        console.log('Dados processados de PREVENTIVAS:', preventivaData.slice(0, 3));
+        console.log('Total de registros PREVENTIVAS:', preventivaData.length);
+      } else {
+        console.log('Aba PREVENTIVAS não encontrada na planilha');
+        console.log('Abas disponíveis:', workbook.SheetNames);
       }
 
       // Salvar dados no contexto
