@@ -102,6 +102,7 @@ const PreventivasContent = () => {
             filteredData={interactiveFilteredData}
             isOpen={isTableOpen}
             onOpenChange={setIsTableOpen}
+            allData={preventivaData}
           />
         </div>
       </div>

@@ -46,12 +46,12 @@ const PreventivasKmChart: React.FC<PreventivasKmChartProps> = ({ filteredData })
         <ChartContainer config={chartConfig}>
           <div className="w-full overflow-x-auto">
             <div style={{ minWidth: Math.max(800, data.length * 60) }}>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={data} margin={{ top: 40, right: 30, left: 20, bottom: 80 }}>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={data} margin={{ top: 30, right: 30, left: 20, bottom: 60 }}>
                   <defs>
                     <linearGradient id="kmGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(var(--chart-primary))" />
-                      <stop offset="100%" stopColor="hsl(var(--chart-primary) / 0.7)" />
+                      <stop offset="0%" stopColor="hsl(120 85% 55%)" />
+                      <stop offset="100%" stopColor="hsl(120 85% 35%)" />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -59,7 +59,7 @@ const PreventivasKmChart: React.FC<PreventivasKmChartProps> = ({ filteredData })
                     dataKey="placa" 
                     angle={-45}
                     textAnchor="end"
-                    height={80}
+                    height={60}
                     interval={0}
                     tick={{ fontSize: 12 }}
                   />

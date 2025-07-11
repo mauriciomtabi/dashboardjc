@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import FilterBar from '@/components/dashboard/FilterBar';
 import { 
   Dialog, 
   DialogContent, 
@@ -18,18 +19,33 @@ import {
 } from '@/components/ui/table';
 import { PreventivaData } from '@/contexts/DataContext';
 import { parseExcelDate } from '@/utils/dateUtils';
+import { usePreventivaData } from '@/hooks/usePreventivaData';
 
 interface PreventivaDataTableProps {
   filteredData: PreventivaData[];
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  allData: PreventivaData[];
 }
 
 const PreventivaDataTable: React.FC<PreventivaDataTableProps> = ({ 
   filteredData, 
   isOpen, 
-  onOpenChange 
+  onOpenChange,
+  allData 
 }) => {
+  const [tableFilters, setTableFilters] = useState({
+    mes: [] as string[],
+    ano: [] as string[],
+    placa: [] as string[],
+    operacao: [] as string[],
+  });
+
+  const { filteredData: tableFilteredData, availableFilters } = usePreventivaData(tableFilters, allData);
+
+  const handleTableFilterChange = (key: string, value: string | string[]) => {
+    setTableFilters(prev => ({ ...prev, [key]: value }));
+  };
   const formatDate = (dateValue: string | number) => {
     const parsedDate = parseExcelDate(dateValue);
     return parsedDate ? parsedDate.toLocaleDateString('pt-BR') : 'Data inválida';
@@ -46,9 +62,29 @@ const PreventivaDataTable: React.FC<PreventivaDataTableProps> = ({
         <DialogHeader>
           <DialogTitle>Tabela Completa - Preventivas</DialogTitle>
           <DialogDescription>
-            Tabela com todos os dados filtrados de preventivas ({filteredData.length} registros)
+            Tabela com todos os dados filtrados de preventivas ({tableFilteredData.length} registros)
           </DialogDescription>
         </DialogHeader>
+        
+        {/* Filtros da Tabela */}
+        <div className="border-b pb-4">
+          <FilterBar
+            filters={{
+              mes: tableFilters.mes,
+              ano: tableFilters.ano,
+              placa: tableFilters.placa,
+              operacao: tableFilters.operacao,
+            }}
+            onFilterChange={handleTableFilterChange}
+            availableFilters={{
+              meses: availableFilters.meses,
+              anos: availableFilters.anos,
+              operacoes: availableFilters.operacoes,
+              placas: availableFilters.placas,
+            }}
+            showStockFilter={false}
+          />
+        </div>
         <div className="overflow-auto max-h-[60vh] border rounded-lg">
           <Table>
             <TableHeader>
@@ -62,7 +98,7 @@ const PreventivaDataTable: React.FC<PreventivaDataTableProps> = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.map((item, index) => (
+              {tableFilteredData.map((item, index) => (
                 <TableRow key={index} className="hover:bg-muted/30">
                   <TableCell className="font-medium">{item.preventiva || '-'}</TableCell>
                   <TableCell>{item.operacao || '-'}</TableCell>
