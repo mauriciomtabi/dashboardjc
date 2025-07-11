@@ -42,11 +42,11 @@ const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredDat
         <CardTitle>Vencimento por Dias</CardTitle>
         <CardDescription>Placas mais próximas do vencimento por dias</CardDescription>
       </CardHeader>
-      <CardContent className="p-0">
-        <ChartContainer config={chartConfig} className="h-[250px]">
-          <div className="w-full overflow-x-auto h-full">
-            <div style={{ minWidth: Math.max(800, data.length * 60), height: '250px' }}>
-              <ResponsiveContainer width="100%" height="100%">
+      <CardContent className="p-4">
+        <ChartContainer config={chartConfig}>
+          <div className="w-full overflow-x-auto">
+            <div style={{ minWidth: Math.max(800, data.length * 60), height: '220px' }}>
+              <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={data} margin={{ top: 30, right: 30, left: 20, bottom: 60 }}>
                   <defs>
                     <linearGradient id="diasGradient" x1="0" y1="0" x2="0" y2="1">

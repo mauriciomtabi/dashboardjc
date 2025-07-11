@@ -49,7 +49,7 @@ const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filtere
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <ResponsiveContainer width="100%" height={180}>
+          <ResponsiveContainer width="100%" height={150}>
             <BarChart data={data} margin={{ top: 30, right: 30, left: 20, bottom: 60 }}>
               <defs>
                 <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
