@@ -89,6 +89,11 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Chart gradients */
+    --chart-gradient: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
+    --chart-primary: 222.2 47.4% 11.2%;
+    --warning: 45 93% 47%;
   }
 }
 

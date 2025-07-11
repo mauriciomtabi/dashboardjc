@@ -1,14 +1,16 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { PreventivaData } from '@/contexts/DataContext';
+import { useInteractiveFilter } from '@/contexts/InteractiveFilterContext';
 
 interface PreventivasTotaisChartProps {
   filteredData: PreventivaData[];
 }
 
 const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filteredData }) => {
+  const { setActiveFilter, activeFilter } = useInteractiveFilter();
   const data = React.useMemo(() => {
     const preventivas = filteredData.reduce((acc: { [key: string]: number }, item) => {
       const preventiva = item.preventiva || 'Não informado';
@@ -27,8 +29,16 @@ const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filtere
   const chartConfig = {
     total: {
       label: "Total",
-      color: "hsl(var(--primary))",
+      color: "hsl(var(--chart-primary))",
     },
+  };
+
+  const handleBarClick = (data: any) => {
+    if (activeFilter.type === 'preventiva' && activeFilter.value === data.preventiva) {
+      setActiveFilter({ type: null, value: null });
+    } else {
+      setActiveFilter({ type: 'preventiva', value: data.preventiva });
+    }
   };
 
   return (
@@ -39,19 +49,37 @@ const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filtere
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data} margin={{ top: 40, right: 30, left: 20, bottom: 80 }}>
+              <defs>
+                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--chart-primary))" />
+                  <stop offset="100%" stopColor="hsl(var(--chart-primary) / 0.7)" />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="preventiva" 
                 angle={-45}
                 textAnchor="end"
-                height={100}
+                height={80}
                 interval={0}
+                tick={{ fontSize: 12 }}
               />
               <YAxis />
               <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="total" fill="var(--color-total)" />
+              <Bar dataKey="total" fill="url(#barGradient)" cursor="pointer" onClick={handleBarClick}>
+                <LabelList dataKey="total" position="top" fontSize={12} />
+                {data.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={activeFilter.type === 'preventiva' && activeFilter.value === entry.preventiva 
+                      ? "hsl(var(--chart-primary) / 0.8)" 
+                      : "url(#barGradient)"
+                    } 
+                  />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>

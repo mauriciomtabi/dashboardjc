@@ -7,6 +7,8 @@ import PreventivasKmChart from '@/components/dashboard/PreventivasKmChart';
 import PreventivasDiasChart from '@/components/dashboard/PreventivasDiasChart';
 import PreventivaDataTable from '@/components/dashboard/PreventivaDataTable';
 import { usePreventivaData } from '@/hooks/usePreventivaData';
+import { useInteractivePreventivaData } from '@/hooks/useInteractivePreventivaData';
+import { InteractiveFilterProvider } from '@/contexts/InteractiveFilterContext';
 
 const Preventivas = () => {
   const { preventivaData } = useData();
@@ -19,6 +21,7 @@ const Preventivas = () => {
   const [isTableOpen, setIsTableOpen] = useState(false);
 
   const { filteredData, availableFilters, operacaoCards } = usePreventivaData(filters, preventivaData);
+  const interactiveFilteredData = useInteractivePreventivaData(filteredData);
 
   const handleFilterChange = (key: string, value: string | string[]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -40,7 +43,8 @@ const Preventivas = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <InteractiveFilterProvider>
+      <div className="max-w-7xl mx-auto">
       <div className="p-6 pb-4">
         <h2 className="text-3xl font-bold">Preventivas</h2>
       </div>
@@ -82,27 +86,28 @@ const Preventivas = () => {
           </div>
         </div>
 
-        {/* Gráfico de Preventivas Totais - Largura completa */}
+        {/* Gráfico de Preventivas Totais - Largura completa, altura reduzida */}
         <div className="w-full">
-          <PreventivasTotaisChart filteredData={filteredData} />
+          <PreventivasTotaisChart filteredData={interactiveFilteredData} />
         </div>
 
-        {/* Gráficos em grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <PreventivasKmChart filteredData={filteredData} />
-          <PreventivasDiasChart filteredData={filteredData} />
+        {/* Gráficos de vencimento - layout vertical */}
+        <div className="w-full space-y-8">
+          <PreventivasKmChart filteredData={interactiveFilteredData} />
+          <PreventivasDiasChart filteredData={interactiveFilteredData} />
         </div>
 
         {/* Tabela Completa */}
         <div className="flex justify-center pt-6">
           <PreventivaDataTable 
-            filteredData={filteredData}
+            filteredData={interactiveFilteredData}
             isOpen={isTableOpen}
             onOpenChange={setIsTableOpen}
           />
         </div>
       </div>
     </div>
+    </InteractiveFilterProvider>
   );
 };
 

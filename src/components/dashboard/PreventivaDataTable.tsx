@@ -44,27 +44,27 @@ const PreventivaDataTable: React.FC<PreventivaDataTableProps> = ({
       </DialogTrigger>
       <DialogContent className="max-w-6xl max-h-[80vh] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Dados Completos - Preventivas</DialogTitle>
+          <DialogTitle>Tabela Completa - Preventivas</DialogTitle>
           <DialogDescription>
             Tabela com todos os dados filtrados de preventivas ({filteredData.length} registros)
           </DialogDescription>
         </DialogHeader>
-        <div className="overflow-auto max-h-[60vh]">
+        <div className="overflow-auto max-h-[60vh] border rounded-lg">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Preventiva</TableHead>
-                <TableHead>Operação</TableHead>
-                <TableHead>Placa</TableHead>
-                <TableHead>Última Manutenção</TableHead>
-                <TableHead>Vencida (Km)</TableHead>
-                <TableHead>Vencida (Dias)</TableHead>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-semibold text-foreground">Preventiva</TableHead>
+                <TableHead className="font-semibold text-foreground">Operação</TableHead>
+                <TableHead className="font-semibold text-foreground">Placa</TableHead>
+                <TableHead className="font-semibold text-foreground">Última Manutenção</TableHead>
+                <TableHead className="font-semibold text-foreground">Vencida (Km)</TableHead>
+                <TableHead className="font-semibold text-foreground">Vencida (Dias)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredData.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>{item.preventiva || '-'}</TableCell>
+                <TableRow key={index} className="hover:bg-muted/30">
+                  <TableCell className="font-medium">{item.preventiva || '-'}</TableCell>
                   <TableCell>{item.operacao || '-'}</TableCell>
                   <TableCell>{item.placa || '-'}</TableCell>
                   <TableCell>{formatDate(item.ultimaManutencao)}</TableCell>

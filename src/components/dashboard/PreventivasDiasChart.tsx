@@ -1,14 +1,16 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { PreventivaData } from '@/contexts/DataContext';
+import { useInteractiveFilter } from '@/contexts/InteractiveFilterContext';
 
 interface PreventivasDiasChartProps {
   filteredData: PreventivaData[];
 }
 
 const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredData }) => {
+  const { setActiveFilter, activeFilter } = useInteractiveFilter();
   const data = React.useMemo(() => {
     return filteredData
       .map(item => ({
@@ -16,40 +18,69 @@ const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredDat
         diasVencida: parseInt(item.vencidaDias) || 0,
       }))
       .filter(item => item.diasVencida > 0)
-      .sort((a, b) => b.diasVencida - a.diasVencida)
-      .slice(0, 20);
+      .sort((a, b) => b.diasVencida - a.diasVencida);
   }, [filteredData]);
 
   const chartConfig = {
     diasVencida: {
       label: "Dias Vencida",
-      color: "hsl(var(--warning))",
+      color: "hsl(var(--chart-primary))",
     },
+  };
+
+  const handleBarClick = (data: any) => {
+    if (activeFilter.type === 'placa' && activeFilter.value === data.placa) {
+      setActiveFilter({ type: null, value: null });
+    } else {
+      setActiveFilter({ type: 'placa', value: data.placa });
+    }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top 20 Placas - Vencimento por Dias</CardTitle>
+        <CardTitle>Vencimento por Dias</CardTitle>
         <CardDescription>Placas mais próximas do vencimento por dias</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="placa" 
-                angle={-45}
-                textAnchor="end"
-                height={100}
-                interval={0}
-              />
-              <YAxis />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="diasVencida" fill="var(--color-diasVencida)" />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="w-full overflow-x-auto">
+            <div style={{ minWidth: Math.max(800, data.length * 60) }}>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={data} margin={{ top: 40, right: 30, left: 20, bottom: 80 }}>
+                  <defs>
+                    <linearGradient id="diasGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--chart-primary))" />
+                      <stop offset="100%" stopColor="hsl(var(--chart-primary) / 0.7)" />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="placa" 
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
+                    interval={0}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="diasVencida" fill="url(#diasGradient)" cursor="pointer" onClick={handleBarClick}>
+                    <LabelList dataKey="diasVencida" position="top" fontSize={12} />
+                    {data.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={activeFilter.type === 'placa' && activeFilter.value === entry.placa 
+                          ? "hsl(var(--chart-primary) / 0.8)" 
+                          : "url(#diasGradient)"
+                        } 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </ChartContainer>
       </CardContent>
     </Card>
