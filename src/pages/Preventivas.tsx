@@ -10,7 +10,7 @@ import { usePreventivaData } from '@/hooks/usePreventivaData';
 import { useInteractivePreventivaData } from '@/hooks/useInteractivePreventivaData';
 import { InteractiveFilterProvider } from '@/contexts/InteractiveFilterContext';
 
-const Preventivas = () => {
+const PreventivasContent = () => {
   const { preventivaData } = useData();
   const [filters, setFilters] = useState({
     mes: [] as string[],
@@ -43,8 +43,7 @@ const Preventivas = () => {
   }
 
   return (
-    <InteractiveFilterProvider>
-      <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="p-6 pb-4">
         <h2 className="text-3xl font-bold">Preventivas</h2>
       </div>
@@ -107,6 +106,13 @@ const Preventivas = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Preventivas = () => {
+  return (
+    <InteractiveFilterProvider>
+      <PreventivasContent />
     </InteractiveFilterProvider>
   );
 };
