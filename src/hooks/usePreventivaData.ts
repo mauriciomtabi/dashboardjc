@@ -12,7 +12,7 @@ interface PreventivaFilters {
 export const usePreventivaData = (filters: PreventivaFilters, preventivaData: PreventivaData[]) => {
   const filteredData = useMemo(() => {
     return preventivaData.filter(item => {
-      const parsedDate = parseExcelDate(item.L);
+      const parsedDate = parseExcelDate(item.ultimaManutencao);
       if (!parsedDate) return false;
       
       const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -24,12 +24,12 @@ export const usePreventivaData = (filters: PreventivaFilters, preventivaData: Pr
       
       if (Array.isArray(filters.placa) && filters.placa.length > 0) {
         const hasMatchingPlaca = filters.placa.some(placa => 
-          item.K?.toLowerCase().includes(placa.toLowerCase())
+          item.placa?.toLowerCase().includes(placa.toLowerCase())
         );
         if (!hasMatchingPlaca) return false;
       }
       
-      if (Array.isArray(filters.operacao) && filters.operacao.length > 0 && !filters.operacao.includes(item.F)) return false;
+      if (Array.isArray(filters.operacao) && filters.operacao.length > 0 && !filters.operacao.includes(item.operacao)) return false;
       
       return true;
     });
@@ -39,7 +39,7 @@ export const usePreventivaData = (filters: PreventivaFilters, preventivaData: Pr
     const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     
     const meses = [...new Set(preventivaData.map(item => {
-      const parsedDate = parseExcelDate(item.L);
+      const parsedDate = parseExcelDate(item.ultimaManutencao);
       if (!parsedDate) return null;
       const monthIndex = parsedDate.getMonth();
       return monthNames[monthIndex];
@@ -48,13 +48,13 @@ export const usePreventivaData = (filters: PreventivaFilters, preventivaData: Pr
     });
 
     const anos = [...new Set(preventivaData.map(item => {
-      const parsedDate = parseExcelDate(item.L);
+      const parsedDate = parseExcelDate(item.ultimaManutencao);
       if (!parsedDate) return null;
       return parsedDate.getFullYear().toString();
     }).filter(Boolean))].sort();
 
-    const operacoes = [...new Set(preventivaData.map(item => item.F))].filter(Boolean).sort();
-    const placas = [...new Set(preventivaData.map(item => item.K))].filter(Boolean).sort();
+    const operacoes = [...new Set(preventivaData.map(item => item.operacao))].filter(Boolean).sort();
+    const placas = [...new Set(preventivaData.map(item => item.placa))].filter(Boolean).sort();
 
     return {
       meses,
@@ -65,11 +65,11 @@ export const usePreventivaData = (filters: PreventivaFilters, preventivaData: Pr
   }, [preventivaData]);
 
   const operacaoCards = useMemo(() => {
-    const operacoes = [...new Set(filteredData.map(item => item.F))].filter(Boolean);
+    const operacoes = [...new Set(filteredData.map(item => item.operacao))].filter(Boolean);
     const totalItems = filteredData.length;
     
     return operacoes.map(operacao => {
-      const dadosOperacao = filteredData.filter(item => item.F === operacao);
+      const dadosOperacao = filteredData.filter(item => item.operacao === operacao);
       const count = dadosOperacao.length;
       const percentage = totalItems > 0 ? (count / totalItems) * 100 : 0;
 

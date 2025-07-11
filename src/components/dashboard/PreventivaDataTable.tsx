@@ -64,12 +64,12 @@ const PreventivaDataTable: React.FC<PreventivaDataTableProps> = ({
             <TableBody>
               {filteredData.map((item, index) => (
                 <TableRow key={index}>
-                  <TableCell>{item.D || '-'}</TableCell>
-                  <TableCell>{item.F || '-'}</TableCell>
-                  <TableCell>{item.K || '-'}</TableCell>
-                  <TableCell>{formatDate(item.L)}</TableCell>
-                  <TableCell>{item.U || '-'}</TableCell>
-                  <TableCell>{item.V || '-'}</TableCell>
+                  <TableCell>{item.preventiva || '-'}</TableCell>
+                  <TableCell>{item.operacao || '-'}</TableCell>
+                  <TableCell>{item.placa || '-'}</TableCell>
+                  <TableCell>{formatDate(item.ultimaManutencao)}</TableCell>
+                  <TableCell>{item.vencidaKm || '-'}</TableCell>
+                  <TableCell>{item.vencidaDias || '-'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

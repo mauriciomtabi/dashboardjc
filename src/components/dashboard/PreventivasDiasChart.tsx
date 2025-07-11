@@ -12,8 +12,8 @@ const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredDat
   const data = React.useMemo(() => {
     return filteredData
       .map(item => ({
-        placa: item.K || 'Não informado',
-        diasVencida: parseInt(item.V) || 0,
+        placa: item.placa || 'Não informado',
+        diasVencida: parseInt(item.vencidaDias) || 0,
       }))
       .filter(item => item.diasVencida > 0)
       .sort((a, b) => b.diasVencida - a.diasVencida)

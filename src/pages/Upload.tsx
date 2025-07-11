@@ -128,18 +128,23 @@ const Upload = () => {
         console.log('Processando aba PREVENTIVAS...');
         const preventivaSheet = workbook.Sheets['PREVENTIVAS'];
         const preventivaJson = XLSX.utils.sheet_to_json(preventivaSheet, { header: 'A' });
-        console.log('Dados brutos da aba PREVENTIVAS:', preventivaJson.slice(0, 3));
+        console.log('Dados brutos da aba PREVENTIVAS (primeiros 5):', preventivaJson.slice(0, 5));
+        console.log('Total de linhas na aba PREVENTIVAS:', preventivaJson.length);
         
-        preventivaData = preventivaJson.slice(1).map((row: any) => ({
-          D: row.D || '',
-          F: row.F || '',
-          K: row.K || '',
-          L: row.L || '',
-          U: row.U || '',
-          V: row.V || '',
-        }));
-        console.log('Dados processados de PREVENTIVAS:', preventivaData.slice(0, 3));
-        console.log('Total de registros PREVENTIVAS:', preventivaData.length);
+        // Filtrar apenas linhas que têm dados válidos
+        preventivaData = preventivaJson.slice(1)
+          .map((row: any) => ({
+            preventiva: row.D || '',
+            operacao: row.F || '',
+            placa: row.K || '',
+            ultimaManutencao: row.L || '',
+            vencidaKm: row.U || '',
+            vencidaDias: row.V || '',
+          }))
+          .filter(item => item.preventiva || item.operacao || item.placa); // Filtrar linhas vazias
+          
+        console.log('Dados processados de PREVENTIVAS (primeiros 3):', preventivaData.slice(0, 3));
+        console.log('Total de registros válidos PREVENTIVAS:', preventivaData.length);
       } else {
         console.log('Aba PREVENTIVAS não encontrada na planilha');
         console.log('Abas disponíveis:', workbook.SheetNames);

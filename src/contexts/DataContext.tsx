@@ -65,12 +65,12 @@ export interface ManutencaoData {
 }
 
 export interface PreventivaData {
-  D: string; // Preventiva
-  F: string; // Operação
-  K: string; // Placa
-  L: string; // Última Manutenção
-  U: string; // Vencida (Km)
-  V: string; // Vencida (dias)
+  preventiva: string; // Preventiva (D)
+  operacao: string; // Operação (F)
+  placa: string; // Placa (K)
+  ultimaManutencao: string; // Última Manutenção (L)
+  vencidaKm: string; // Vencida (Km) (U)
+  vencidaDias: string; // Vencida (dias) (V)
 }
 
 interface DataContextType {

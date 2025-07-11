@@ -11,7 +11,7 @@ interface PreventivasTotaisChartProps {
 const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filteredData }) => {
   const data = React.useMemo(() => {
     const preventivas = filteredData.reduce((acc: { [key: string]: number }, item) => {
-      const preventiva = item.D || 'Não informado';
+      const preventiva = item.preventiva || 'Não informado';
       acc[preventiva] = (acc[preventiva] || 0) + 1;
       return acc;
     }, {});

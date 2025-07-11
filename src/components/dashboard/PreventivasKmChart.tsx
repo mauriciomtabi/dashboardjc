@@ -12,8 +12,8 @@ const PreventivasKmChart: React.FC<PreventivasKmChartProps> = ({ filteredData })
   const data = React.useMemo(() => {
     return filteredData
       .map(item => ({
-        placa: item.K || 'Não informado',
-        kmVencida: parseInt(item.U) || 0,
+        placa: item.placa || 'Não informado',
+        kmVencida: parseInt(item.vencidaKm) || 0,
       }))
       .filter(item => item.kmVencida > 0)
       .sort((a, b) => b.kmVencida - a.kmVencida)
