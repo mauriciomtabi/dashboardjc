@@ -1,12 +1,10 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, LabelList, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { PreventivaData } from '@/contexts/DataContext';
 import { useInteractiveFilter } from '@/contexts/InteractiveFilterContext';
 
 interface PreventivasDiasChartProps {
-  filteredData: PreventivaData[];
+  filteredData: any[];
 }
 
 const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredData }) => {
@@ -21,12 +19,6 @@ const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredDat
       .sort((a, b) => b.diasVencida - a.diasVencida);
   }, [filteredData]);
 
-  const chartConfig = {
-    diasVencida: {
-      label: "Dias Vencida",
-      color: "hsl(var(--chart-primary))",
-    },
-  };
 
   const handleBarClick = (data: any) => {
     if (activeFilter.type === 'placa' && activeFilter.value === data.placa) {
@@ -63,7 +55,15 @@ const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredDat
                   tick={{ fontSize: 10 }}
                 />
                 <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(59, 130, 246, 0.2)',
+                    borderRadius: '12px',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                  }}
+                />
                 <Bar dataKey="diasVencida" fill="url(#diasGradient)" radius={[8, 8, 0, 0]} cursor="pointer" onClick={handleBarClick} className="drop-shadow-lg">
                   <LabelList dataKey="diasVencida" position="top" className="fill-primary font-semibold" />
                   {data.map((entry, index) => (
