@@ -8,6 +8,7 @@ interface PreventivasTotaisChartProps {
 }
 
 const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filteredData }) => {
+  console.log('PreventivasTotaisChart rendering with data:', filteredData?.length);
   const { setActiveFilter, activeFilter } = useInteractiveFilter();
   const data = React.useMemo(() => {
     const preventivas = filteredData.reduce((acc: { [key: string]: number }, item) => {
@@ -70,7 +71,7 @@ const PreventivasTotaisChart: React.FC<PreventivasTotaisChartProps> = ({ filtere
                   }}
                 />
                 <Bar dataKey="total" fill="url(#barGradient)" radius={[8, 8, 0, 0]} cursor="pointer" onClick={handleBarClick} className="drop-shadow-lg">
-                  <LabelList dataKey="total" position="top" className="fill-primary font-semibold" />
+                  <LabelList dataKey="total" position="top" style={{ fontSize: '12px', fontWeight: 'bold' }} />
                   {data.map((entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 

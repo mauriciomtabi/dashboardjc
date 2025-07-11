@@ -8,6 +8,7 @@ interface PreventivasDiasChartProps {
 }
 
 const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredData }) => {
+  console.log('PreventivasDiasChart rendering with data:', filteredData?.length);
   const { setActiveFilter, activeFilter } = useInteractiveFilter();
   const data = React.useMemo(() => {
     return filteredData
@@ -65,7 +66,7 @@ const PreventivasDiasChart: React.FC<PreventivasDiasChartProps> = ({ filteredDat
                   }}
                 />
                 <Bar dataKey="diasVencida" fill="url(#diasGradient)" radius={[8, 8, 0, 0]} cursor="pointer" onClick={handleBarClick} className="drop-shadow-lg">
-                  <LabelList dataKey="diasVencida" position="top" className="fill-primary font-semibold" />
+                  <LabelList dataKey="diasVencida" position="top" style={{ fontSize: '12px', fontWeight: 'bold' }} />
                   {data.map((entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 

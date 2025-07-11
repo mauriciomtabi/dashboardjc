@@ -8,6 +8,7 @@ interface PreventivasKmChartProps {
 }
 
 const PreventivasKmChart: React.FC<PreventivasKmChartProps> = ({ filteredData }) => {
+  console.log('PreventivasKmChart rendering with data:', filteredData?.length);
   const { setActiveFilter, activeFilter } = useInteractiveFilter();
   const data = React.useMemo(() => {
     return filteredData
@@ -65,7 +66,7 @@ const PreventivasKmChart: React.FC<PreventivasKmChartProps> = ({ filteredData })
                   }}
                 />
                 <Bar dataKey="kmVencida" fill="url(#kmGradient)" radius={[8, 8, 0, 0]} cursor="pointer" onClick={handleBarClick} className="drop-shadow-lg">
-                  <LabelList dataKey="kmVencida" position="top" className="fill-primary font-semibold" />
+                  <LabelList dataKey="kmVencida" position="top" style={{ fontSize: '12px', fontWeight: 'bold' }} />
                   {data.map((entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
