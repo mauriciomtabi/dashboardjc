@@ -42,19 +42,19 @@ const PreventivasKmChart: React.FC<PreventivasKmChartProps> = ({ filteredData })
         <CardTitle>Vencimento por KM</CardTitle>
         <CardDescription>Placas mais próximas do vencimento por quilometragem</CardDescription>
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent>
         <ChartContainer config={chartConfig}>
           <div className="w-full overflow-x-auto">
-            <div style={{ minWidth: Math.max(800, data.length * 60), height: '220px' }}>
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={data} margin={{ top: 30, right: 30, left: 20, bottom: 60 }}>
+            <div style={{ minWidth: Math.max(800, data.length * 60), height: '300px' }}>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                   <defs>
                     <linearGradient id="kmGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(120 85% 55%)" />
-                      <stop offset="100%" stopColor="hsl(120 85% 35%)" />
+                      <stop offset="0%" stopColor="hsl(120 85% 60%)" />
+                      <stop offset="100%" stopColor="hsl(120 85% 40%)" />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                   <XAxis 
                     dataKey="placa" 
                     angle={-45}
