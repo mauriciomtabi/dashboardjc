@@ -108,7 +108,7 @@ const CheckListContent = () => {
         />
       </div>
 
-      <div className="p-6 pt-8 space-y-8">
+      <div className="p-6 pt-8 space-y-6">
         {/* Cards de Conformidade */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Conformidade das Inspeções</h3>

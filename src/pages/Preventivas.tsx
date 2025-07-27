@@ -68,7 +68,7 @@ const PreventivasContent = () => {
         />
       </div>
 
-      <div className="p-6 pt-8 space-y-8">
+      <div className="p-6 pt-8 space-y-6">
         {/* Cards de Operações */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Preventivas por Operação</h3>
@@ -79,7 +79,6 @@ const PreventivasContent = () => {
                 title={card.title}
                 value={card.value}
                 percentage={card.percentage}
-                variant="default"
               />
             ))}
           </div>
@@ -91,7 +90,7 @@ const PreventivasContent = () => {
         </div>
 
         {/* Gráficos de vencimento - layout vertical */}
-        <div className="w-full space-y-8">
+        <div className="w-full space-y-6">
           <PreventivasKmChart filteredData={interactiveFilteredData} />
           <PreventivasDiasChart filteredData={interactiveFilteredData} />
         </div>

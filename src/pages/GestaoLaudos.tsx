@@ -62,7 +62,7 @@ const GestaoLaudos = () => {
         />
       </div>
 
-      <div className="p-6 pt-8 space-y-8">
+      <div className="p-6 pt-8 space-y-6">
         {/* Cards de Operações */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {operacaoCards.map((card, index) => (

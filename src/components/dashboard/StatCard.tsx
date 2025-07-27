@@ -98,12 +98,12 @@ const StatCard = ({ title, value, percentage, icon, className, variant = 'defaul
       <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       
       <div className="relative z-10 ml-2">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
           <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-300">
             {title}
           </CardTitle>
           {displayIcon && (
-            <div className={`p-2.5 rounded-full bg-gradient-to-br ${styles.iconBgColor} transition-all duration-300 group-hover:scale-110 shadow-sm group-hover:shadow-lg relative overflow-hidden`}>
+            <div className={`p-2 rounded-full bg-gradient-to-br ${styles.iconBgColor} transition-all duration-300 group-hover:scale-110 shadow-sm group-hover:shadow-lg relative overflow-hidden`}>
               {/* Brilho interno do ícone */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
               <div className={`${styles.glowColor} transition-all duration-300 relative z-10`}>
@@ -112,15 +112,15 @@ const StatCard = ({ title, value, percentage, icon, className, variant = 'defaul
             </div>
           )}
         </CardHeader>
-        <CardContent className="space-y-3">
-          <div className={`text-2xl font-bold ${styles.valueColor} transition-all duration-300 drop-shadow-sm`}>
+        <CardContent className="space-y-2">
+          <div className={`text-xl font-bold ${styles.valueColor} transition-all duration-300 drop-shadow-sm`}>
             {value}
           </div>
           {percentage !== undefined && (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 {/* Barra de progresso premium */}
-                <div className="h-2.5 w-full bg-gradient-to-r from-muted/40 to-muted/60 rounded-full overflow-hidden relative shadow-inner">
+                <div className="h-2 w-full bg-gradient-to-r from-muted/40 to-muted/60 rounded-full overflow-hidden relative shadow-inner">
                   {/* Fundo com textura sutil */}
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-white/5 to-transparent" />
                   {/* Barra de progresso com múltiplos efeitos */}

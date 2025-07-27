@@ -57,7 +57,7 @@ const GestaoEstoque = () => {
         />
       </div>
 
-      <div className="p-6 pt-8 space-y-8">
+      <div className="p-6 pt-8 space-y-6">
         {/* Cards de Operações */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Operações</h3>

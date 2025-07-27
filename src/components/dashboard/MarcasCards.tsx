@@ -55,17 +55,17 @@ const MarcasCards = ({ filteredData, onMarcaClick, selectedMarca }: MarcasCardsP
           {marcasPneus.map((marca, index) => (
             <div 
               key={`${marca.name}-${index}`} 
-              className={`group cursor-pointer bg-gradient-to-br transition-all duration-300 hover:shadow-md min-h-[120px] flex flex-col justify-center rounded-xl p-4 text-center border ${
+              className={`group cursor-pointer bg-gradient-to-br transition-all duration-300 hover:shadow-md min-h-[90px] flex flex-col justify-center rounded-xl p-3 text-center border ${
                 selectedMarca === marca.name
                   ? 'from-primary/20 to-primary/30 border-primary/60 shadow-lg scale-105'
                   : 'from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 border-primary/20 hover:border-primary/40'
               }`}
               onClick={() => onMarcaClick?.(selectedMarca === marca.name ? '' : marca.name)}
             >
-              <div className="text-2xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-xl font-bold text-primary mb-1 group-hover:scale-110 transition-transform duration-300">
                 {marca.value}
               </div>
-              <div className="text-sm font-medium text-foreground mb-2 line-clamp-2">
+              <div className="text-sm font-medium text-foreground mb-1 line-clamp-2">
                 {marca.name}
               </div>
               <div className="text-xs font-semibold text-primary bg-primary/10 rounded-full px-2 py-1">
