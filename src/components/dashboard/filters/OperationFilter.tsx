@@ -37,21 +37,21 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
   const hasValue = (Array.isArray(value) && value.length > 0) || (!Array.isArray(value) && value);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <Label className="text-sm flex items-center gap-1">
-          <Building2 className="h-4 w-4" />
+        <Label className="text-xs flex items-center gap-1">
+          <Building2 className="h-3 w-3" />
           Operação
         </Label>
         {hasValue && (
-          <Button variant="ghost" size="sm" onClick={onClear}>
+          <Button variant="ghost" size="sm" onClick={onClear} className="h-6 w-6 p-0">
             <X className="h-3 w-3" />
           </Button>
         )}
       </div>
       {isMultiple ? (
         <Select>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full h-8">
             <SelectValue placeholder={getDisplayValue()} />
           </SelectTrigger>
           <SelectContent>
@@ -77,7 +77,7 @@ const OperationFilter = ({ value, onChange, availableOperations, onClear, isMult
         </Select>
       ) : (
         <Select value={value as string || ''} onValueChange={handleSingleSelectChange}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full h-8">
             <SelectValue placeholder="Todas" />
           </SelectTrigger>
           <SelectContent>

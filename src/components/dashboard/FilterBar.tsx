@@ -42,9 +42,9 @@ const FilterBar = ({
 
   return (
     <Card className="shadow-lg border-l-4 border-l-primary bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/95">
-      <CardContent className="p-6">
-        <div className="flex flex-wrap gap-6">
-          <div className="min-w-[200px]">
+      <CardContent className="p-3">
+        <div className="flex flex-wrap gap-4">
+          <div className="min-w-[180px]">
             <MonthFilter
               value={filters.mes}
               onChange={(value) => onFilterChange('mes', value)}
@@ -53,7 +53,7 @@ const FilterBar = ({
             />
           </div>
           
-          <div className="min-w-[200px]">
+          <div className="min-w-[180px]">
             <YearFilter
               value={filters.ano}
               onChange={(value) => onFilterChange('ano', value)}
@@ -62,7 +62,7 @@ const FilterBar = ({
             />
           </div>
           
-          <div className="min-w-[200px]">
+          <div className="min-w-[180px]">
             <PlateFilter
               value={filters.placa}
               onChange={(value) => onFilterChange('placa', value)}
@@ -71,7 +71,7 @@ const FilterBar = ({
             />
           </div>
           
-          <div className="min-w-[200px]">
+          <div className="min-w-[180px]">
             <OperationFilter
               value={filters.operacao || []}
               onChange={(value) => onFilterChange('operacao', value)}
@@ -82,7 +82,7 @@ const FilterBar = ({
           </div>
           
           {showStockFilter && availableFilters.estoques && (
-            <div className="min-w-[200px]">
+            <div className="min-w-[180px]">
               <StockFilter
                 value={filters.estoque || []}
                 onChange={(value) => onFilterChange('estoque', value)}
@@ -93,7 +93,7 @@ const FilterBar = ({
           )}
 
           {showConformidadeFilter && availableFilters.conformidades && (
-            <div className="min-w-[200px]">
+            <div className="min-w-[180px]">
               <ConformidadeFilter
                 value={filters.conformidade || []}
                 onChange={(value) => onFilterChange('conformidade', value)}

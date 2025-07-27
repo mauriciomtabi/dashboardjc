@@ -30,20 +30,20 @@ const YearFilter = ({ value, onChange, availableYears, onClear }: YearFilterProp
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <Label className="text-sm flex items-center gap-1">
-          <Calendar className="h-4 w-4" />
+        <Label className="text-xs flex items-center gap-1">
+          <Calendar className="h-3 w-3" />
           Ano
         </Label>
         {Array.isArray(value) && value.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={onClear}>
+          <Button variant="ghost" size="sm" onClick={onClear} className="h-6 w-6 p-0">
             <X className="h-3 w-3" />
           </Button>
         )}
       </div>
       <Select value="" onValueChange={handleMultipleSelectChange}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full h-8">
           <SelectValue placeholder={getDisplayValue()} />
         </SelectTrigger>
         <SelectContent>
