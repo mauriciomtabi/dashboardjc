@@ -156,19 +156,25 @@ export const useCheckListData = (filters: CheckListFilters) => {
     try {
       console.log('useCheckListData - Processing checkListTypeCards...');
       
-      const typeCounts = filteredData.reduce((acc, item) => {
-        if (item.G) {
-          acc[item.G] = (acc[item.G] || 0) + 1;
+      // Contar placas únicas por tipo de checklist
+      const typePlates = filteredData.reduce((acc, item) => {
+        if (item.G && item.AG) {
+          if (!acc[item.G]) {
+            acc[item.G] = new Set();
+          }
+          acc[item.G].add(item.AG);
         }
         return acc;
-      }, {} as Record<string, number>);
+      }, {} as Record<string, Set<string>>);
 
-      const total = filteredData.length;
+      // Contar total de placas únicas
+      const allPlates = new Set(filteredData.map(item => item.AG).filter(Boolean));
+      const total = allPlates.size;
 
-      const result = Object.entries(typeCounts).map(([type, count]) => ({
+      const result = Object.entries(typePlates).map(([type, plates]) => ({
         title: type,
-        value: count,
-        percentage: total > 0 ? parseFloat(((count / total) * 100).toFixed(1)) : 0,
+        value: plates.size,
+        percentage: total > 0 ? parseFloat(((plates.size / total) * 100).toFixed(1)) : 0,
       }));
       
       console.log('useCheckListData - CheckList type cards:', result);
