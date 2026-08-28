@@ -98,14 +98,21 @@ const Upload = () => {
       // Processar aba CHECK LIST
       const checkListSheet = workbook.Sheets['CHECK LIST'];
       const checkListJson = XLSX.utils.sheet_to_json(checkListSheet, { header: 'A' });
+      
+      // Detectar se a planilha possui a nova coluna X inserida (deslocando Lista para Z e Placa para AH)
+      const isCheckListShifted = checkListJson.length > 0 && (
+        Boolean((checkListJson[0] as any)?.AH) || 
+        checkListJson.slice(1, 10).some((r: any) => Boolean(r?.AH))
+      );
+
       const checkListData = checkListJson.slice(1).map((row: any) => ({
         D: row.D || '',
         G: row.G || '',
         N: row.N || '',
         T: row.T || '',
         V: row.V || '',
-        Y: row.Y || '',
-        AG: row.AG || '',
+        Y: (isCheckListShifted ? (row.Z ?? row.Y) : (row.Y ?? row.Z)) || '',
+        AG: (isCheckListShifted ? (row.AH ?? row.AG) : (row.AG ?? row.AH)) || '',
       }));
 
       // Processar aba MANUTENÇÃO
