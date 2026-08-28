@@ -99,28 +99,47 @@ const Upload = () => {
       const checkListSheet = workbook.Sheets['CHECK LIST'];
       const checkListJson = XLSX.utils.sheet_to_json(checkListSheet, { header: 'A' });
       
-      const checkListData = checkListJson.slice(1).map((row: any) => {
-        // Obter nome do colaborador (está em AH ou AI ou AN)
-        let colaborador = '';
-        if (typeof row.AH === 'string' && isNaN(Number(row.AH)) && row.AH.trim() !== '') {
-          colaborador = row.AH.trim();
-        } else if (typeof row.AI === 'string' && isNaN(Number(row.AI)) && row.AI.trim() !== '') {
-          colaborador = row.AI.trim();
-        } else if (typeof row.AN === 'string' && isNaN(Number(row.AN)) && row.AN.trim() !== '') {
-          colaborador = row.AN.trim();
-        } else {
-          colaborador = String(row.AH || row.AI || row.AN || '').trim();
+      const headerRow = (checkListJson[0] || {}) as Record<string, any>;
+      
+      // Função auxiliar para encontrar a coluna pelo nome do cabeçalho
+      const getCheckListCol = (exactKeys: string[], fallback: string) => {
+        for (const [col, val] of Object.entries(headerRow)) {
+          if (typeof val === 'string') {
+            const lower = val.toLowerCase().trim();
+            if (exactKeys.includes(lower)) return col;
+          }
         }
+        return fallback;
+      };
+
+      const colFilial = getCheckListCol(['nm_filial', 'filial'], 'D');
+      const colCheckList = getCheckListCol(['nm_cheklst', 'cheklst', 'checklist'], 'G');
+      const colData = getCheckListCol(['dh_realiza', 'data_realiza', 'data'], 'N');
+      const colItem = getCheckListCol(['nm_item', 'item'], 'T');
+      const colConform = getCheckListCol(['bl_conform', 'conform', 'bl_confrm'], 'V');
+      const colLista = getCheckListCol(['nm_lista', 'lista'], 'Z');
+      const colPlaca = getCheckListCol(['placa'], 'AH');
+      const colColaborador = getCheckListCol(['nm_usuario', 'usuario', 'colaborador', 'nm_conduto'], 'AI');
+
+      const checkListData = checkListJson.slice(1).map((row: any) => {
+        const filial = row[colFilial] || row.D || '';
+        const checkList = row[colCheckList] || row.G || '';
+        const dataHora = row[colData] || row.N || '';
+        const item = row[colItem] || row.T || '';
+        const conform = row[colConform] !== undefined ? row[colConform] : (row.V || '');
+        const lista = row[colLista] || row.Z || (typeof row.Y === 'string' && isNaN(Number(row.Y)) ? row.Y : '');
+        const placa = row[colPlaca] || row.AH || row.AG || '';
+        const colaborador = row[colColaborador] || row.AI || row.AN || (row.AH !== placa ? row.AH : '') || '';
 
         return {
-          D: row.D || '',
-          G: row.G || '',
-          N: row.N || '',
-          T: row.T || '',
-          V: row.V || '',
-          Y: row.Y || row.Z || '',
-          AG: row.AG || '',
-          colaborador: colaborador,
+          D: filial,
+          G: checkList,
+          N: dataHora,
+          T: item,
+          V: conform,
+          Y: lista,
+          AG: placa,
+          colaborador: String(colaborador).trim(),
         };
       });
 
