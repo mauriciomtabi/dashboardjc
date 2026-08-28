@@ -19,6 +19,8 @@ export const useInteractiveCheckListData = (filteredData: CheckListData[]) => {
           return item.T === activeFilter.value;
         case 'placa':
           return item.AG === activeFilter.value;
+        case 'colaborador':
+          return item.colaborador === activeFilter.value;
         default:
           return true;
       }

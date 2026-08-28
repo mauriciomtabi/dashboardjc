@@ -51,6 +51,7 @@ export interface CheckListData {
   V: number; // bl_Confrm (0 ou 1)
   Y: string; // Lista
   AG: string; // Placa
+  colaborador?: string; // Colaborador / Usuário / Condutor
 }
 
 export interface ManutencaoData {

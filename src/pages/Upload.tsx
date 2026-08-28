@@ -99,21 +99,30 @@ const Upload = () => {
       const checkListSheet = workbook.Sheets['CHECK LIST'];
       const checkListJson = XLSX.utils.sheet_to_json(checkListSheet, { header: 'A' });
       
-      // Detectar se a planilha possui a nova coluna X inserida (deslocando Lista para Z e Placa para AH)
-      const isCheckListShifted = checkListJson.length > 0 && (
-        Boolean((checkListJson[0] as any)?.AH) || 
-        checkListJson.slice(1, 10).some((r: any) => Boolean(r?.AH))
-      );
+      const checkListData = checkListJson.slice(1).map((row: any) => {
+        // Obter nome do colaborador (está em AH ou AI ou AN)
+        let colaborador = '';
+        if (typeof row.AH === 'string' && isNaN(Number(row.AH)) && row.AH.trim() !== '') {
+          colaborador = row.AH.trim();
+        } else if (typeof row.AI === 'string' && isNaN(Number(row.AI)) && row.AI.trim() !== '') {
+          colaborador = row.AI.trim();
+        } else if (typeof row.AN === 'string' && isNaN(Number(row.AN)) && row.AN.trim() !== '') {
+          colaborador = row.AN.trim();
+        } else {
+          colaborador = String(row.AH || row.AI || row.AN || '').trim();
+        }
 
-      const checkListData = checkListJson.slice(1).map((row: any) => ({
-        D: row.D || '',
-        G: row.G || '',
-        N: row.N || '',
-        T: row.T || '',
-        V: row.V || '',
-        Y: (isCheckListShifted ? (row.Z ?? row.Y) : (row.Y ?? row.Z)) || '',
-        AG: (isCheckListShifted ? (row.AH ?? row.AG) : (row.AG ?? row.AH)) || '',
-      }));
+        return {
+          D: row.D || '',
+          G: row.G || '',
+          N: row.N || '',
+          T: row.T || '',
+          V: row.V || '',
+          Y: row.Y || row.Z || '',
+          AG: row.AG || '',
+          colaborador: colaborador,
+        };
+      });
 
       // Processar aba MANUTENÇÃO
       const manutencaoSheet = workbook.Sheets['MANUTENÇÃO'];

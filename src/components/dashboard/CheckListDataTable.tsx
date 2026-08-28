@@ -150,6 +150,7 @@ const CheckListDataTable = ({ filteredData, isOpen, onOpenChange }: CheckListDat
                 <TableHead className="font-bold text-primary whitespace-nowrap">bl_Confrm</TableHead>
                 <TableHead className="font-bold text-primary whitespace-nowrap">Lista</TableHead>
                 <TableHead className="font-bold text-primary whitespace-nowrap">Placa</TableHead>
+                <TableHead className="font-bold text-primary whitespace-nowrap">Colaborador</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -165,6 +166,7 @@ const CheckListDataTable = ({ filteredData, isOpen, onOpenChange }: CheckListDat
                   <TableCell className="whitespace-nowrap">{item.V}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.Y}</TableCell>
                   <TableCell className="whitespace-nowrap">{item.AG}</TableCell>
+                  <TableCell className="whitespace-nowrap">{item.colaborador || '-'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

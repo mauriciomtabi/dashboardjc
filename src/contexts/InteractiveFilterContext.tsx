@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface InteractiveFilter {
-  type: 'lista' | 'item' | 'placa' | 'preventiva' | null;
+  type: 'lista' | 'item' | 'placa' | 'preventiva' | 'colaborador' | null;
   value: string | null;
 }
 

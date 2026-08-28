@@ -9,6 +9,7 @@ import CheckListDataInspecaoChart from '@/components/dashboard/CheckListDataInsp
 import CheckListItensChart from '@/components/dashboard/CheckListItensChart';
 import CheckListListaChart from '@/components/dashboard/CheckListListaChart';
 import CheckListPlacasChart from '@/components/dashboard/CheckListPlacasChart';
+import CheckListColaboradorChart from '@/components/dashboard/CheckListColaboradorChart';
 import CheckListDataTable from '@/components/dashboard/CheckListDataTable';
 
 const CheckListContent = () => {
@@ -167,6 +168,11 @@ const CheckListContent = () => {
         {/* Placas - Largura completa */}
         <div className="w-full">
           <CheckListPlacasChart filteredData={filteredData} />
+        </div>
+
+        {/* Inspeção por Colaborador - Largura completa */}
+        <div className="w-full">
+          <CheckListColaboradorChart filteredData={filteredData} />
         </div>
 
         {/* Tabela Completa */}
